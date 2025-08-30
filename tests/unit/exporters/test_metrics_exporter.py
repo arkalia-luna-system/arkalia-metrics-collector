@@ -3,11 +3,13 @@ Tests unitaires pour MetricsExporter.
 Tests professionnels avec fixtures et mocks.
 """
 
-import pytest
 import json
 import tempfile
 from pathlib import Path
-from unittest.mock import Mock, patch, mock_open
+from unittest.mock import Mock, mock_open, patch
+
+import pytest
+
 from arkalia_metrics_collector.exporters.metrics_exporter import MetricsExporter
 
 
@@ -37,7 +39,7 @@ class TestMetricsExporter:
         assert output_file.exists()
 
         # Vérifier le contenu JSON
-        with open(output_file, "r") as f:
+        with open(output_file) as f:
             exported_data = json.load(f)
 
         assert exported_data["timestamp"] == sample_metrics_data["timestamp"]
@@ -55,7 +57,7 @@ class TestMetricsExporter:
         assert result is True
 
         # Vérifier que le timestamp n'est pas ajouté
-        with open(output_file, "r") as f:
+        with open(output_file) as f:
             exported_data = json.load(f)
 
         # Votre implémentation n'ajoute pas de export_timestamp

@@ -3,12 +3,14 @@ Configuration et fixtures pour les tests Arkalia Metrics Collector.
 Configuration professionnelle récupérée d'Athalia Core.
 """
 
-import pytest
-import tempfile
 import shutil
+import tempfile
+from collections.abc import Generator
 from pathlib import Path
-from typing import Dict, Any, Generator
+from typing import Any
 from unittest.mock import Mock, patch
+
+import pytest
 
 # Import des modules à tester
 from arkalia_metrics_collector.collectors.metrics_collector import MetricsCollector
@@ -57,7 +59,7 @@ def temp_project_dir() -> Generator[Path, None, None]:
 
 
 @pytest.fixture
-def sample_metrics_data() -> Dict[str, Any]:
+def sample_metrics_data() -> dict[str, Any]:
     """Données de métriques d'exemple pour les tests."""
     return {
         "timestamp": "2024-01-01T00:00:00",
@@ -215,7 +217,7 @@ def create_test_file(path: Path, content: str = "") -> None:
     path.write_text(content or f"# Test file: {path.name}\n")
 
 
-def assert_metrics_structure(metrics: Dict[str, Any]) -> None:
+def assert_metrics_structure(metrics: dict[str, Any]) -> None:
     """Vérifie que la structure des métriques est correcte."""
     required_keys = [
         "timestamp",

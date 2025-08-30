@@ -3,9 +3,11 @@ Tests unitaires pour MetricsValidator.
 Tests professionnels avec fixtures et mocks.
 """
 
-import pytest
 from pathlib import Path
 from unittest.mock import Mock, patch
+
+import pytest
+
 from arkalia_metrics_collector.validators.metrics_validator import MetricsValidator
 
 
@@ -239,11 +241,6 @@ class TestMetricsValidator:
 
     def test_custom_validation_rules(self):
         """Test de validation avec des règles personnalisées."""
-        custom_rules = {
-            "min_test_coverage": 0.8,
-            "min_documentation_files": 3,
-            "max_file_size_lines": 1000,
-        }
 
         validator = MetricsValidator()
 
