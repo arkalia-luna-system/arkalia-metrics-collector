@@ -1,10 +1,6 @@
 """
-Tests unitaires pour MetricsValidator.
 Tests professionnels avec fixtures et mocks.
 """
-
-from pathlib import Path
-from unittest.mock import Mock, patch
 
 import pytest
 

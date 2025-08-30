@@ -10,12 +10,11 @@ Collecte des métriques fiables sur :
 - Sécurité et qualité
 """
 
-import json
-import subprocess
+import subprocess  # nosec B404
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 
 class MetricsCollector:
@@ -203,7 +202,7 @@ class MetricsCollector:
                 os.chdir(self.project_root)
 
                 # Utiliser pytest pour collecter les tests
-                result = subprocess.run(
+                result = subprocess.run(  # nosec B603
                     [sys.executable, "-m", "pytest", "--collect-only", "-q"],
                     capture_output=True,
                     text=True,

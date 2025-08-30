@@ -1,10 +1,9 @@
 """
-Tests unitaires pour MetricsCollector.
 Tests professionnels avec fixtures et mocks.
 """
 
 from pathlib import Path
-from unittest.mock import Mock, mock_open, patch
+from unittest.mock import patch
 
 import pytest
 
@@ -17,20 +16,20 @@ class TestMetricsCollector:
     def test_init_with_valid_path(self, temp_project_dir: Path):
         """Test de l'initialisation avec un chemin valide."""
         collector = MetricsCollector(str(temp_project_dir))
-        # Sur macOS, les chemins peuvent avoir /private/var vs /var
-        assert str(collector.project_root).replace("/private", "") == str(
-            temp_project_dir
-        ).replace("/private", "")
+        # Normaliser les chemins pour la comparaison cross-platform
+        expected_path = Path(temp_project_dir).resolve()
+        actual_path = Path(collector.project_root).resolve()
+        assert actual_path == expected_path
         assert isinstance(collector.exclude_patterns, set)
         assert "__pycache__" in collector.exclude_patterns
 
     def test_init_with_string_path(self, temp_project_dir: Path):
         """Test de l'initialisation avec un chemin string."""
         collector = MetricsCollector(str(temp_project_dir))
-        # Sur macOS, les chemins peuvent avoir /private/var vs /var
-        assert str(collector.project_root).replace("/private", "") == str(
-            temp_project_dir
-        ).replace("/private", "")
+        # Normaliser les chemins pour la comparaison cross-platform
+        expected_path = Path(temp_project_dir).resolve()
+        actual_path = Path(collector.project_root).resolve()
+        assert actual_path == expected_path
 
     def test_exclude_patterns_default(self):
         """Test des patterns d'exclusion par défaut."""
@@ -246,7 +245,10 @@ class TestMetricsCollector:
         # Votre implémentation n'a pas de validation de chemin, donc pas d'erreur
         collector = MetricsCollector("/chemin/inexistant")
         # Votre implémentation accepte n'importe quel chemin
-        assert str(collector.project_root) == "/chemin/inexistant"
+        # Normaliser le chemin pour la comparaison cross-platform
+        expected_path = Path("/chemin/inexistant").resolve()
+        actual_path = Path(collector.project_root).resolve()
+        assert actual_path == expected_path
 
     def test_error_handling_file_instead_of_dir(self, temp_project_dir: Path):
         """Test de la gestion d'erreur avec un fichier au lieu d'un dossier."""
@@ -255,7 +257,7 @@ class TestMetricsCollector:
 
         # Votre implémentation accepte les fichiers
         collector = MetricsCollector(str(file_path))
-        # Sur macOS, les chemins peuvent avoir /private/var vs /var
-        assert str(collector.project_root).replace("/private", "") == str(
-            file_path
-        ).replace("/private", "")
+        # Normaliser les chemins pour la comparaison cross-platform
+        expected_path = Path(file_path).resolve()
+        actual_path = Path(collector.project_root).resolve()
+        assert actual_path == expected_path
