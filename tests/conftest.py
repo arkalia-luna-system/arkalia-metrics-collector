@@ -2,19 +2,20 @@
 Configuration professionnelle récupérée d'Athalia Core.
 """
 
+from collections.abc import Generator
 import shutil
 import tempfile
-from collections.abc import Generator
-from pathlib import Path
 from typing import Any
 from unittest.mock import Mock, patch
 
+from pathlib import Path
 import pytest
 
 # Import des modules à tester
 from arkalia_metrics_collector.collectors.metrics_collector import MetricsCollector
 from arkalia_metrics_collector.exporters.metrics_exporter import MetricsExporter
 from arkalia_metrics_collector.validators.metrics_validator import MetricsValidator
+
 
 # ========================================
 # FIXTURES DE BASE

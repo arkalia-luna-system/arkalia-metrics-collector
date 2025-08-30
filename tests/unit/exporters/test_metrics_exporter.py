@@ -4,9 +4,9 @@ Tests professionnels avec fixtures et mocks.
 
 import json
 import tempfile
-from pathlib import Path
 from unittest.mock import Mock, mock_open, patch
 
+from pathlib import Path
 import pytest
 
 from arkalia_metrics_collector.exporters.metrics_exporter import MetricsExporter
