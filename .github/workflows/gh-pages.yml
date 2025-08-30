@@ -1,0 +1,99 @@
+# Workflow GitHub Pages pour Arkalia Metrics Collector
+# Déploie automatiquement la documentation sur GitHub Pages
+
+name: Deploy Documentation
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # ========================================
+  # BUILD DE LA DOCUMENTATION
+  # ========================================
+  build:
+    name: "Build Documentation"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "Checkout Code"
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: "Setup Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: "Install Dependencies"
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[docs]"
+
+      - name: "Create Logs Directory"
+        run: |
+          mkdir -p logs
+
+      - name: "Build Documentation"
+        run: |
+          echo "BUILD DE LA DOCUMENTATION ARKALIA METRICS COLLECTOR"
+          echo "=================================================="
+          
+          # Vérifier la configuration MkDocs
+          mkdocs --version
+          
+          # Construire la documentation
+          mkdocs build --site-dir ./site-build
+          
+          # Vérifier que le build a réussi
+          if [ ! -f "./site-build/index.html" ]; then
+            echo "❌ ERREUR: index.html non trouvé après build"
+            exit 1
+          fi
+          
+          echo "✅ Documentation construite avec succès"
+          ls -la ./site-build/
+
+      - name: "Upload Build Artifacts"
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./site-build
+
+  # ========================================
+  # DÉPLOIEMENT GITHUB PAGES
+  # ========================================
+  deploy:
+    name: "Deploy to GitHub Pages"
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+      - name: "Deploy to GitHub Pages"
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
+      - name: "Deployment Status"
+        run: |
+          echo "🚀 DÉPLOIEMENT GITHUB PAGES TERMINÉ"
+          echo "===================================="
+          echo "Status: ${{ steps.deployment.outputs.outcome }}"
+          
+          if [ "${{ steps.deployment.outputs.outcome }}" = "success" ]; then
+            echo "✅ Documentation déployée avec succès !"
+          else
+            echo "❌ Échec du déploiement"
+            exit 1
+          fi

@@ -78,14 +78,14 @@ class MetricsExporter:
 
 | **Composant** | **Valeur** | **Statut** | **Vérifié** |
 |:-------------:|:---------:|:----------:|:------------:|
-| **🐍 Fichiers Python** | `{summary.get('total_python_files', 0):,} modules` | ![Actif](https://img.shields.io/badge/status-actif-brightgreen) | ✅ **COMPTÉ** |
-| **📝 Lignes de Code** | `{summary.get('lines_of_code', 0):,} lignes` | ![Maintenu](https://img.shields.io/badge/status-maintenu-blue) | ✅ **MESURÉ** |
-| **🧪 Tests** | `{summary.get('collected_tests', 0):,} tests` | ![Testé](https://img.shields.io/badge/status-testé-green) | ✅ **COLLECTÉ** |
-| **📚 Documentation** | `{summary.get('documentation_files', 0)} fichiers` | ![Complet](https://img.shields.io/badge/status-complet-yellow) | ✅ **ORGANISÉ** |
+| **🐍 Fichiers Python** | `{summary.get("total_python_files", 0):,} modules` | ![Actif](https://img.shields.io/badge/status-actif-brightgreen) | ✅ **COMPTÉ** |
+| **📝 Lignes de Code** | `{summary.get("lines_of_code", 0):,} lignes` | ![Maintenu](https://img.shields.io/badge/status-maintenu-blue) | ✅ **MESURÉ** |
+| **🧪 Tests** | `{summary.get("collected_tests", 0):,} tests` | ![Testé](https://img.shields.io/badge/status-testé-green) | ✅ **COLLECTÉ** |
+| **📚 Documentation** | `{summary.get("documentation_files", 0)} fichiers` | ![Complet](https://img.shields.io/badge/status-complet-yellow) | ✅ **ORGANISÉ** |
 
 </div>
 
-*Métriques collectées automatiquement le {collection_info.get('collection_date', 'Inconnu')} par [Arkalia Metrics Collector](data/metrics.json)*
+*Métriques collectées automatiquement le {collection_info.get("collection_date", "Inconnu")} par [Arkalia Metrics Collector](data/metrics.json)*
 """
 
             with open(output_path, "w", encoding="utf-8") as f:
@@ -129,7 +129,7 @@ class MetricsExporter:
                 🚀 Arkalia Metrics Dashboard
             </h1>
             <p class="text-xl text-gray-300">
-                Métriques collectées le {collection_info.get('collection_date', 'Inconnu')}
+                Métriques collectées le {collection_info.get("collection_date", "Inconnu")}
             </p>
         </header>
 
@@ -137,7 +137,7 @@ class MetricsExporter:
             <!-- Fichiers Python -->
             <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-6 rounded-xl shadow-lg">
                 <div class="text-center">
-                    <div class="text-4xl font-bold mb-2">{summary.get('total_python_files', 0):,}</div>
+                    <div class="text-4xl font-bold mb-2">{summary.get("total_python_files", 0):,}</div>
                     <div class="text-blue-200">Fichiers Python</div>
                 </div>
             </div>
@@ -145,7 +145,7 @@ class MetricsExporter:
             <!-- Lignes de Code -->
             <div class="bg-gradient-to-br from-green-600 to-green-800 p-6 rounded-xl shadow-lg">
                 <div class="text-center">
-                    <div class="text-4xl font-bold mb-2">{summary.get('lines_of_code', 0):,}</div>
+                    <div class="text-4xl font-bold mb-2">{summary.get("lines_of_code", 0):,}</div>
                     <div class="text-green-200">Lignes de Code</div>
                 </div>
             </div>
@@ -153,7 +153,7 @@ class MetricsExporter:
             <!-- Tests -->
             <div class="bg-gradient-to-br from-purple-600 to-purple-800 p-6 rounded-xl shadow-lg">
                 <div class="text-center">
-                    <div class="text-4xl font-bold mb-2">{summary.get('collected_tests', 0):,}</div>
+                    <div class="text-4xl font-bold mb-2">{summary.get("collected_tests", 0):,}</div>
                     <div class="text-purple-200">Tests</div>
                 </div>
             </div>
@@ -161,7 +161,7 @@ class MetricsExporter:
             <!-- Documentation -->
             <div class="bg-gradient-to-br from-orange-600 to-orange-800 p-6 rounded-xl shadow-lg">
                 <div class="text-center">
-                    <div class="text-4xl font-bold mb-2">{summary.get('documentation_files', 0):,}</div>
+                    <div class="text-4xl font-bold mb-2">{summary.get("documentation_files", 0):,}</div>
                     <div class="text-orange-200">Documentation</div>
                 </div>
             </div>
@@ -173,24 +173,24 @@ class MetricsExporter:
                 <div>
                     <h3 class="text-lg font-semibold mb-2">🐍 Métriques Python</h3>
                     <ul class="space-y-2 text-gray-300">
-                        <li>• Fichiers core: {self.metrics_data.get('python_files', {}).get('core_files', 0)}</li>
-                        <li>• Fichiers de test: {self.metrics_data.get('python_files', {}).get('test_files', 0)}</li>
-                        <li>• Total lignes: {self.metrics_data.get('python_files', {}).get('total_lines', 0):,}</li>
+                        <li>• Fichiers core: {self.metrics_data.get("python_files", {}).get("core_files", 0)}</li>
+                        <li>• Fichiers de test: {self.metrics_data.get("python_files", {}).get("test_files", 0)}</li>
+                        <li>• Total lignes: {self.metrics_data.get("python_files", {}).get("total_lines", 0):,}</li>
                     </ul>
                 </div>
                 <div>
                     <h3 class="text-lg font-semibold mb-2">🧪 Métriques de Tests</h3>
                     <ul class="space-y-2 text-gray-300">
-                        <li>• Fichiers de test: {self.metrics_data.get('test_metrics', {}).get('test_files_count', 0)}</li>
-                        <li>• Dossiers de test: {self.metrics_data.get('test_metrics', {}).get('test_directories_count', 0)}</li>
-                        <li>• Tests collectés: {self.metrics_data.get('test_metrics', {}).get('collected_tests_count', 0)}</li>
+                        <li>• Fichiers de test: {self.metrics_data.get("test_metrics", {}).get("test_files_count", 0)}</li>
+                        <li>• Dossiers de test: {self.metrics_data.get("test_metrics", {}).get("test_directories_count", 0)}</li>
+                        <li>• Tests collectés: {self.metrics_data.get("test_metrics", {}).get("collected_tests_count", 0)}</li>
                     </ul>
                 </div>
             </div>
         </div>
 
         <footer class="text-center mt-12 text-gray-400">
-            <p>Généré par <strong>Arkalia Metrics Collector</strong> v{collection_info.get('collector_version', '1.0.0')}</p>
+            <p>Généré par <strong>Arkalia Metrics Collector</strong> v{collection_info.get("collector_version", "1.0.0")}</p>
         </footer>
     </div>
 </body>

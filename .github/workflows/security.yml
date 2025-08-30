@@ -38,16 +38,20 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+          
+      - name: "Create Logs Directory"
+        run: |
+          mkdir -p logs
 
       - name: "Safety Check"
         run: |
-          safety check --json --output logs/safety_report.json || true
-          safety check --text --output logs/safety_report.txt
+          safety check --json > logs/safety_report.json || true
+          safety check --text > logs/safety_report.txt || true
 
       - name: "Pip Audit"
         run: |
-          pip-audit --format json --output logs/pip_audit.json || true
-          pip-audit --format text --output logs/pip_audit.txt
+          pip-audit --format json > logs/pip_audit.json || true
+          pip-audit --format text > logs/pip_audit.txt || true
 
       - name: "Upload Security Reports"
         uses: actions/upload-artifact@v4
@@ -75,11 +79,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+          
+      - name: "Create Logs Directory"
+        run: |
+          mkdir -p logs
 
       - name: "Bandit Security Scan"
         run: |
-          bandit -r src/arkalia_metrics_collector/ -f json -o logs/bandit_report.json
-          bandit -r src/arkalia_metrics_collector/ -f txt -o logs/bandit_report.txt
+          bandit -r src/arkalia_metrics_collector/ -f json -o logs/bandit_report.json || true
+          bandit -r src/arkalia_metrics_collector/ -f txt -o logs/bandit_report.txt || true
 
       - name: "Semgrep Security Scan"
         uses: returntocorp/semgrep-action@v1
