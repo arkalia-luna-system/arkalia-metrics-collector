@@ -103,7 +103,7 @@ class TestMetricsExporter:
 
         exporter.export_markdown_summary(str(output_file))
 
-        content = output_file.read_text()
+        content = output_file.read_text(encoding="utf-8")
 
         # Vérifier les valeurs
         assert "3" in content  # Nombre de fichiers Python
