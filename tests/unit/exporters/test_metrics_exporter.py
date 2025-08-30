@@ -1,13 +1,12 @@
 """
-Tests unitaires pour MetricsExporter.
 Tests professionnels avec fixtures et mocks.
 """
 
 import json
 import tempfile
-from pathlib import Path
 from unittest.mock import Mock, mock_open, patch
 
+from pathlib import Path
 import pytest
 
 from arkalia_metrics_collector.exporters.metrics_exporter import MetricsExporter
@@ -87,7 +86,7 @@ class TestMetricsExporter:
         assert output_file.exists()
 
         # Vérifier le contenu Markdown
-        content = output_file.read_text()
+        content = output_file.read_text(encoding="utf-8")
         assert (
             "Métriques du Projet" in content
         )  # Votre implémentation utilise ## 📊 **Métriques du Projet**
@@ -123,7 +122,7 @@ class TestMetricsExporter:
         assert output_file.exists()
 
         # Vérifier le contenu HTML
-        content = output_file.read_text()
+        content = output_file.read_text(encoding="utf-8")
         assert "<!DOCTYPE html>" in content
         assert "<title>Arkalia Metrics Dashboard</title>" in content  # Votre vrai titre
         assert "Arkalia Metrics Dashboard" in content  # Votre vrai h1
@@ -137,7 +136,7 @@ class TestMetricsExporter:
 
         exporter.export_html_dashboard(str(output_file))
 
-        content = output_file.read_text()
+        content = output_file.read_text(encoding="utf-8")
 
         # Vérifier le CSS (votre implémentation utilise Tailwind)
         assert "bg-gray-900" in content  # Votre classe Tailwind
@@ -155,11 +154,11 @@ class TestMetricsExporter:
         assert output_file.exists()
 
         # Vérifier le contenu CSV
-        content = output_file.read_text()
+        content = output_file.read_text(encoding="utf-8")
         lines = content.strip().split("\n")
 
         # Vérifier l'en-tête
-        assert "Métrique,Valeur" in lines[0]
+        assert "Métrique,Valeur,Unité" in lines[0]
 
         # Vérifier les données
         assert "Fichiers Python,3" in content
@@ -228,7 +227,7 @@ class TestMetricsExporter:
         assert result is True
 
         # Vérifier le contenu normal
-        content = output_file.read_text()
+        content = output_file.read_text(encoding="utf-8")
         assert "Métriques du Projet" in content
         assert "Fichiers Python" in content
 
