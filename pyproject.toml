@@ -1,5 +1,5 @@
 [build-system]
-requires = ["flit-core>=3.8.0"]
+requires = ["flit-core>=3.9.0"]
 build-backend = "flit_core.buildapi"
 
 [project]
@@ -68,6 +68,9 @@ Issues = "https://github.com/arkalia-luna-system/arkalia-metrics-collector/issue
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools]
+include-package-data = true
 
 # Configuration Black (formatage)
 [tool.black]
