@@ -17,20 +17,20 @@ class TestMetricsCollector:
     def test_init_with_valid_path(self, temp_project_dir: Path):
         """Test de l'initialisation avec un chemin valide."""
         collector = MetricsCollector(str(temp_project_dir))
-        # Sur macOS, les chemins peuvent avoir /private/var vs /var
-        assert str(collector.project_root).replace("/private", "") == str(
-            temp_project_dir
-        ).replace("/private", "")
+        # Normaliser les chemins pour la comparaison cross-platform
+        expected_path = Path(temp_project_dir).resolve()
+        actual_path = Path(collector.project_root).resolve()
+        assert actual_path == expected_path
         assert isinstance(collector.exclude_patterns, set)
         assert "__pycache__" in collector.exclude_patterns
 
     def test_init_with_string_path(self, temp_project_dir: Path):
         """Test de l'initialisation avec un chemin string."""
         collector = MetricsCollector(str(temp_project_dir))
-        # Sur macOS, les chemins peuvent avoir /private/var vs /var
-        assert str(collector.project_root).replace("/private", "") == str(
-            temp_project_dir
-        ).replace("/private", "")
+        # Normaliser les chemins pour la comparaison cross-platform
+        expected_path = Path(temp_project_dir).resolve()
+        actual_path = Path(collector.project_root).resolve()
+        assert actual_path == expected_path
 
     def test_exclude_patterns_default(self):
         """Test des patterns d'exclusion par défaut."""

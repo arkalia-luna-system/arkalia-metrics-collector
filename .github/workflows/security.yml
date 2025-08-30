@@ -57,7 +57,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dependency-security-reports
-          path: logs/safety_report.* logs/pip_audit.*
+          path: logs/
+          if-no-files-found: warn
 
   # ========================================
   # SCAN DE SÉCURITÉ DU CODE
@@ -101,7 +102,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: code-security-reports
-          path: logs/bandit_report.* logs/semgrep_report.*
+          path: logs/
+          if-no-files-found: warn
 
   # ========================================
   # ALERTES DE SÉCURITÉ

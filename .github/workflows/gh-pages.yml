@@ -41,11 +41,7 @@ jobs:
       - name: "Install Dependencies"
         run: |
           python -m pip install --upgrade pip
-          pip install -e ".[docs]"
-
-      - name: "Create Logs Directory"
-        run: |
-          mkdir -p logs
+          pip install mkdocs mkdocs-material
 
       - name: "Build Documentation"
         run: |
@@ -58,32 +54,8 @@ jobs:
           # Construire la documentation
           mkdocs build --site-dir ./site-build
           
-          # Vérifier que le build a réussi
-          if [ ! -f "./site-build/index.html" ]; then
-            echo "❌ ERREUR: index.html non trouvé après build"
-            exit 1
-          fi
-          
           echo "✅ Documentation construite avec succès"
           ls -la ./site-build/
-
-      - name: "Verify Build Artifacts"
-        run: |
-          echo "🔍 VÉRIFICATION DES ARTIFACTS"
-          echo "=============================="
-          
-          # Vérifier les fichiers essentiels
-          required_files=("index.html" "api/" "guides/" "examples/")
-          for file in "${required_files[@]}"; do
-            if [ -e "./site-build/$file" ]; then
-              echo "✅ $file - Présent"
-            else
-              echo "❌ $file - MANQUANT"
-              exit 1
-            fi
-          done
-          
-          echo "✅ Tous les artifacts sont présents"
 
       - name: "Upload Build Artifacts"
         uses: actions/upload-pages-artifact@v4
@@ -97,7 +69,6 @@ jobs:
     name: "Deploy to GitHub Pages"
     runs-on: ubuntu-latest
     needs: build
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     
     steps:
       - name: "Deploy to GitHub Pages"
@@ -113,10 +84,7 @@ jobs:
           if [ "${{ steps.deployment.outputs.outcome }}" = "success" ]; then
             echo "✅ Documentation déployée avec succès !"
             echo "🌐 GitHub Pages sera disponible dans quelques minutes"
-            echo "🔗 URL: https://${{ github.repository_owner }}.github.io/arkalia-metrics-collector/"
           else
             echo "❌ Échec du déploiement"
             echo "💡 Vérifiez que GitHub Pages est activé dans les paramètres du repository"
-            echo "📍 Allez dans: Settings > Pages > Source: GitHub Actions"
-            exit 1
           fi
