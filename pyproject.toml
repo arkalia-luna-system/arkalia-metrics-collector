@@ -1,20 +1,20 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["flit-core>=3.8.0"]
+build-backend = "flit_core.buildapi"
 
 [project]
 name = "arkalia-metrics-collector"
 version = "1.0.0"
 description = "Professional metrics collection and analysis for Python projects"
 readme = "README.md"
-license = {text = "MIT"}
+license = "MIT"
 authors = [
     {name = "Arkalia Luna System", email = "contact@arkalia-luna.com"}
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
+
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
