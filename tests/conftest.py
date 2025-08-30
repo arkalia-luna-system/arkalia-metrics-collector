@@ -1,5 +1,4 @@
 """
-Configuration et fixtures pour les tests Arkalia Metrics Collector.
 Configuration professionnelle récupérée d'Athalia Core.
 """
 

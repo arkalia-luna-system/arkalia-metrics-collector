@@ -27,8 +27,6 @@ env:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 jobs:
   # ========================================
@@ -244,7 +242,7 @@ jobs:
     needs: build
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
-    environment: production
+    # environment: production  # Temporairement désactivé
 
     steps:
       - name: "Checkout Code"
