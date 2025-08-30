@@ -1,0 +1,161 @@
+# Workflow de Sécurité Automatisée
+# Scans de vulnérabilités, dépendances, et audit de code
+
+name: Security_Scanning
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # Tous les lundis à 2h du matin
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+jobs:
+  # ========================================
+  # AUDIT DES DÉPENDANCES
+  # ========================================
+  dependency-audit:
+    name: "Audit des Dépendances"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout Code"
+        uses: actions/checkout@v5
+
+      - name: "Setup Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: "Install Dependencies"
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: "Safety Check"
+        run: |
+          safety check --json --output logs/safety_report.json || true
+          safety check --text --output logs/safety_report.txt
+
+      - name: "Pip Audit"
+        run: |
+          pip-audit --format json --output logs/pip_audit.json || true
+          pip-audit --format text --output logs/pip_audit.txt
+
+      - name: "Upload Security Reports"
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-security-reports
+          path: logs/safety_report.* logs/pip_audit.*
+
+  # ========================================
+  # SCAN DE SÉCURITÉ DU CODE
+  # ========================================
+  code-security:
+    name: "Sécurité du Code"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout Code"
+        uses: actions/checkout@v5
+
+      - name: "Setup Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: "Install Dependencies"
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: "Bandit Security Scan"
+        run: |
+          bandit -r src/arkalia_metrics_collector/ -f json -o logs/bandit_report.json
+          bandit -r src/arkalia_metrics_collector/ -f txt -o logs/bandit_report.txt
+
+      - name: "Semgrep Security Scan"
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: >-
+            p/security-audit
+            p/secrets
+            p/owasp-top-ten
+
+      - name: "Upload Code Security Reports"
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-security-reports
+          path: logs/bandit_report.* logs/semgrep_report.*
+
+  # ========================================
+  # ALERTES DE SÉCURITÉ
+  # ========================================
+  security-alerts:
+    name: "Alertes de Sécurité"
+    runs-on: ubuntu-latest
+    needs: [dependency-audit, code-security]
+
+    steps:
+      - name: "Download Security Reports"
+        uses: actions/download-artifact@v4
+        with:
+          name: dependency-security-reports
+          path: security-reports/deps
+
+      - name: "Download Code Security Reports"
+        uses: actions/download-artifact@v4
+        with:
+          name: code-security-reports
+          path: security-reports/code
+
+      - name: "Analyze Security Reports"
+        run: |
+          echo "ANALYSE DES RAPPORTS DE SÉCURITÉ"
+          echo "=================================="
+          
+          # Vérifier les rapports de dépendances
+          if [ -f "security-reports/deps/safety_report.txt" ]; then
+            echo "Rapport Safety:"
+            cat security-reports/deps/safety_report.txt
+          fi
+          
+          if [ -f "security-reports/deps/pip_audit.txt" ]; then
+            echo "Rapport Pip Audit:"
+            cat security-reports/deps/pip_audit.txt
+          fi
+          
+          # Vérifier les rapports de code
+          if [ -f "security-reports/code/bandit_report.txt" ]; then
+            echo "Rapport Bandit:"
+            cat security-reports/code/bandit_report.txt
+          fi
+
+      - name: "Create Security Summary"
+        run: |
+          echo "# Rapport de Sécurité - $(date)" > SECURITY_SUMMARY.md
+          echo "" >> SECURITY_SUMMARY.md
+          echo "## Dépendances" >> SECURITY_SUMMARY.md
+          if [ -f "security-reports/deps/safety_report.txt" ]; then
+            echo "### Safety Check" >> SECURITY_SUMMARY.md
+            cat security-reports/deps/safety_report.txt >> SECURITY_SUMMARY.md
+          fi
+          echo "" >> SECURITY_SUMMARY.md
+          echo "## Code" >> SECURITY_SUMMARY.md
+          if [ -f "security-reports/code/bandit_report.txt" ]; then
+            echo "### Bandit Scan" >> SECURITY_SUMMARY.md
+            cat security-reports/code/bandit_report.txt >> SECURITY_SUMMARY.md
+          fi
+
+      - name: "Upload Security Summary"
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-summary
+          path: SECURITY_SUMMARY.md

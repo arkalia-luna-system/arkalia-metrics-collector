@@ -1,0 +1,54 @@
+site_name: Arkalia Metrics Collector
+site_description: Outil professionnel de collecte de métriques Python
+site_author: Arkalia Luna System
+site_url: https://github.com/arkalia-luna-system/arkalia-metrics-collector
+
+theme:
+  name: material
+  language: fr
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.share
+
+nav:
+  - Accueil: index.md
+  - Guide d'installation: guides/installation.md
+  - Utilisation: guides/usage.md
+  - API:
+    - Collectors: api/collectors.md
+    - Exporters: api/exporters.md
+    - Validators: api/validators.md
+  - Exemples:
+    - Collecte basique: examples/basic_collection.md
+    - Export personnalisé: examples/custom_export.md
+    - Validation: examples/validation.md
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - meta
+  - pymdownx.arithmatex
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.tasklist
+  - pymdownx.tilde
+  - toc:
+      permalink: true
