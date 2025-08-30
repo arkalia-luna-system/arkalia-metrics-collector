@@ -11,7 +11,7 @@ Collecte des métriques fiables sur :
 """
 
 import json
-import subprocess
+import subprocess  # nosec B404
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -203,7 +203,7 @@ class MetricsCollector:
                 os.chdir(self.project_root)
 
                 # Utiliser pytest pour collecter les tests
-                result = subprocess.run(
+                result = subprocess.run(  # nosec B603
                     [sys.executable, "-m", "pytest", "--collect-only", "-q"],
                     capture_output=True,
                     text=True,
