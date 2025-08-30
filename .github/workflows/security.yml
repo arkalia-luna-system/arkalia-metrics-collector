@@ -87,8 +87,15 @@ jobs:
 
       - name: "Bandit Security Scan"
         run: |
-          bandit -r src/arkalia_metrics_collector/ -f json -o logs/bandit_report.json || true
-          bandit -r src/arkalia_metrics_collector/ -f txt -o logs/bandit_report.txt || true
+          # S'assurer que le dossier logs existe
+          mkdir -p logs
+          
+          # Exécuter bandit avec gestion d'erreur robuste
+          bandit -r src/arkalia_metrics_collector/ -f json -o logs/bandit_report.json || echo "Bandit JSON failed" > logs/bandit_report.json
+          bandit -r src/arkalia_metrics_collector/ -f txt -o logs/bandit_report.txt || echo "Bandit TXT failed" > logs/bandit_report.txt
+          
+          # Vérifier que les fichiers existent
+          ls -la logs/
 
       - name: "Semgrep Security Scan"
         uses: returntocorp/semgrep-action@v1
