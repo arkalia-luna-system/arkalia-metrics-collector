@@ -7,7 +7,7 @@ name = "arkalia-metrics-collector"
 version = "1.0.0"
 description = "Professional metrics collection and analysis for Python projects"
 readme = "README.md"
-license = "MIT"
+license = {text = "MIT"}
 authors = [
     {name = "Arkalia Luna System", email = "contact@arkalia-luna.com"}
 ]
