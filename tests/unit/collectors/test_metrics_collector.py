@@ -3,9 +3,9 @@ Tests unitaires pour MetricsCollector.
 Tests professionnels avec fixtures et mocks.
 """
 
+from pathlib import Path
 from unittest.mock import Mock, mock_open, patch
 
-from pathlib import Path
 import pytest
 
 from arkalia_metrics_collector.collectors.metrics_collector import MetricsCollector

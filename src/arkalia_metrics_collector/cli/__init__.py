@@ -8,5 +8,4 @@ le collecteur de métriques.
 
 from .main import cli
 
-
 __all__ = ["cli"]

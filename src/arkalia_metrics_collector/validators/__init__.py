@@ -8,5 +8,4 @@ des métriques collectées.
 
 from .metrics_validator import MetricsValidator
 
-
 __all__ = ["MetricsValidator"]
