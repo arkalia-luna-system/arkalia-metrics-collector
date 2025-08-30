@@ -1,7 +1,9 @@
 site_name: Arkalia Metrics Collector
 site_description: Outil professionnel de collecte de métriques Python
 site_author: Arkalia Luna System
-site_url: https://github.com/arkalia-luna-system/arkalia-metrics-collector
+site_url: https://arkalia-luna-system.github.io/arkalia-metrics-collector/
+repo_url: https://github.com/arkalia-luna-system/arkalia-metrics-collector
+edit_uri: edit/main/docs/
 
 theme:
   name: material
@@ -19,16 +21,23 @@ nav:
   - Guide d'installation: guides/installation.md
   - Utilisation: guides/usage.md
   - API:
-    - Collectors: api/collectors.md
-    - Exporters: api/exporters.md
-    - Validators: api/validators.md
+      - Collectors: api/collectors.md
+      - Exporters: api/exporters.md
+      - Validators: api/validators.md
   - Exemples:
-    - Collecte basique: examples/basic_collection.md
-    - Export personnalisé: examples/custom_export.md
-    - Validation: examples/validation.md
+      - Collecte basique: examples/basic_collection.md
+      - Export personnalisé: examples/custom_export.md
+      - Validation: examples/validation.md
 
 plugins:
   - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/arkalia-luna-system/arkalia-metrics-collector
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/arkalia-metrics-collector/
 
 markdown_extensions:
   - admonition

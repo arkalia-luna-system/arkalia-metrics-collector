@@ -52,15 +52,15 @@ jobs:
           mkdocs --version
           
           # Construire la documentation
-          mkdocs build --site-dir ./site-build
+          mkdocs build
           
           echo "✅ Documentation construite avec succès"
-          ls -la ./site-build/
+          ls -la ./site/
 
       - name: "Upload Build Artifacts"
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./site-build
+          path: ./site
 
   # ========================================
   # DÉPLOIEMENT GITHUB PAGES
@@ -80,11 +80,15 @@ jobs:
           echo "🚀 DÉPLOIEMENT GITHUB PAGES TERMINÉ"
           echo "===================================="
           echo "Status: ${{ steps.deployment.outputs.outcome }}"
+          echo "URL: ${{ steps.deployment.outputs.page_url }}"
           
           if [ "${{ steps.deployment.outputs.outcome }}" = "success" ]; then
             echo "✅ Documentation déployée avec succès !"
             echo "🌐 GitHub Pages sera disponible dans quelques minutes"
+            echo "🔗 URL: ${{ steps.deployment.outputs.page_url }}"
           else
             echo "❌ Échec du déploiement"
             echo "💡 Vérifiez que GitHub Pages est activé dans les paramètres du repository"
+            echo "📋 Vérifiez les permissions du workflow"
+            echo "🔧 Vérifiez la configuration MkDocs"
           fi
