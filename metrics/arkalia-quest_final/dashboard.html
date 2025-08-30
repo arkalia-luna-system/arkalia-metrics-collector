@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arkalia Metrics Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+                🚀 Arkalia Metrics Dashboard
+            </h1>
+            <p class="text-xl text-gray-300">
+                Métriques collectées le 2025-08-30T14:51:02.918949
+            </p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <!-- Fichiers Python -->
+            <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-6 rounded-xl shadow-lg">
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">120</div>
+                    <div class="text-blue-200">Fichiers Python</div>
+                </div>
+            </div>
+
+            <!-- Lignes de Code -->
+            <div class="bg-gradient-to-br from-green-600 to-green-800 p-6 rounded-xl shadow-lg">
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">28,862</div>
+                    <div class="text-green-200">Lignes de Code</div>
+                </div>
+            </div>
+
+            <!-- Tests -->
+            <div class="bg-gradient-to-br from-purple-600 to-purple-800 p-6 rounded-xl shadow-lg">
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">144</div>
+                    <div class="text-purple-200">Tests</div>
+                </div>
+            </div>
+
+            <!-- Documentation -->
+            <div class="bg-gradient-to-br from-orange-600 to-orange-800 p-6 rounded-xl shadow-lg">
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">253</div>
+                    <div class="text-orange-200">Documentation</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 rounded-xl p-6">
+            <h2 class="text-2xl font-bold mb-4">📈 Détails des Métriques</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold mb-2">🐍 Métriques Python</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li>• Fichiers core: 86</li>
+                        <li>• Fichiers de test: 34</li>
+                        <li>• Total lignes: 28,862</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-2">🧪 Métriques de Tests</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li>• Fichiers de test: 34</li>
+                        <li>• Dossiers de test: 6</li>
+                        <li>• Tests collectés: 144</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer class="text-center mt-12 text-gray-400">
+            <p>Généré par <strong>Arkalia Metrics Collector</strong> v1.0.0</p>
+        </footer>
+    </div>
+</body>
+</html>

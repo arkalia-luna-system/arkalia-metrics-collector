@@ -1,0 +1,103 @@
+{
+  "timestamp": "2025-08-30T14:43:53.809553",
+  "project_root": "/Volumes/T7/bbia-reachy-sim",
+  "collection_info": {
+    "collector_version": "1.0.0",
+    "python_version": "3.10.14",
+    "collection_date": "2025-08-30T14:43:52.204310"
+  },
+  "python_files": {
+    "count": 19,
+    "core_files": 8,
+    "test_files": 11,
+    "total_lines": 2943,
+    "files_list": [
+      "src/bbia_sim/bbia_awake.py",
+      "src/bbia_sim/__init__.py",
+      "src/bbia_sim/bbia_behavior.py",
+      "src/bbia_sim/unity_reachy_controller.py",
+      "src/bbia_sim/bbia_vision.py",
+      "src/bbia_sim/bbia_emotions.py",
+      "src/bbia_sim/bbia_audio.py",
+      "src/bbia_sim/bbia_voice.py",
+      "tests/reachy_test_sim.py",
+      "tests/test_bbia_reachy.py",
+      "tests/reachy_websim_test.py",
+      "tests/demo_bbia_complete.py",
+      "tests/reachy_local_test.py",
+      "tests/test_visual_consistency.py",
+      "tests/test_vision_advanced.py",
+      "tests/test_bbia_awake.py",
+      "tests/test_bbia_audio.py",
+      "tests/test_bbia_behavior.py",
+      "tests/test_bbia_voice.py"
+    ]
+  },
+  "test_metrics": {
+    "test_files_count": 11,
+    "test_directories_count": 1,
+    "collected_tests_count": 0,
+    "test_files_list": [
+      "tests/reachy_test_sim.py",
+      "tests/test_bbia_reachy.py",
+      "tests/reachy_websim_test.py",
+      "tests/demo_bbia_complete.py",
+      "tests/reachy_local_test.py",
+      "tests/test_visual_consistency.py",
+      "tests/test_vision_advanced.py",
+      "tests/test_bbia_awake.py",
+      "tests/test_bbia_audio.py",
+      "tests/test_bbia_behavior.py",
+      "tests/test_bbia_voice.py"
+    ]
+  },
+  "documentation_metrics": {
+    "documentation_files": 38,
+    "documentation_list": [
+      "README.md",
+      "requirements.txt",
+      "CONTRIBUTING.md",
+      "CODE_OF_CONDUCT.md",
+      "src/bbia_sim/reachy_commands.txt",
+      "src/bbia_sim/reachy_response.txt",
+      "tests/README.md",
+      "reachy_repos/reachy2-sdk-audio-server-rs/README.md",
+      "assets/README.md",
+      "assets/images/REACHY_MINI_REFERENCE.md",
+      "bbia-sim/README.md",
+      "docs/README.md",
+      "docs/guides/📚_DOCUMENTATION_COMPLETE_BBIA.md",
+      "docs/guides/📋_INDEX_DOCUMENTATION.md",
+      "docs/guides/📋_ETAT_ACTUEL_FINAL.md",
+      "docs/guides/📋_RESUME_DOCUMENTATION_COMPLETE.md",
+      "docs/guides/🚀_DEMARRAGE_RAPIDE_MIS_A_JOUR.md",
+      "docs/guides/🎯_PHASE_1_TERMINEE_PHASE_2_PRET.md",
+      "docs/guides/REACHY_MINI_WIRELESS_COMPLETE_GUIDE.md",
+      "docs/guides/PROJET_COMPLET.md",
+      "docs/guides/NETTOYAGE_FINAL.md",
+      "docs/guides/🎯_PHASE_CORRECTION_SIMULATIONS.md",
+      "docs/semaines/📋_SEMAINE_2_VISION_EMOTIONS.md",
+      "docs/simulations/🎮_SIMULATIONS_DISPONIBLES.md",
+      "docs/simulations/SIMULATION_BBIA_COMPLETE.md",
+      "docs/installation/🎯_DEMARRAGE_RAPIDE_DEPOTS.md",
+      "docs/installation/🎯_ACTION_IMMEDIATE.md",
+      "docs/installation/🎯_DEMARRAGE_RAPIDE.md",
+      "docs/rapports/📋_BILAN_PHASE_2_DEMARRAGE.md",
+      "docs/rapports/📋_ARRET_UNITY_DOCUMENTATION.md",
+      "docs/rapports/📋_REORGANISATION_FINALE.md",
+      "docs/unity/UNITY_BBIA_GUIDE.md",
+      "docs/unity/UNITY_TROUBLESHOOTING.md",
+      "docs/unity/UNITY_WARNINGS_FIXED.md",
+      "docs/depots/DEPOTS_GITHUB_BBIA_COMPLETE.md",
+      "docs/depots/📋_RESUME_COMPLET_FINAL.md",
+      "docs/depots/RESUME_FINAL_DEPOTS_BBIA.md",
+      "scripts/README.md"
+    ]
+  },
+  "summary": {
+    "total_python_files": 19,
+    "lines_of_code": 2943,
+    "collected_tests": 0,
+    "documentation_files": 38
+  }
+}

@@ -1,0 +1,122 @@
+# Configuration par défaut pour Arkalia Metrics Collector
+# Ce fichier définit les paramètres de base pour la collecte de métriques
+
+project:
+  # Configuration générale du projet
+  name: "Projet Python"
+  type: "application"
+  description: "Projet Python analysé par Arkalia Metrics Collector"
+
+# Patterns d'exclusion pour les fichiers et dossiers à ignorer
+exclusions:
+  # Environnements virtuels
+  - "**/venv/**"
+  - "**/.venv/**"
+  - "**/env/**"
+  - "**/.env/**"
+
+  # Cache et fichiers temporaires
+  - "**/__pycache__/**"
+  - "**/.pytest_cache/**"
+  - "**/.mypy_cache/**"
+  - "**/.cache/**"
+  - "**/htmlcov/**"
+  - "**/.coverage"
+
+  # Dépendances et build
+  - "**/node_modules/**"
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/*.egg-info/**"
+  - "**/.tox/**"
+
+  # Contrôle de version
+  - "**/.git/**"
+  - "**/.github/**"
+
+  # Système
+  - "**/.DS_Store"
+  - "**/._*"
+  - "**/Thumbs.db"
+
+  # Archives et sauvegardes
+  - "**/archive/**"
+  - "**/backup/**"
+  - "**/*.bak"
+  - "**/*.tmp"
+
+# Types de métriques à collecter
+metrics:
+  # Métriques de code
+  code:
+    - lines_of_code
+    - file_count
+    - function_count
+    - class_count
+    - complexity_analysis
+
+  # Métriques de tests
+  tests:
+    - test_file_count
+    - test_count
+    - coverage_analysis
+    - test_quality
+
+  # Métriques de documentation
+  documentation:
+    - doc_file_count
+    - doc_quality
+    - readme_analysis
+
+  # Métriques de qualité
+  quality:
+    - linting_score
+    - security_scan
+    - dependency_analysis
+
+# Configuration des exports
+export:
+  # Formats d'export par défaut
+  formats:
+    - json
+    - markdown
+    - html
+    - csv
+
+  # Dossier de sortie par défaut
+  output_dir: "metrics"
+
+  # Templates personnalisés (optionnel)
+  templates:
+    readme: "templates/readme_metrics.md"
+    dashboard: "templates/dashboard.html"
+
+# Configuration de validation
+validation:
+  # Seuils de qualité
+  thresholds:
+    min_test_coverage: 70
+    max_complexity: 10
+    min_documentation_files: 1
+
+  # Règles de validation strictes
+  strict_mode: false
+
+  # Avertissements à ignorer
+  ignore_warnings:
+    - "no_documentation"
+    - "low_test_coverage"
+
+# Configuration des rapports
+reports:
+  # Génération automatique
+  auto_generate: true
+
+  # Inclure les graphiques
+  include_charts: true
+
+  # Format de date
+  date_format: "%Y-%m-%d %H:%M:%S"
+
+  # Langue des rapports
+  language: "fr"

@@ -1,0 +1,127 @@
+# Configuration spécifique pour ATHALIA Core
+# Projet: Framework IA Enterprise
+
+project:
+  name: "Athalia Core"
+  type: "framework"
+  description: "Framework IA Enterprise de niveau expert avec architecture modulaire avancée"
+
+# Exclusions spécifiques à ATHALIA
+exclusions:
+  # Environnements virtuels
+  - "**/venv/**"
+  - "**/.venv/**"
+  - "**/env/**"
+
+  # Cache et fichiers temporaires
+  - "**/__pycache__/**"
+  - "**/.pytest_cache/**"
+  - "**/.mypy_cache/**"
+  - "**/.cache/**"
+  - "**/htmlcov/**"
+  - "**/.coverage"
+
+  # Dépendances et build
+  - "**/node_modules/**"
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/*.egg-info/**"
+  - "**/.tox/**"
+
+  # Contrôle de version
+  - "**/.git/**"
+  - "**/.github/**"
+
+  # Système
+  - "**/.DS_Store"
+  - "**/._*"
+
+  # Archives et sauvegardes
+  - "**/archive/**"
+  - "**/backup/**"
+  - "**/*.bak"
+  - "**/*.tmp"
+
+  # Dossiers spécifiques ATHALIA
+  - "**/site/**" # Site généré
+  - "**/logs/**" # Logs système
+  - "**/data/archive/**" # Archives de données
+  - "**/blueprints_history/**" # Historique des blueprints
+
+# Métriques spécifiques à ATHALIA
+metrics:
+  # Métriques de code avancées
+  code:
+    - lines_of_code
+    - file_count
+    - function_count
+    - class_count
+    - module_count
+    - architecture_analysis
+
+  # Métriques de tests complets
+  tests:
+    - test_file_count
+    - test_count
+    - test_coverage
+    - test_quality
+    - integration_tests
+    - performance_tests
+
+  # Métriques de documentation enterprise
+  documentation:
+    - doc_file_count
+    - doc_quality
+    - readme_analysis
+    - api_documentation
+    - architecture_docs
+
+  # Métriques de qualité enterprise
+  quality:
+    - linting_score
+    - security_scan
+    - dependency_analysis
+    - performance_metrics
+    - scalability_analysis
+
+# Configuration des exports ATHALIA
+export:
+  formats:
+    - json
+    - markdown
+    - html
+    - csv
+
+  output_dir: "data/metrics"
+
+  # Templates personnalisés ATHALIA
+  templates:
+    readme: "templates/athalia_readme.md"
+    dashboard: "templates/athalia_dashboard.html"
+
+# Validation spécifique ATHALIA
+validation:
+  thresholds:
+    min_test_coverage: 80 # ATHALIA doit avoir une couverture élevée
+    max_complexity: 8 # Complexité modérée pour la maintenabilité
+    min_documentation_files: 5 # Documentation enterprise requise
+
+  strict_mode: true # ATHALIA est un projet critique
+
+  # Avertissements spécifiques ATHALIA
+  ignore_warnings:
+    - "archive_files" # Les archives sont normales pour ATHALIA
+
+# Rapports ATHALIA
+reports:
+  auto_generate: true
+  include_charts: true
+  date_format: "%Y-%m-%d %H:%M:%S"
+  language: "fr"
+
+  # Métriques spécifiques ATHALIA
+  custom_metrics:
+    - module_complexity
+    - integration_points
+    - performance_benchmarks
+    - security_score
