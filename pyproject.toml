@@ -88,6 +88,7 @@ addopts = [
     "--import-mode=importlib",
     "--maxfail=10",
     "--durations=10",
+    "--no-cov-on-fail",
 ]
 markers = [
     "fast: marks tests as fast (deselect with '-m \"not fast\"')",

@@ -6,10 +6,11 @@ Interface CLI principale pour utiliser le collecteur de métriques.
 """
 
 import sys
-from pathlib import Path
 from typing import Optional
 
 import click
+from pathlib import Path
+
 
 # Ajouter le chemin du projet pour les imports
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent

@@ -11,11 +11,12 @@ Collecte des métriques fiables sur :
 """
 
 import json
-import subprocess
 import sys
+from typing import Any, Optional
+
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+import subprocess
 
 
 class MetricsCollector:
