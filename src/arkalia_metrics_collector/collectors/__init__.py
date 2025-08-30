@@ -8,5 +8,4 @@ des différentes métriques de vos projets Python.
 
 from .metrics_collector import MetricsCollector
 
-
 __all__ = ["MetricsCollector"]

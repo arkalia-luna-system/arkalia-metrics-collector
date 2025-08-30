@@ -165,8 +165,8 @@ jobs:
       - name: "MyPy Type Check"
         run: mypy src/arkalia_metrics_collector/
 
-      - name: "Import Sorting Check"
-        run: isort --check-only --diff .
+      - name: "Import Sorting Check (Ruff)"
+        run: ruff check --select I001 .
 
   # ========================================
   # SÉCURITÉ

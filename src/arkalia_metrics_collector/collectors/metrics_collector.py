@@ -11,12 +11,11 @@ Collecte des métriques fiables sur :
 """
 
 import json
+import subprocess  # nosec B404
 import sys
-from typing import Any, Optional
-
 from datetime import datetime
 from pathlib import Path
-import subprocess  # nosec B404
+from typing import Any, Optional
 
 
 class MetricsCollector:
