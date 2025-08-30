@@ -10,12 +10,11 @@ Collecte des métriques fiables sur :
 - Sécurité et qualité
 """
 
-import json
 import subprocess  # nosec B404
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 
 class MetricsCollector:

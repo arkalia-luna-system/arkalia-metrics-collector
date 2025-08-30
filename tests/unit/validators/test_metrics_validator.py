@@ -2,9 +2,6 @@
 Tests professionnels avec fixtures et mocks.
 """
 
-from pathlib import Path
-from unittest.mock import Mock, patch
-
 import pytest
 
 from arkalia_metrics_collector.validators.metrics_validator import MetricsValidator

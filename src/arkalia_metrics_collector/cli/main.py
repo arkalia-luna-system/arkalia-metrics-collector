@@ -7,7 +7,6 @@ Interface CLI principale pour utiliser le collecteur de métriques.
 
 import sys
 from pathlib import Path
-from typing import Optional
 
 import click
 
