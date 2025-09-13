@@ -137,19 +137,87 @@ metrics:
 - [Arkalia Quest](https://github.com/arkalia-luna-system/arkalia-quest) - Jeu éducatif IA
 - [BBIA Simulation](https://github.com/arkalia-luna-system/bbia-sim) - Simulation robotique
 
+## 🎯 Pourquoi Choisir Arkalia Metrics Collector ?
+
+### vs Autres Outils de Métriques
+
+| Feature | Arkalia Metrics | pytest-cov | radon | bandit | Autres |
+|---------|-----------------|------------|-------|--------|--------|
+| **Installation simple** | ✅ `pip install` | ✅ | ✅ | ✅ | ⚠️ Configuration complexe |
+| **Multi-format export** | ✅ JSON/HTML/MD/CSV | ❌ HTML uniquement | ❌ Texte | ❌ JSON | ⚠️ Format propriétaire |
+| **Dashboard intégré** | ✅ Responsive | ❌ | ❌ | ❌ | 💰 Payant |
+| **Exclusions intelligentes** | ✅ Auto venv/cache | ⚠️ Manuel | ⚠️ Manuel | ⚠️ Manuel | ❌ |
+| **CLI unifiée** | ✅ Une commande | ❌ Multiples outils | ❌ | ❌ | ❌ |
+| **CI/CD ready** | ✅ GitHub Actions | ⚠️ Configuration | ❌ | ⚠️ | ⚠️ |
+
+### 🎯 Avantages Clés
+
+- **🚀 Rapidité** : Métriques complètes en < 30 secondes
+- **🔧 Modularité** : Collectors/Exporters/Validators séparés
+- **🛡️ Sécurité** : Aucun code source collecté
+- **📱 Responsive** : Dashboard mobile-friendly
+- **🔄 Évolutif** : Architecture plugin-ready
+
+## ⚠️ Limitations & Scope
+
+### ❌ **Pas (encore) supporté**
+
+- **Langages** : JavaScript, TypeScript, Go, Rust
+- **Notebooks** : Jupyter .ipynb (prévu v1.2)
+- **Métriques avancées** : Complexité cyclomatique détaillée
+- **Base de données** : Stockage persistant des métriques
+- **API REST** : Endpoints temps réel (prévu v1.1)
+
+### 🎯 **Scope volontaire**
+
+- **Focus Python** : Spécialisé pour l'écosystème Python
+- **Métriques statiques** : Pas d'analyse runtime
+- **Local-first** : Pas de télémétrie ou cloud obligatoire
+- **Sans dépendances lourdes** : Reste léger et rapide
+
+### 🔮 **Roadmap**
+
+| Version | Features Prévues | Timeline |
+|---------|------------------|----------|
+| **v1.1** | API REST + JavaScript support | Q1 2025 |
+| **v1.2** | Jupyter notebooks + Go support | Q2 2025 |
+| **v1.3** | Plugins système + Rust support | Q3 2025 |
+
 ## 🤝 Contributing
 
-Les contributions sont les bienvenues ! 
+**Nous recherchons activement des contributeurs !** 🎯
 
-1. Fork le projet
-2. Créez une branche feature (`git checkout -b feature/AmazingFeature`)
-3. Committez vos changements (`git commit -m 'Add some AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrez une Pull Request
+### 🟢 **Issues "Help Wanted"**
+- 📚 Amélioration documentation
+- 🧪 Tests sur nouveaux projets Python
+- 🎨 Templates de configuration
+- 🌍 Traductions (anglais, espagnol)
+
+### 🚀 **Features Recherchées**
+- Support JavaScript/TypeScript
+- Métriques de complexité avancées
+- Intégration SonarQube/CodeClimate
+- Dashboard temps réel
+
+### 📋 **Guide Complet**
+Voir [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) pour :
+- Setup développement
+- Standards de code
+- Process de review
+- Types de contributions
+
+**Contribution rapide :** Testez sur votre projet et signalez les améliorations !
 
 ## 📄 License
 
 MIT License - voir [LICENSE](LICENSE) pour plus de détails
+
+## 📚 Documentation
+
+- 📖 **[Guide Complet](docs/)** - Installation, usage, exemples
+- ❓ **[FAQ](docs/FAQ.md)** - Questions fréquentes
+- 🔒 **[Sécurité](docs/SECURITY.md)** - Politique de sécurité
+- 🤝 **[Contribution](docs/CONTRIBUTING.md)** - Guide contributeur
 
 ## 👨‍💻 Auteur
 
