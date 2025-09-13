@@ -1,0 +1,86 @@
+# Configuration pour bibliothèques Python (packages PyPI)
+# ========================================================
+
+project:
+  name: "Ma Bibliothèque Python"
+  type: "library"
+  description: "Package Python réutilisable"
+
+  # Métadonnées du package
+  package:
+    version: "1.0.0"
+    author: "Mon Nom"
+    license: "MIT"
+    python_requires: ">=3.8"
+
+# Exclusions pour bibliothèques
+exclusions:
+  # Standard
+  - "**/venv/**"
+  - "**/.venv/**"
+  - "**/__pycache__/**"
+  - "**/.pytest_cache/**"
+  - "**/htmlcov/**"
+
+  # Build et distribution
+  - "**/build/**"
+  - "**/dist/**"
+  - "**/*.egg-info/**"
+  - "**/.eggs/**"
+
+  # Documentation générée
+  - "**/docs/_build/**"
+  - "**/site/**"
+
+  # Outils de développement
+  - "**/.tox/**"
+  - "**/.nox/**"
+  - "**/.coverage"
+  - "**/coverage.xml"
+
+  # Configuration CI
+  - "**/.github/**"
+  - "**/.travis.yml"
+  - "**/appveyor.yml"
+
+# Configuration orientée qualité pour packages
+metrics:
+  include_tests: true
+  include_documentation: true
+  deep_analysis: true
+
+  # Spécifique aux bibliothèques
+  library_specific:
+    # Analyser l'API publique
+    analyze_public_api: true
+    # Vérifier la documentation des fonctions
+    check_docstrings: true
+    # Analyser les exemples
+    analyze_examples: true
+    # Compter les dépendances
+    count_dependencies: true
+
+# Export orienté package
+export:
+  formats:
+    - json
+    - markdown
+    - html
+
+  output_directory: "package_metrics"
+
+  # Sections pour bibliothèques
+  sections:
+    - package_overview
+    - api_documentation
+    - test_coverage
+    - quality_metrics
+    - usage_examples
+    - dependencies_analysis
+
+# Seuils de qualité recommandés
+quality_thresholds:
+  test_coverage: 80 # % minimum de couverture
+  documentation: 90 # % de fonctions documentées
+  complexity: 10 # Complexité cyclomatique max
+  line_length: 88 # Longueur de ligne max

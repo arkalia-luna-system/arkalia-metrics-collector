@@ -1,0 +1,75 @@
+# Configuration spécialisée pour projets Django
+# =============================================
+
+project:
+  name: "Mon Projet Django"
+  type: "web_application"
+  description: "Application web Django avec API REST"
+  framework: "django"
+
+# Exclusions spécifiques Django
+exclusions:
+  # Exclusions standard
+  - "**/venv/**"
+  - "**/.venv/**"
+  - "**/__pycache__/**"
+  - "**/.pytest_cache/**"
+  - "**/htmlcov/**"
+  - "**/node_modules/**"
+
+  # Spécifiques Django
+  - "**/migrations/**" # Migrations auto-générées
+  - "**/static/admin/**" # Admin Django
+  - "**/static/vendor/**" # Librairies tierces
+  - "**/media/**" # Fichiers uploadés
+  - "**/locale/**" # Traductions compilées
+  - "**/staticfiles/**" # Fichiers statiques collectés
+
+  # Base de données
+  - "**/*.sqlite3"
+  - "**/db.sqlite3"
+  - "**/dump.sql"
+
+  # Logs et cache
+  - "**/logs/**"
+  - "**/cache/**"
+  - "**/*.log"
+
+  # Configuration sensible
+  - "**/.env"
+  - "**/secrets.py"
+  - "**/local_settings.py"
+
+# Configuration adaptée Django
+metrics:
+  include_tests: true
+  include_documentation: true
+  deep_analysis: true
+
+  # Spécifique Django
+  django_specific:
+    # Analyser les modèles
+    analyze_models: true
+    # Analyser les vues
+    analyze_views: true
+    # Analyser les templates
+    analyze_templates: false
+    # Compter les endpoints API
+    count_api_endpoints: true
+
+# Export avec structure Django
+export:
+  formats:
+    - json
+    - markdown
+    - html
+
+  output_directory: "metrics"
+
+  # Sections spécialisées pour Django
+  sections:
+    - project_overview
+    - models_analysis
+    - views_analysis
+    - tests_summary
+    - api_documentation
