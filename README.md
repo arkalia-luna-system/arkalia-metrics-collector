@@ -7,6 +7,21 @@
 
 **Collecteur de métriques universel et professionnel pour projets Python**
 
+## 📊 **Métriques du Projet** *(Mises à jour automatiquement)*
+
+<div align="center">
+
+| **Composant** | **Valeur** | **Statut** | **Vérifié** |
+|:-------------:|:---------:|:----------:|:------------:|
+| **🐍 Fichiers Python** | `14 modules` | ![Actif](https://img.shields.io/badge/status-active-brightgreen) | ✅ **COMPTÉS** |
+| **📝 Lignes de Code** | `2,368 lignes` | ![Maintenu](https://img.shields.io/badge/status-maintained-blue) | ✅ **MESURÉES** |
+| **🧪 Tests** | `62 tests` | ![Testé](https://img.shields.io/badge/status-tested-green) | ✅ **COLLECTÉS** |
+| **📚 Documentation** | `193 fichiers` | ![Complet](https://img.shields.io/badge/status-complete-yellow) | ✅ **ORGANISÉS** |
+
+</div>
+
+*Métriques collectées automatiquement le 2025-08-31 13:00 par le Collecteur de Métriques Arkalia*
+
 ## ✨ Features
 
 - 🚀 **Exclusion automatique** des venv, cache, dépendances
