@@ -18,8 +18,10 @@ theme:
 
 nav:
   - Accueil: index.md
-  - Guide d'installation: guides/installation.md
-  - Utilisation: guides/usage.md
+  - Démarrage:
+      - Installation: guides/installation.md
+      - Utilisation: guides/usage.md
+      - FAQ: FAQ.md
   - API:
       - Collectors: api/collectors.md
       - Exporters: api/exporters.md
@@ -28,6 +30,9 @@ nav:
       - Collecte basique: examples/basic_collection.md
       - Export personnalisé: examples/custom_export.md
       - Validation: examples/validation.md
+  - Développement:
+      - Contribution: CONTRIBUTING.md
+      - Sécurité: SECURITY.md
 
 plugins:
   - search

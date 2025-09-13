@@ -1,0 +1,71 @@
+# Configuration basique pour Arkalia Metrics Collector
+# ===================================================
+
+project:
+  name: "Mon Projet Python"
+  type: "application" # application, library, script, web_app
+  description: "Description de mon projet"
+
+# Exclusions - Dossiers et fichiers à ignorer
+exclusions:
+  # Environnements virtuels
+  - "**/venv/**"
+  - "**/.venv/**"
+  - "**/env/**"
+  - "**/.env/**"
+
+  # Cache Python
+  - "**/__pycache__/**"
+  - "**/*.pyc"
+  - "**/*.pyo"
+  - "**/*.pyd"
+
+  # Cache de tests
+  - "**/.pytest_cache/**"
+  - "**/.coverage"
+  - "**/htmlcov/**"
+
+  # Dépendances
+  - "**/node_modules/**"
+  - "**/vendor/**"
+  - "**/libs/**"
+
+  # Build et distribution
+  - "**/build/**"
+  - "**/dist/**"
+  - "**/*.egg-info/**"
+
+  # IDE et éditeurs
+  - "**/.vscode/**"
+  - "**/.idea/**"
+  - "**/*.sublime-*"
+
+  # Système
+  - "**/.DS_Store"
+  - "**/Thumbs.db"
+
+# Options de collecte
+metrics:
+  # Inclure les tests dans l'analyse
+  include_tests: true
+
+  # Inclure la documentation
+  include_documentation: true
+
+  # Analyse approfondie (plus lent mais plus détaillé)
+  deep_analysis: false
+
+# Configuration d'export (optionnel)
+export:
+  # Formats à générer automatiquement
+  formats:
+    - json
+    - markdown
+    - html
+    - csv
+
+  # Dossier de sortie
+  output_directory: "metrics"
+
+  # Template HTML personnalisé (optionnel)
+  # html_template: "templates/custom_dashboard.html"
