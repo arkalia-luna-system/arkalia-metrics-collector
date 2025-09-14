@@ -1,6 +1,6 @@
 # 🚀 Arkalia Metrics Collector
 
-**Outil professionnel de collecte de métriques Python**
+**Outil professionnel de collecte de métriques Python avec tests complets**
 
 ## 📚 Documentation
 
@@ -15,11 +15,13 @@
 - 🏗️ **[API Collectors](api/collectors.md)** - Documentation des collecteurs
 - 📊 **[API Exporters](api/exporters.md)** - Documentation des exporteurs
 - ✅ **[API Validators](api/validators.md)** - Documentation des validateurs
+- 🧪 **[Tests](guides/testing.md)** - Guide des tests et validation
 
 ### 💡 **Exemples**
 - 🎯 **[Collecte Basique](examples/basic_collection.md)** - Premier pas
 - 🎨 **[Export Personnalisé](examples/custom_export.md)** - Formats avancés
 - ✅ **[Validation](examples/validation.md)** - Validation des métriques
+- 🌐 **[Projets Externes](examples/external_projects.md)** - Tests sur projets réels
 
 ---
 

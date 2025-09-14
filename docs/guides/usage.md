@@ -1,5 +1,7 @@
 # 📖 Utilisation
 
+**Guide complet d'utilisation d'Arkalia Metrics Collector**
+
 ## 🚀 Premiers pas
 
 ### Collecte basique
@@ -186,6 +188,59 @@ arkalia-metrics serve ./mon-projet --port 9000
     "documentation_files": 3
   }
 }
+```
+
+## 🌐 Tests sur Projets Externes
+
+### Collecte sur Projets Réels
+```bash
+# Analyser un projet externe
+arkalia-metrics collect /path/to/external-project --validate
+
+# Générer tous les formats
+arkalia-metrics collect /path/to/external-project --format all --output reports/
+
+# Mode verbeux pour debug
+arkalia-metrics collect /path/to/external-project --verbose
+```
+
+### Validation des Métriques
+```bash
+# Validation complète
+arkalia-metrics validate /path/to/project
+
+# Validation avec rapport détaillé
+arkalia-metrics validate /path/to/project --verbose
+```
+
+### Serveur de Visualisation
+```bash
+# Lancer le serveur de dashboard
+arkalia-metrics serve /path/to/project --port 8080
+
+# Ouvrir http://localhost:8080 dans le navigateur
+```
+
+## 🧪 Tests et Validation
+
+### Tests Automatisés
+```bash
+# Exécuter tous les tests
+pytest tests/ -v
+
+# Tests spécifiques
+pytest tests/integration/test_external_projects.py -v
+pytest tests/performance/test_performance_metrics.py -v
+pytest tests/unit/cli/test_cli_main.py -v
+```
+
+### Validation de Qualité
+```bash
+# Vérification complète
+ruff check .
+black --check .
+mypy src/
+bandit -r src/
 ```
 
 ## 🎯 Cas d'usage avancés

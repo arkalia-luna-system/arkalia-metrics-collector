@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-**Collecteur de métriques universel et professionnel pour projets Python**
+**Collecteur de métriques universel et professionnel pour projets Python avec tests complets**
 
 ## 📊 **Métriques du Projet** *(Mises à jour automatiquement)*
 
@@ -15,7 +15,7 @@
 |:-------------:|:---------:|:----------:|:------------:|
 | **🐍 Fichiers Python** | `14 modules` | ![Actif](https://img.shields.io/badge/status-active-brightgreen) | ✅ **COMPTÉS** |
 | **📝 Lignes de Code** | `2,368 lignes` | ![Maintenu](https://img.shields.io/badge/status-maintained-blue) | ✅ **MESURÉES** |
-| **🧪 Tests** | `62 tests` | ![Testé](https://img.shields.io/badge/status-tested-green) | ✅ **COLLECTÉS** |
+| **🧪 Tests** | `113 tests` | ![Testé](https://img.shields.io/badge/status-tested-green) | ✅ **COLLECTÉS** |
 | **📚 Documentation** | `193 fichiers` | ![Complet](https://img.shields.io/badge/status-complete-yellow) | ✅ **ORGANISÉS** |
 
 </div>
@@ -31,6 +31,8 @@
 - 🌐 **Dashboard web** interactif et responsive
 - 🔗 **Intégration GitHub** automatique
 - 📈 **Évolution temporelle** des métriques
+- 🧪 **Tests complets** : 113 tests unitaires, intégration et performance
+- 🌐 **Tests sur projets externes** avec validation automatique
 
 ## 🚀 Installation
 
