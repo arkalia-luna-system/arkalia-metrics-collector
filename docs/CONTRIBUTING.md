@@ -21,6 +21,8 @@ Merci de votre intérêt pour **Arkalia Metrics Collector** ! Toutes les contrib
 - Tests avec des projets de grande taille (>10k fichiers)
 - Benchmarks de performance
 - Tests d'intégration avec CI/CD
+- Tests sur projets externes réels
+- Validation des outputs en production
 
 ## 🛠️ Comment Contribuer
 
@@ -58,6 +60,11 @@ bandit -r src/            # Sécurité
 # Lancer les tests
 pytest tests/ -v --cov=arkalia_metrics_collector
 
+# Tests spécifiques
+pytest tests/unit/ -v                    # Tests unitaires
+pytest tests/integration/ -v             # Tests d'intégration
+pytest tests/performance/ -v             # Tests de performance
+
 # Committer vos changements
 git add .
 git commit -m "✨ Ajout de ma super feature"
@@ -72,7 +79,7 @@ git push origin feature/ma-super-feature
 - **Linting** : Ruff
 - **Types** : MyPy avec annotations
 - **Sécurité** : Bandit pour les scans
-- **Tests** : pytest avec couverture >80%
+- **Tests** : pytest avec couverture >80% (113 tests actuels)
 - **Documentation** : Docstrings Google style
 
 ### 4. **Structure des Commits**

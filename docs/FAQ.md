@@ -24,6 +24,52 @@ pip install arkalia-metrics-collector
 
 **A:** ✅ Oui ! Testé automatiquement sur les 3 plateformes via GitHub Actions.
 
+## 🧪 Tests et Validation
+
+### Q: Combien de tests y a-t-il ?
+
+**A:** **113 tests** au total :
+- **50 tests unitaires** : Fonctionnalités individuelles
+- **16 tests d'intégration** : Projets externes et validation
+- **15 tests de performance** : Vitesse et mémoire
+- **32 tests CLI** : Interface en ligne de commande
+
+### Q: Les tests couvrent-ils tous les cas d'usage ?
+
+**A:** ✅ Oui ! Les tests couvrent :
+- Projets de différentes tailles (petit, moyen, grand)
+- Tous les formats d'export (JSON, Markdown, HTML, CSV)
+- Validation des métriques et cohérence
+- Gestion d'erreurs et cas limites
+- Performance et utilisation mémoire
+- Interface CLI complète
+
+### Q: Comment exécuter les tests ?
+
+**A:** Plusieurs options :
+
+```bash
+# Tous les tests
+pytest tests/ -v
+
+# Par catégorie
+pytest tests/unit/ -v                    # Tests unitaires
+pytest tests/integration/ -v             # Tests d'intégration
+pytest tests/performance/ -v             # Tests de performance
+
+# Avec couverture
+pytest tests/ --cov=src/ --cov-report=html
+```
+
+### Q: Les tests valident-ils les projets externes ?
+
+**A:** ✅ Oui ! Les tests d'intégration incluent :
+- Tests sur projets simulés de différentes tailles
+- Validation des métriques collectées
+- Tests d'export sur projets externes
+- Mesures de performance
+- Gestion d'erreurs avec projets invalides
+
 ## 📊 Formats et Compatibilité
 
 ### Q: Quels formats d'export sont supportés ?
