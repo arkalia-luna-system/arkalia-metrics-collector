@@ -183,7 +183,7 @@ authors = [{name = "Test Author", email = "test@example.com"}]
         python_files = metrics["python_files"]
         assert python_files["count"] >= 4  # Au moins 4 fichiers Python
         assert python_files["total_lines"] > 0
-        
+
         # Vérification compatible Windows/Unix
         files_list = python_files["files_list"]
         assert any("__init__.py" in f and "external_package" in f for f in files_list)
@@ -192,14 +192,14 @@ authors = [{name = "Test Author", email = "test@example.com"}]
         test_metrics = metrics["test_metrics"]
         assert test_metrics["test_files_count"] >= 2  # Au moins 2 fichiers de test
         assert test_metrics["collected_tests_count"] >= 2  # Au moins 2 tests
-        
+
         # Vérification compatible Windows/Unix
         test_files_list = test_metrics["test_files_list"]
         assert any("test_core.py" in f for f in test_files_list)
 
         doc_metrics = metrics["documentation_metrics"]
         assert doc_metrics["documentation_files"] >= 2  # Au moins 2 fichiers de doc
-        
+
         # Vérification compatible Windows/Unix
         doc_list = doc_metrics["documentation_list"]
         assert any("README.md" in f for f in doc_list)
