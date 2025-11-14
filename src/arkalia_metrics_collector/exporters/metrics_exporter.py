@@ -11,6 +11,11 @@ import json
 from pathlib import Path
 from typing import Any
 
+try:
+    import yaml
+except ImportError:
+    yaml = None
+
 
 class MetricsExporter:
     """
@@ -21,6 +26,7 @@ class MetricsExporter:
     - Markdown (pour README)
     - HTML (pour dashboards)
     - CSV (pour analyse)
+    - YAML (pour configuration)
     """
 
     def __init__(self, metrics_data: dict[str, Any]) -> None:
@@ -266,6 +272,39 @@ class MetricsExporter:
             print(f"Erreur lors de l'export CSV: {e}")
             return False
 
+    def export_yaml(self, output_file: str) -> bool:
+        """
+        Exporte en format YAML.
+
+        Args:
+            output_file: Chemin du fichier de sortie
+
+        Returns:
+            True si l'export a réussi
+        """
+        if yaml is None:
+            print("⚠️  PyYAML n'est pas installé. Installez-le avec: pip install pyyaml")
+            return False
+
+        try:
+            output_path = Path(output_file)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+
+            with open(output_path, "w", encoding="utf-8") as f:
+                yaml.dump(
+                    self.metrics_data,
+                    f,
+                    default_flow_style=False,
+                    allow_unicode=True,
+                    sort_keys=False,
+                )
+
+            return True
+
+        except (OSError, TypeError) as e:
+            print(f"Erreur lors de l'export YAML: {e}")
+            return False
+
     def export_all_formats(self, output_dir: str = "metrics") -> dict[str, bool]:
         """
         Exporte dans tous les formats disponibles.
@@ -280,7 +319,6 @@ class MetricsExporter:
         output_path.mkdir(parents=True, exist_ok=True)
 
         results = {}
-
         results["json"] = self.export_json(str(output_path / "metrics.json"))
         results["markdown"] = self.export_markdown_summary(
             str(output_path / "metrics.md")
@@ -289,5 +327,6 @@ class MetricsExporter:
             str(output_path / "dashboard.html")
         )
         results["csv"] = self.export_csv(str(output_path / "metrics.csv"))
+        results["yaml"] = self.export_yaml(str(output_path / "metrics.yaml"))
 
         return results

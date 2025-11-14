@@ -51,7 +51,7 @@ def cli():
 @click.option(
     "--format",
     "-f",
-    type=click.Choice(["json", "markdown", "html", "csv", "all"]),
+    type=click.Choice(["json", "markdown", "html", "csv", "yaml", "all"]),
     default="all",
     help="Format d'export (défaut: all)",
 )
@@ -117,6 +117,8 @@ def collect(project_path: str, output: str, format: str, validate: bool, verbose
                 success = exporter.export_html_dashboard(f"{output}/dashboard.html")
             elif format == "csv":
                 success = exporter.export_csv(f"{output}/metrics.csv")
+            elif format == "yaml":
+                success = exporter.export_yaml(f"{output}/metrics.yaml")
 
             if verbose:
                 status = "✅" if success else "❌"
@@ -383,6 +385,92 @@ def aggregate(
 
     except Exception as e:
         click.echo(f"❌ Erreur lors de l'agrégation: {e}")
+        if verbose:
+            import traceback
+
+            traceback.print_exc()
+        sys.exit(1)
+
+
+@cli.command()
+@click.argument(
+    "metrics_file", type=click.Path(exists=True, file_okay=True, dir_okay=False)
+)
+@click.option(
+    "--format",
+    "-f",
+    type=click.Choice(["json", "markdown", "html", "csv", "yaml", "all"]),
+    default="all",
+    help="Format d'export (défaut: all)",
+)
+@click.option("--output", "-o", default="metrics", help="Dossier de sortie")
+@click.option("--verbose", is_flag=True, help="Mode verbeux")
+def export(
+    metrics_file: str,
+    format: str,
+    output: str,
+    verbose: bool,
+):
+    """
+    Exporte des métriques depuis un fichier JSON dans différents formats.
+
+    METRICS_FILE: Fichier JSON contenant les métriques à exporter
+    """
+    if verbose:
+        click.echo(f"📤 Export des métriques depuis {metrics_file}...")
+        click.echo(f"📁 Dossier de sortie: {output}")
+        click.echo(f"📊 Format: {format}")
+
+    try:
+        import json
+
+        # Charger les métriques
+        with open(metrics_file, encoding="utf-8") as f:
+            metrics_data = json.load(f)
+
+        # Exporter
+        exporter = MetricsExporter(metrics_data)
+
+        output_path = Path(output)
+        output_path.mkdir(parents=True, exist_ok=True)
+
+        if format == "all":
+            results = exporter.export_all_formats(str(output_path))
+            if verbose:
+                for fmt, success in results.items():
+                    status = "✅" if success else "❌"
+                    click.echo(
+                        f"{status} Export {fmt}: {'Succès' if success else 'Échec'}"
+                    )
+            click.echo(f"\n💾 Métriques exportées dans: {output_path}")
+        else:
+            success = False
+            if format == "json":
+                success = exporter.export_json(str(output_path / "metrics.json"))
+            elif format == "markdown":
+                success = exporter.export_markdown_summary(
+                    str(output_path / "metrics.md")
+                )
+            elif format == "html":
+                success = exporter.export_html_dashboard(
+                    str(output_path / "dashboard.html")
+                )
+            elif format == "csv":
+                success = exporter.export_csv(str(output_path / "metrics.csv"))
+            elif format == "yaml":
+                success = exporter.export_yaml(str(output_path / "metrics.yaml"))
+
+            if verbose:
+                status = "✅" if success else "❌"
+                click.echo(
+                    f"{status} Export {format}: {'Succès' if success else 'Échec'}"
+                )
+
+            if success:
+                click.echo(f"💾 Métriques exportées dans: {output_path}")
+
+    except Exception as e:
+        click.echo(f"❌ Erreur lors de l'export: {e}")
         if verbose:
             import traceback
 
