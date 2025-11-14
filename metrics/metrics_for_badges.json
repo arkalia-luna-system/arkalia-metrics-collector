@@ -1,0 +1,25 @@
+{
+  "updated_at": "2025-11-14T22:33:46.964638",
+  "metrics": {
+    "modules": {
+      "value": 52320,
+      "formatted": "52 320",
+      "badge_url": "https://img.shields.io/badge/Python%20Modules-52 320-blue"
+    },
+    "tests": {
+      "value": 11204,
+      "formatted": "11 204",
+      "badge_url": "https://img.shields.io/badge/Tests-11 204-green"
+    },
+    "lines_of_code": {
+      "value": 24790076,
+      "formatted": "24 790 076",
+      "badge_url": "https://img.shields.io/badge/Lines%20of%20Code-24 790 076-orange"
+    },
+    "documentation": {
+      "value": 6530,
+      "formatted": "6 530",
+      "badge_url": "https://img.shields.io/badge/Documentation-6 530%20files-purple"
+    }
+  }
+}

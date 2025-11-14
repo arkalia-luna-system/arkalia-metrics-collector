@@ -86,6 +86,23 @@ Date de collecte,2024-01-01T00:00:00,
 Version collecteur,1.0.0,
 ```
 
+#### export_yaml(output_path: str) -> bool
+
+Exporte les métriques au format YAML.
+
+**Paramètres :**
+- `output_path` : Chemin du fichier de sortie
+
+**Retour :** `bool` - True si l'export a réussi
+
+**Note :** Nécessite PyYAML (`pip install pyyaml`). Si PyYAML n'est pas installé, retourne False avec un message d'avertissement.
+
+**Exemple :**
+```python
+exporter = MetricsExporter(metrics_data)
+success = exporter.export_yaml("metrics.yaml")
+```
+
 #### export_all_formats(output_dir: str = "metrics") -> dict[str, bool]
 
 Exporte dans tous les formats disponibles.
@@ -98,7 +115,7 @@ Exporte dans tous les formats disponibles.
 **Exemple :**
 ```python
 results = exporter.export_all_formats("output/")
-# Retourne : {"json": True, "markdown": True, "html": True, "csv": True}
+# Retourne : {"json": True, "markdown": True, "html": True, "csv": True, "yaml": True}
 ```
 
 ### Gestion des erreurs
@@ -177,6 +194,10 @@ custom_columns = [
 - **Avantages** : Compatible Excel, analyse de données
 - **Utilisation** : Rapports, analyse, import dans d'autres outils
 
+#### YAML
+- **Avantages** : Lisible, configuration, scripts
+- **Utilisation** : Configuration, CI/CD, scripts d'automatisation
+
 ### Intégration avec d'autres outils
 
 #### GitHub Actions
@@ -185,6 +206,16 @@ custom_columns = [
   run: |
     arkalia-metrics collect . --format all --output metrics/
     # Les métriques sont maintenant disponibles dans metrics/
+    # Formats disponibles: JSON, Markdown, HTML, CSV, YAML
+```
+
+#### Commande export dédiée
+```bash
+# Exporter depuis un fichier JSON existant
+arkalia-metrics export metrics.json --format yaml
+
+# Exporter dans tous les formats
+arkalia-metrics export metrics.json --format all --output exports/
 ```
 
 #### CI/CD

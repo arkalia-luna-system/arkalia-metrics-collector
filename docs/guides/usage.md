@@ -72,6 +72,9 @@ exporter.export_html_dashboard("dashboard.html")
 
 # Exporter en CSV
 exporter.export_csv("metrics.csv")
+
+# Exporter en YAML
+exporter.export_yaml("metrics.yaml")
 ```
 
 ### Export en lot
@@ -129,6 +132,12 @@ arkalia-metrics collect ./mon-projet --validate
 
 # Collecte avec export spécifique
 arkalia-metrics collect ./mon-projet --format json --output results/
+
+# Export depuis un fichier JSON
+arkalia-metrics export metrics.json --format yaml --output exports/
+
+# Export dans tous les formats
+arkalia-metrics export metrics.json --format all
 
 # Mode verbeux
 arkalia-metrics collect ./mon-projet --verbose

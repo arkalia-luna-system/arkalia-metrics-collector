@@ -11,7 +11,7 @@ Merci de votre intérêt pour **Arkalia Metrics Collector** ! Toutes les contrib
 - Traductions (anglais, espagnol, etc.)
 
 ### 🚀 **Features Recherchées**
-- Support de nouveaux formats d'export (XML, YAML)
+- Support de nouveaux formats d'export (XML) - YAML déjà implémenté ✅
 - Métriques de qualité avancées (complexité cyclomatique)
 - Intégration avec d'autres outils (SonarQube, CodeClimate)
 - Support d'autres langages (JavaScript, TypeScript)

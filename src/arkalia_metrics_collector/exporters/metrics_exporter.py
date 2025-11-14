@@ -3,7 +3,7 @@
 Arkalia Metrics Exporter - Export des métriques en différents formats.
 
 Module d'export des métriques en différents formats.
-Supporte JSON, Markdown, HTML et CSV.
+Supporte JSON, Markdown, HTML, CSV et YAML.
 """
 
 import csv

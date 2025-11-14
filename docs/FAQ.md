@@ -74,11 +74,12 @@ pytest tests/ --cov=src/ --cov-report=html
 
 ### Q: Quels formats d'export sont supportés ?
 
-**A:** 4 formats disponibles :
+**A:** 5 formats disponibles :
 - **JSON** : Données complètes pour intégration
 - **Markdown** : Pour README et documentation
 - **HTML** : Dashboard interactif
 - **CSV** : Pour analyse dans Excel/Google Sheets
+- **YAML** : Pour configuration et scripts (nécessite PyYAML)
 
 ### Q: Est-ce compatible avec mon type de projet Python ?
 

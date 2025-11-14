@@ -58,13 +58,16 @@ Collecteur de métriques universel et professionnel pour projets Python avec tes
 
 - 🚀 **Exclusion automatique** des venv, cache, dépendances
 - 📊 **Métriques intelligentes** : code, tests, sécurité, qualité
-- 🎨 **Export multi-format** : JSON, Markdown, HTML, CSV
+- 🎨 **Export multi-format** : JSON, Markdown, HTML, CSV, YAML
 - 🔧 **CLI professionnel** avec configuration flexible
 - 🌐 **Dashboard web** interactif et responsive
 - 🔗 **Intégration GitHub API** : stars, forks, issues, PRs, releases
 - 📈 **Agrégation multi-projets** : coverage global, métriques agrégées
 - 🏷️ **Génération de badges** : Shields.io, Codecov, GitHub Actions
 - 📋 **Tableaux README automatiques** : métriques sourcées et vérifiables
+- 📊 **Support Coverage automatique** : parsing coverage.xml, calcul global
+- 📅 **Comparaison temporelle** : historique des métriques, rapports d'évolution
+- 🔄 **Automatisation CI/CD** : mise à jour quotidienne via GitHub Actions
 - 🧪 **Tests complets** : 120 tests unitaires, intégration et performance
 - 🌐 **Tests sur projets externes** avec validation automatique
 
@@ -130,11 +133,32 @@ arkalia-metrics badges metrics/metrics.json \
   --output badges.md
 ```
 
+### Export depuis fichier JSON
+
+```bash
+# Exporter dans un format spécifique
+arkalia-metrics export metrics.json --format yaml
+
+# Exporter dans tous les formats
+arkalia-metrics export metrics.json --format all --output exports/
+```
+
+### Comparaison temporelle
+
+```bash
+# Générer un rapport d'évolution
+arkalia-metrics aggregate projects.json --evolution --json --readme-table
+
+# Désactiver l'historique si nécessaire
+arkalia-metrics aggregate projects.json --no-history
+```
+
 ### Aide complète
 
 ```bash
 arkalia-metrics --help
 arkalia-metrics collect --help
+arkalia-metrics export --help
 arkalia-metrics github --help
 arkalia-metrics aggregate --help
 arkalia-metrics badges --help
