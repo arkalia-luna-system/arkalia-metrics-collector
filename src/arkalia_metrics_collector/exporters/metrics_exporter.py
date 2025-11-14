@@ -12,9 +12,13 @@ from pathlib import Path
 from typing import Any
 
 try:
-    import yaml
+    import yaml  # type: ignore[import-untyped]
 except ImportError:
     yaml = None
+
+from arkalia_metrics_collector.exporters.interactive_dashboard import (
+    InteractiveDashboardGenerator,
+)
 
 
 class MetricsExporter:
@@ -103,16 +107,51 @@ class MetricsExporter:
             print(f"Erreur lors de l'export Markdown: {e}")
             return False
 
-    def export_html_dashboard(self, output_file: str) -> bool:
+    def export_html_dashboard(
+        self, output_file: str, use_interactive: bool = True
+    ) -> bool:
         """
         Exporte un dashboard HTML interactif.
 
         Args:
             output_file: Chemin du fichier de sortie
+            use_interactive: Utiliser le dashboard interactif avec Chart.js (défaut: True)
 
         Returns:
             True si l'export a réussi
         """
+        # Utiliser le dashboard interactif si demandé
+        if use_interactive:
+            try:
+                # Détecter si ce sont des métriques agrégées
+                is_aggregated = (
+                    "aggregated" in self.metrics_data
+                    and "projects" in self.metrics_data
+                )
+
+                # Essayer de charger l'historique si disponible
+                from arkalia_metrics_collector.collectors.metrics_history import (
+                    MetricsHistory,
+                )
+
+                history = MetricsHistory()
+                latest_history = []
+                # Charger la dernière entrée
+                entry = history.get_latest_metrics()
+                if entry:
+                    latest_history.append(entry)
+
+                return InteractiveDashboardGenerator.generate_dashboard(
+                    self.metrics_data,
+                    latest_history if latest_history else None,
+                    output_file,
+                    is_aggregated=is_aggregated,
+                )
+            except Exception:
+                # Si échec, utiliser le dashboard basique
+                pass
+
+        # Dashboard basique (fallback)
         try:
             output_path = Path(output_file)
             output_path.parent.mkdir(parents=True, exist_ok=True)
