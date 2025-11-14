@@ -79,7 +79,7 @@ git push origin feature/ma-super-feature
 - **Linting** : Ruff
 - **Types** : MyPy avec annotations
 - **Sécurité** : Bandit pour les scans
-- **Tests** : pytest avec couverture >80% (113 tests actuels)
+- **Tests** : pytest avec couverture >80% (120 tests actuels)
 - **Documentation** : Docstrings Google style
 
 ### 4. **Structure des Commits**

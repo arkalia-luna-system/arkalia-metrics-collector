@@ -1,0 +1,148 @@
+# Workflow pour mise à jour automatique des métriques
+# Déclenché quotidiennement à 2h UTC et manuellement via workflow_dispatch
+
+name: Update Metrics
+
+on:
+  schedule:
+    # Tous les jours à 2h UTC (3h CET, 4h CEST)
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      force_update:
+        description: 'Forcer la mise à jour même si aucune modification'
+        required: false
+        default: 'false'
+        type: boolean
+
+env:
+  PYTHON_VERSION: "3.11"
+  PIP_CACHE_DIR: ~/.cache/pip
+  PYTHONUNBUFFERED: 1
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-metrics:
+    name: "Mise à jour automatique des métriques"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: "Checkout Code"
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Setup Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: "Install Dependencies"
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: "Vérifier projects.json"
+        run: |
+          if [ ! -f "projects.json" ]; then
+            echo "❌ projects.json non trouvé"
+            exit 1
+          fi
+          echo "✅ projects.json trouvé"
+          cat projects.json | head -20
+
+      - name: "Agréger les métriques"
+        run: |
+          echo "📊 Agrégation des métriques..."
+          arkalia-metrics aggregate projects.json \
+            --readme-table \
+            --json \
+            --output metrics \
+            --verbose
+
+      - name: "Générer les badges"
+        run: |
+          echo "🏷️ Génération des badges..."
+          if [ -f "metrics/metrics_for_badges.json" ]; then
+            arkalia-metrics badges metrics/metrics_for_badges.json \
+              --github-owner arkalia-luna-system \
+              --github-repo arkalia-metrics-collector \
+              --pypi-name arkalia-metrics-collector \
+              --output metrics/badges_final.md \
+              --verbose
+          else
+            echo "⚠️ metrics_for_badges.json non trouvé, création..."
+            python scripts/create_badges_metrics.py
+            arkalia-metrics badges metrics/metrics_for_badges.json \
+              --github-owner arkalia-luna-system \
+              --github-repo arkalia-metrics-collector \
+              --pypi-name arkalia-metrics-collector \
+              --output metrics/badges_final.md \
+              --verbose
+          fi
+
+      - name: "Mettre à jour README.md"
+        run: |
+          echo "📝 Mise à jour du README..."
+          python scripts/update_readme_metrics.py
+
+      - name: "Vérifier les changements"
+        id: check-changes
+        run: |
+          git diff --exit-code README.md metrics/ || echo "has-changes=true" >> $GITHUB_OUTPUT
+          if [ -z "$(git diff --exit-code README.md metrics/ || echo 'changed')" ]; then
+            echo "has-changes=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ Aucun changement détecté"
+          else
+            echo "has-changes=true" >> $GITHUB_OUTPUT
+            echo "✅ Changements détectés"
+            git diff --stat README.md metrics/
+          fi
+
+      - name: "Commit et Push"
+        if: steps.check-changes.outputs.has-changes == 'true' || inputs.force_update == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add README.md metrics/aggregated_metrics.json metrics/README_TABLE.md metrics/badges_final.md
+          
+          git commit -m "📊 Auto-update metrics [skip ci]" \
+            -m "Mise à jour automatique des métriques:" \
+            -m "- Métriques agrégées depuis 12 projets" \
+            -m "- Tableau README mis à jour" \
+            -m "- Badges régénérés" \
+            || echo "Aucun changement à commiter"
+          
+          git push origin main || echo "Push échoué (peut-être déjà à jour)"
+
+      - name: "Résumé"
+        if: always()
+        run: |
+          echo "## 📊 Résumé de la mise à jour" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f "metrics/aggregated_metrics.json" ]; then
+            echo "✅ Métriques agrégées générées" >> $GITHUB_STEP_SUMMARY
+            python3 << 'PYEOF'
+import json
+try:
+    with open('metrics/aggregated_metrics.json') as f:
+        data = json.load(f)
+    agg = data.get('aggregated', {})
+    print(f"- **Modules Python**: {agg.get('total_modules', 0):,}")
+    print(f"- **Lignes de code**: {agg.get('total_lines_of_code', 0):,}")
+    print(f"- **Tests**: {agg.get('total_tests', 0):,}")
+    print(f"- **Projets analysés**: {agg.get('total_projects', 0)}")
+except Exception as e:
+    print(f"❌ Erreur: {e}")
+PYEOF
+          else
+            echo "❌ Métriques non générées" >> $GITHUB_STEP_SUMMARY
+          fi
+

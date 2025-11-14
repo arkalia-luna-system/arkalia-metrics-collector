@@ -28,11 +28,11 @@ pip install arkalia-metrics-collector
 
 ### Q: Combien de tests y a-t-il ?
 
-**A:** **113 tests** au total :
-- **50 tests unitaires** : Fonctionnalités individuelles
-- **16 tests d'intégration** : Projets externes et validation
-- **15 tests de performance** : Vitesse et mémoire
-- **32 tests CLI** : Interface en ligne de commande
+**A:** **120 tests** au total :
+- **50+ tests unitaires** : Fonctionnalités individuelles
+- **16+ tests d'intégration** : Projets externes et validation
+- **15+ tests de performance** : Vitesse et mémoire
+- **32+ tests CLI** : Interface en ligne de commande
 
 ### Q: Les tests couvrent-ils tous les cas d'usage ?
 

@@ -1,6 +1,8 @@
 # 📖 Utilisation
 
-**Guide complet d'utilisation d'Arkalia Metrics Collector**
+## Description
+
+Guide complet d'utilisation d'Arkalia Metrics Collector
 
 ## 🚀 Premiers pas
 
@@ -193,6 +195,7 @@ arkalia-metrics serve ./mon-projet --port 9000
 ## 🌐 Tests sur Projets Externes
 
 ### Collecte sur Projets Réels
+
 ```bash
 # Analyser un projet externe
 arkalia-metrics collect /path/to/external-project --validate
@@ -205,6 +208,7 @@ arkalia-metrics collect /path/to/external-project --verbose
 ```
 
 ### Validation des Métriques
+
 ```bash
 # Validation complète
 arkalia-metrics validate /path/to/project
@@ -214,6 +218,7 @@ arkalia-metrics validate /path/to/project --verbose
 ```
 
 ### Serveur de Visualisation
+
 ```bash
 # Lancer le serveur de dashboard
 arkalia-metrics serve /path/to/project --port 8080
@@ -224,6 +229,7 @@ arkalia-metrics serve /path/to/project --port 8080
 ## 🧪 Tests et Validation
 
 ### Tests Automatisés
+
 ```bash
 # Exécuter tous les tests
 pytest tests/ -v
@@ -235,6 +241,7 @@ pytest tests/unit/cli/test_cli_main.py -v
 ```
 
 ### Validation de Qualité
+
 ```bash
 # Vérification complète
 ruff check .
@@ -391,7 +398,7 @@ print(badges)
 # Badge Shields.io personnalisé
 badge_url = generator.generate_shields_badge(
     label="Python Modules",
-    message="550+",
+    message="52,320",
     color="blue",
     logo="python",
 )
