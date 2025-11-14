@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from .metrics_collector import MetricsCollector
+from .metrics_history import MetricsHistory
 
 
 class MultiProjectAggregator:
@@ -28,9 +29,15 @@ class MultiProjectAggregator:
     - Créer des tableaux récapitulatifs
     """
 
-    def __init__(self) -> None:
-        """Initialise l'agrégateur multi-projets."""
+    def __init__(self, enable_history: bool = True) -> None:
+        """
+        Initialise l'agrégateur multi-projets.
+
+        Args:
+            enable_history: Activer la sauvegarde de l'historique
+        """
         self.projects_metrics: dict[str, Any] = {}
+        self.history = MetricsHistory() if enable_history else None
 
     def collect_project(
         self, project_name: str, project_path: str | Path
@@ -276,7 +283,26 @@ class MultiProjectAggregator:
             with open(output_path, "w", encoding="utf-8") as f:
                 json.dump(aggregated, f, indent=2, ensure_ascii=False)
 
+            # Sauvegarder dans l'historique si activé
+            if self.history:
+                self.history.save_metrics(aggregated)
+
             return True
 
         except Exception:
             return False
+
+    def get_evolution_report(self) -> str:
+        """
+        Génère un rapport d'évolution des métriques.
+
+        Returns:
+            Rapport Markdown avec les deltas
+        """
+        if not self.history:
+            return "## 📈 Évolution des Métriques\n\n*Historique désactivé.*\n"
+
+        current = self.aggregate_metrics()
+        comparison = self.history.compare_metrics(current)
+
+        return self.history.generate_evolution_report(comparison)

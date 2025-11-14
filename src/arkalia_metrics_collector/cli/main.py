@@ -281,12 +281,18 @@ def github(owner: str, repo: str, token: str | None, output: str, verbose: bool)
 @click.option("--output", "-o", default="metrics", help="Dossier de sortie")
 @click.option("--readme-table", is_flag=True, help="Générer un tableau README")
 @click.option("--json", "export_json", is_flag=True, help="Exporter en JSON")
+@click.option("--evolution", is_flag=True, help="Générer un rapport d'évolution")
+@click.option(
+    "--no-history", is_flag=True, help="Désactiver la sauvegarde de l'historique"
+)
 @click.option("--verbose", is_flag=True, help="Mode verbeux")
 def aggregate(
     projects_file: str,
     output: str,
     readme_table: bool,
     export_json: bool,
+    evolution: bool,
+    no_history: bool,
     verbose: bool,
 ):
     """
@@ -310,7 +316,7 @@ def aggregate(
             click.echo("❌ Aucun projet trouvé dans le fichier")
             sys.exit(1)
 
-        aggregator = MultiProjectAggregator()
+        aggregator = MultiProjectAggregator(enable_history=not no_history)
 
         # Collecter les métriques de chaque projet
         for project in projects:
@@ -354,6 +360,26 @@ def aggregate(
             with open(table_file, "w", encoding="utf-8") as f:
                 f.write(table)
             click.echo(f"📊 Tableau README généré dans: {table_file}")
+
+        if evolution:
+            evolution_file = output_path / "EVOLUTION_REPORT.md"
+            evolution_report = aggregator.get_evolution_report()
+            evolution_file.write_text(evolution_report, encoding="utf-8")
+            click.echo(f"📈 Rapport d'évolution généré dans: {evolution_file}")
+            if verbose and aggregator.history:
+                # Afficher un résumé
+                comparison = aggregator.history.compare_metrics(aggregated)
+                if comparison and comparison.get("has_previous"):
+                    deltas = comparison.get("deltas", {})
+                    click.echo("\n📊 Résumé de l'évolution:")
+                    for metric, delta_data in deltas.items():
+                        if delta_data.get("delta") is not None:
+                            delta = delta_data["delta"]
+                            delta_pct = delta_data.get("delta_percent", 0)
+                            trend = "📈" if delta > 0 else "📉" if delta < 0 else "➡️"
+                            click.echo(
+                                f"   {trend} {metric.replace('_', ' ').title()}: {delta:+,.0f} ({delta_pct:+.1f}%)"
+                            )
 
     except Exception as e:
         click.echo(f"❌ Erreur lors de l'agrégation: {e}")
