@@ -16,9 +16,12 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 try:
     from arkalia_metrics_collector import (
+        BadgesGenerator,
+        GitHubCollector,
         MetricsCollector,
         MetricsExporter,
         MetricsValidator,
+        MultiProjectAggregator,
     )
 except ImportError as e:
     print(f"❌ Erreur d'import: {e}")
@@ -214,6 +217,211 @@ def serve(project_path: str, port: int):
 
     except Exception as e:
         click.echo(f"❌ Erreur lors de la génération du dashboard: {e}")
+        sys.exit(1)
+
+
+@cli.command()
+@click.argument("owner")
+@click.argument("repo")
+@click.option("--token", "-t", help="Token GitHub (ou variable GITHUB_TOKEN)")
+@click.option("--output", "-o", default="metrics", help="Dossier de sortie")
+@click.option("--verbose", is_flag=True, help="Mode verbeux")
+def github(owner: str, repo: str, token: str | None, output: str, verbose: bool):
+    """
+    Collecte les métriques GitHub d'un dépôt.
+
+    OWNER: Propriétaire du dépôt (organisation ou utilisateur)
+    REPO: Nom du dépôt
+    """
+    if verbose:
+        click.echo(f"🔍 Collecte des métriques GitHub pour {owner}/{repo}...")
+
+    try:
+        collector = GitHubCollector(token)
+        metrics = collector.collect_repo_metrics(owner, repo)
+
+        if metrics is None:
+            click.echo("❌ Impossible de collecter les métriques GitHub")
+            click.echo("💡 Vérifiez que le dépôt existe et est accessible")
+            sys.exit(1)
+
+        # Exporter en JSON
+        output_path = Path(output)
+        output_path.mkdir(parents=True, exist_ok=True)
+        json_file = output_path / f"github_{owner}_{repo}.json"
+
+        import json
+
+        with open(json_file, "w", encoding="utf-8") as f:
+            json.dump(metrics, f, indent=2, ensure_ascii=False)
+
+        if verbose:
+            stats = metrics.get("stats", {})
+            click.echo("✅ Métriques collectées:")
+            click.echo(f"   ⭐ Stars: {stats.get('stars', 0):,}")
+            click.echo(f"   🍴 Forks: {stats.get('forks', 0):,}")
+            click.echo(f"   👀 Watchers: {stats.get('watchers', 0):,}")
+            click.echo(f"   📝 Open Issues: {stats.get('open_issues', 0):,}")
+
+        click.echo(f"\n💾 Métriques exportées dans: {json_file}")
+
+    except Exception as e:
+        click.echo(f"❌ Erreur lors de la collecte GitHub: {e}")
+        if verbose:
+            import traceback
+
+            traceback.print_exc()
+        sys.exit(1)
+
+
+@cli.command()
+@click.argument(
+    "projects_file", type=click.Path(exists=True, file_okay=True, dir_okay=False)
+)
+@click.option("--output", "-o", default="metrics", help="Dossier de sortie")
+@click.option("--readme-table", is_flag=True, help="Générer un tableau README")
+@click.option("--json", "export_json", is_flag=True, help="Exporter en JSON")
+@click.option("--verbose", is_flag=True, help="Mode verbeux")
+def aggregate(
+    projects_file: str,
+    output: str,
+    readme_table: bool,
+    export_json: bool,
+    verbose: bool,
+):
+    """
+    Agrège les métriques de plusieurs projets.
+
+    PROJECTS_FILE: Fichier JSON avec la liste des projets
+                   Format: {"projects": [{"name": "...", "path": "..."}]}
+    """
+    if verbose:
+        click.echo(f"🔍 Agrégation des métriques depuis {projects_file}...")
+
+    try:
+        import json
+
+        # Charger la configuration des projets
+        with open(projects_file, encoding="utf-8") as f:
+            config = json.load(f)
+
+        projects = config.get("projects", [])
+        if not projects:
+            click.echo("❌ Aucun projet trouvé dans le fichier")
+            sys.exit(1)
+
+        aggregator = MultiProjectAggregator()
+
+        # Collecter les métriques de chaque projet
+        for project in projects:
+            name = project.get("name", "")
+            path = project.get("path", "")
+
+            if not name or not path:
+                continue
+
+            if verbose:
+                click.echo(f"   📦 Collecte de {name}...")
+
+            metrics = aggregator.collect_project(name, path)
+            if metrics is None:
+                click.echo(f"   ⚠️  Impossible de collecter {name}")
+                continue
+
+        # Agréger les métriques
+        aggregated = aggregator.aggregate_metrics()
+        agg_data = aggregated.get("aggregated", {})
+
+        if verbose:
+            click.echo("\n✅ Métriques agrégées:")
+            click.echo(f"   📦 Projets: {agg_data.get('total_projects', 0)}")
+            click.echo(f"   🐍 Modules: {agg_data.get('total_modules', 0):,}")
+            click.echo(f"   📝 Lignes: {agg_data.get('total_lines_of_code', 0):,}")
+            click.echo(f"   🧪 Tests: {agg_data.get('total_tests', 0):,}")
+
+        # Exporter
+        output_path = Path(output)
+        output_path.mkdir(parents=True, exist_ok=True)
+
+        if export_json:
+            json_file = output_path / "aggregated_metrics.json"
+            aggregator.export_aggregated_json(json_file)
+            click.echo(f"\n💾 Métriques agrégées exportées dans: {json_file}")
+
+        if readme_table:
+            table = aggregator.generate_readme_table()
+            table_file = output_path / "README_TABLE.md"
+            with open(table_file, "w", encoding="utf-8") as f:
+                f.write(table)
+            click.echo(f"📊 Tableau README généré dans: {table_file}")
+
+    except Exception as e:
+        click.echo(f"❌ Erreur lors de l'agrégation: {e}")
+        if verbose:
+            import traceback
+
+            traceback.print_exc()
+        sys.exit(1)
+
+
+@cli.command()
+@click.argument(
+    "metrics_file", type=click.Path(exists=True, file_okay=True, dir_okay=False)
+)
+@click.option("--output", "-o", default="badges.md", help="Fichier de sortie")
+@click.option("--github-owner", help="Propriétaire GitHub")
+@click.option("--github-repo", help="Dépôt GitHub")
+@click.option("--pypi-name", help="Nom du package PyPI")
+@click.option("--license", "license_name", default="MIT", help="Nom de la licence")
+@click.option("--verbose", is_flag=True, help="Mode verbeux")
+def badges(
+    metrics_file: str,
+    output: str,
+    github_owner: str | None,
+    github_repo: str | None,
+    pypi_name: str | None,
+    license_name: str,
+    verbose: bool,
+):
+    """
+    Génère des badges automatiques pour README.
+
+    METRICS_FILE: Fichier JSON avec les métriques du projet
+    """
+    if verbose:
+        click.echo(f"🎨 Génération des badges depuis {metrics_file}...")
+
+    try:
+        import json
+
+        with open(metrics_file, encoding="utf-8") as f:
+            metrics = json.load(f)
+
+        generator = BadgesGenerator()
+        badges_content = generator.generate_all_badges(
+            metrics,
+            github_owner,
+            github_repo,
+            pypi_name,
+            license_name,
+        )
+
+        with open(output, "w", encoding="utf-8") as f:
+            f.write(badges_content)
+
+        if verbose:
+            click.echo("✅ Badges générés:")
+            click.echo("   📊 Badges de métriques")
+            click.echo("   🏷️  Badges de statut")
+
+        click.echo(f"\n💾 Badges exportés dans: {output}")
+
+    except Exception as e:
+        click.echo(f"❌ Erreur lors de la génération des badges: {e}")
+        if verbose:
+            import traceback
+
+            traceback.print_exc()
         sys.exit(1)
 
 

@@ -157,7 +157,7 @@ Les contributeurs sont mentionnés dans :
 - **Issues** : Questions, bugs, features
 - **Discussions** : Idées, feedback, aide
 - **Discord** : [Arkalia Community](https://discord.gg/arkalia) (optionnel)
-- **Email** : `contrib@arkalia-luna.com`
+- **Email** : `arkalia.luna.system@gmail.com`
 
 ## 📄 Licence
 

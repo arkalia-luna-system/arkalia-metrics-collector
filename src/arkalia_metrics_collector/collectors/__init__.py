@@ -6,6 +6,12 @@ Ce module contient les classes responsables de la collecte
 des différentes métriques de vos projets Python.
 """
 
+from .github_collector import GitHubCollector
 from .metrics_collector import MetricsCollector
+from .multi_project_aggregator import MultiProjectAggregator
 
-__all__ = ["MetricsCollector"]
+__all__ = [
+    "MetricsCollector",
+    "GitHubCollector",
+    "MultiProjectAggregator",
+]

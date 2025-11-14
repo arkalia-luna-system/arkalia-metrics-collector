@@ -39,7 +39,7 @@ Le collecteur **exclut automatiquement** :
 Si vous découvrez une vulnérabilité de sécurité :
 
 1. **NE PAS** créer d'issue publique
-2. **Envoyez un email** à : `security@arkalia-luna.com`
+2. **Envoyez un email** à : `arkalia.luna.system@gmail.com`
 3. **Incluez** :
    - Description détaillée de la vulnérabilité
    - Étapes pour reproduire le problème

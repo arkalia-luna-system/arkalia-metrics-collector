@@ -160,7 +160,7 @@ build-backend = "setuptools.build_meta"
 name = "external-package"
 version = "1.0.0"
 description = "Package externe pour tests"
-authors = [{name = "Test Author", email = "test@example.com"}]
+authors = [{name = "Test Author", email = "arkalia.luna.system@gmail.com"}]
 """
         )
 

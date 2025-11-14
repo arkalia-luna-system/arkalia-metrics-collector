@@ -24,16 +24,22 @@ Classes principales:
 
 __version__ = "1.0.0"
 __author__ = "Arkalia Luna System"
-__email__ = "contact@arkalia-luna.com"
+__email__ = "arkalia.luna.system@gmail.com"
 __license__ = "MIT"
 
+from .collectors.github_collector import GitHubCollector
 from .collectors.metrics_collector import MetricsCollector
+from .collectors.multi_project_aggregator import MultiProjectAggregator
+from .exporters.badges_generator import BadgesGenerator
 from .exporters.metrics_exporter import MetricsExporter
 from .validators.metrics_validator import MetricsValidator
 
 __all__ = [
     "MetricsCollector",
+    "GitHubCollector",
+    "MultiProjectAggregator",
     "MetricsExporter",
+    "BadgesGenerator",
     "MetricsValidator",
     "__version__",
     "__author__",

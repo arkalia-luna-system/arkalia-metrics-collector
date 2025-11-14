@@ -289,3 +289,124 @@ while True:
     schedule.run_pending()
     time.sleep(60)
 ```
+
+## 🔗 Intégration GitHub API
+
+### Collecte des métriques GitHub
+
+```python
+from arkalia_metrics_collector import GitHubCollector
+
+# Créer un collecteur GitHub (token optionnel)
+collector = GitHubCollector(github_token="YOUR_TOKEN")
+
+# Collecter les métriques d'un dépôt
+metrics = collector.collect_repo_metrics("owner", "repo")
+
+if metrics:
+    stats = metrics.get("stats", {})
+    print(f"⭐ Stars: {stats.get('stars', 0)}")
+    print(f"🍴 Forks: {stats.get('forks', 0)}")
+    print(f"👀 Watchers: {stats.get('watchers', 0)}")
+    print(f"📝 Open Issues: {stats.get('open_issues', 0)}")
+```
+
+### Collecte de plusieurs dépôts
+
+```python
+# Collecter plusieurs dépôts
+repos = [
+    {"owner": "arkalia-luna-system", "repo": "arkalia-metrics-collector"},
+    {"owner": "arkalia-luna-system", "repo": "athalia"},
+]
+
+aggregated = collector.collect_multiple_repos(repos)
+print(f"Total stars: {aggregated['aggregated']['total_stars']}")
+```
+
+## 📈 Agrégation Multi-Projets
+
+### Collecte et agrégation
+
+```python
+from arkalia_metrics_collector import MultiProjectAggregator
+
+aggregator = MultiProjectAggregator()
+
+# Collecter plusieurs projets
+aggregator.collect_project("projet1", "/path/to/project1")
+aggregator.collect_project("projet2", "/path/to/project2")
+
+# Agréger les métriques
+aggregated = aggregator.aggregate_metrics()
+
+print(f"Total modules: {aggregated['aggregated']['total_modules']}")
+print(f"Total lignes: {aggregated['aggregated']['total_lines_of_code']}")
+print(f"Coverage global: {aggregated['aggregated']['global_coverage']}%")
+```
+
+### Génération de tableau README
+
+```python
+# Générer un tableau Markdown pour README
+table = aggregator.generate_readme_table()
+print(table)
+```
+
+### Chargement depuis JSON
+
+```python
+# Charger depuis un fichier JSON
+aggregator.load_from_json("projects_metrics.json")
+aggregated = aggregator.aggregate_metrics()
+```
+
+## 🏷️ Génération de Badges
+
+### Badges automatiques
+
+```python
+from arkalia_metrics_collector import BadgesGenerator, MetricsCollector
+
+# Collecter les métriques
+collector = MetricsCollector(".")
+metrics = collector.collect_all_metrics()
+
+# Générer les badges
+generator = BadgesGenerator()
+badges = generator.generate_all_badges(
+    metrics,
+    github_owner="arkalia-luna-system",
+    github_repo="arkalia-metrics-collector",
+    pypi_name="arkalia-metrics-collector",
+    license_name="MIT",
+)
+
+print(badges)
+```
+
+### Badges personnalisés
+
+```python
+# Badge Shields.io personnalisé
+badge_url = generator.generate_shields_badge(
+    label="Python Modules",
+    message="550+",
+    color="blue",
+    logo="python",
+)
+
+# Badge Codecov
+codecov_badge = generator.generate_codecov_badge(
+    owner="arkalia-luna-system",
+    repo="arkalia-metrics-collector",
+    branch="main",
+)
+
+# Badge GitHub Actions
+actions_badge = generator.generate_github_actions_badge(
+    owner="arkalia-luna-system",
+    repo="arkalia-metrics-collector",
+    workflow="ci",
+)
+```

@@ -5,7 +5,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-**Collecteur de métriques universel et professionnel pour projets Python avec tests complets**
+## Description
+
+Collecteur de métriques universel et professionnel pour projets Python avec tests complets
 
 ## 📊 **Métriques du Projet** *(Mises à jour automatiquement)*
 
@@ -29,8 +31,10 @@
 - 🎨 **Export multi-format** : JSON, Markdown, HTML, CSV
 - 🔧 **CLI professionnel** avec configuration flexible
 - 🌐 **Dashboard web** interactif et responsive
-- 🔗 **Intégration GitHub** automatique
-- 📈 **Évolution temporelle** des métriques
+- 🔗 **Intégration GitHub API** : stars, forks, issues, PRs, releases
+- 📈 **Agrégation multi-projets** : coverage global, métriques agrégées
+- 🏷️ **Génération de badges** : Shields.io, Codecov, GitHub Actions
+- 📋 **Tableaux README automatiques** : métriques sourcées et vérifiables
 - 🧪 **Tests complets** : 113 tests unitaires, intégration et performance
 - 🌐 **Tests sur projets externes** avec validation automatique
 
@@ -48,23 +52,67 @@ pip install arkalia-metrics-collector
 
 ## 📖 Usage
 
+### Collecte basique
+
 ```bash
 # Collecte simple
 arkalia-metrics collect .
 
-# Avec configuration personnalisée
-arkalia-metrics collect . --config my_config.yaml
+# Avec validation
+arkalia-metrics collect . --validate
 
 # Export spécifique
 arkalia-metrics collect . --format markdown --output reports/
+```
 
-# Afficher l'aide
+### Métriques GitHub
+
+```bash
+# Collecter les métriques GitHub d'un dépôt
+arkalia-metrics github owner repo --token YOUR_TOKEN
+
+# Avec export automatique
+arkalia-metrics github arkalia-luna-system arkalia-metrics-collector --output metrics/
+```
+
+### Agrégation multi-projets
+
+```bash
+# Créer un fichier projects.json
+echo '{"projects": [{"name": "projet1", "path": "/path/to/project1"}, {"name": "projet2", "path": "/path/to/project2"}]}' > projects.json
+
+# Agréger les métriques
+arkalia-metrics aggregate projects.json --readme-table --json
+
+# Génère :
+# - aggregated_metrics.json : métriques agrégées
+# - README_TABLE.md : tableau récapitulatif pour README
+```
+
+### Génération de badges
+
+```bash
+# Générer des badges depuis les métriques
+arkalia-metrics badges metrics/metrics.json \
+  --github-owner arkalia-luna-system \
+  --github-repo arkalia-metrics-collector \
+  --pypi-name arkalia-metrics-collector \
+  --output badges.md
+```
+
+### Aide complète
+
+```bash
 arkalia-metrics --help
+arkalia-metrics collect --help
+arkalia-metrics github --help
+arkalia-metrics aggregate --help
+arkalia-metrics badges --help
 ```
 
 ## 🏗️ Architecture
 
-```
+```text
 arkalia-metrics-collector/
 ├── src/arkalia_metrics_collector/
 │   ├── collectors/          # Collecteurs de métriques
@@ -102,6 +150,7 @@ metrics:
 ## 📊 Exemples de Sortie
 
 ### Métriques JSON
+
 ```json
 {
   "project": "Mon Projet",
@@ -122,6 +171,7 @@ metrics:
 ```
 
 ### Export Markdown
+
 ```markdown
 ## 📊 Métriques du Projet
 
@@ -190,19 +240,23 @@ metrics:
 **Nous recherchons activement des contributeurs !** 🎯
 
 ### 🟢 **Issues "Help Wanted"**
+
 - 📚 Amélioration documentation
 - 🧪 Tests sur nouveaux projets Python
 - 🎨 Templates de configuration
 - 🌍 Traductions (anglais, espagnol)
 
 ### 🚀 **Features Recherchées**
+
 - Support JavaScript/TypeScript
 - Métriques de complexité avancées
 - Intégration SonarQube/CodeClimate
 - Dashboard temps réel
 
 ### 📋 **Guide Complet**
+
 Voir [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) pour :
+
 - Setup développement
 - Standards de code
 - Process de review
@@ -223,7 +277,8 @@ MIT License - voir [LICENSE](LICENSE) pour plus de détails
 
 ## 👨‍💻 Auteur
 
-**Arkalia Luna System**
+## Arkalia Luna System
+
 - GitHub: [@arkalia-luna-system](https://github.com/arkalia-luna-system)
 - Portfolio: [arkalia-luna-system.github.io](https://arkalia-luna-system.github.io)
 

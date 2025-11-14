@@ -243,7 +243,7 @@ python_files = metrics['summary']['total_python_files']
 **A:** Plusieurs options :
 1. **Issues GitHub** : [github.com/arkalia-luna-system/arkalia-metrics-collector/issues](https://github.com/arkalia-luna-system/arkalia-metrics-collector/issues)
 2. **Discussions** : Pour questions générales
-3. **Email** : `support@arkalia-luna.com`
+3. **Email** : `arkalia.luna.system@gmail.com`
 
 ### Q: Comment signaler un bug ?
 
