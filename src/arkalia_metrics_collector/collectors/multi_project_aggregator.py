@@ -225,7 +225,18 @@ class MultiProjectAggregator:
             modules = project["modules"]
             lines = project["lines_of_code"]
             tests = project["tests"]
-            coverage = "N/A"  # À améliorer avec le coverage réel
+            # Récupérer le coverage depuis les métriques du projet
+            project_data = self.projects_metrics.get(name, {})
+            project_metrics = project_data.get("metrics", {})
+            test_metrics = project_metrics.get("test_metrics", {})
+            coverage_value = test_metrics.get("coverage_percentage")
+            if coverage_value is not None:
+                try:
+                    coverage = f"{float(coverage_value):.1f}%"
+                except (ValueError, TypeError):
+                    coverage = "N/A"
+            else:
+                coverage = "N/A"
 
             table += f"| **{name}** | `{modules:,}` | `{lines:,}` | `{tests:,}` | `{coverage}` |\n"
 

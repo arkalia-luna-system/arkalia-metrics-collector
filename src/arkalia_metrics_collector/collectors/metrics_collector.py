@@ -16,6 +16,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from arkalia_metrics_collector.collectors.coverage_parser import CoverageParser
+
 
 class MetricsCollector:
     """
@@ -177,7 +179,13 @@ class MetricsCollector:
         # Essayer de collecter les tests avec pytest
         collected_tests = self._collect_pytest_tests()
 
-        return {
+        # Essayer de récupérer le coverage depuis coverage.xml
+        coverage_data = CoverageParser.get_coverage_for_project(self.project_root)
+        coverage_percentage = None
+        if coverage_data and coverage_data.get("coverage_percentage") is not None:
+            coverage_percentage = coverage_data["coverage_percentage"]
+
+        result = {
             "test_files_count": len(test_files),
             "test_directories_count": len(test_directories),
             "collected_tests_count": collected_tests,
@@ -185,6 +193,18 @@ class MetricsCollector:
                 str(f.relative_to(self.project_root)) for f in test_files
             ],
         }
+
+        # Ajouter le coverage si disponible
+        if coverage_percentage is not None:
+            result["coverage_percentage"] = coverage_percentage
+            if coverage_data:
+                result["coverage_details"] = {
+                    "lines_covered": coverage_data.get("lines_covered"),
+                    "lines_valid": coverage_data.get("lines_valid"),
+                    "branch_coverage": coverage_data.get("branch_coverage"),
+                }
+
+        return result
 
     def _collect_pytest_tests(self) -> int:
         """
