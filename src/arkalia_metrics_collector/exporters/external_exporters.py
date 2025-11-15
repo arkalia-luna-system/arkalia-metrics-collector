@@ -13,7 +13,7 @@ import logging
 from typing import Any
 
 try:
-    import requests
+    import requests  # type: ignore
 except ImportError:
     requests = None
 
