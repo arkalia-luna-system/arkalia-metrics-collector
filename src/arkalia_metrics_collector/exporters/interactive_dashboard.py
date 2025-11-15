@@ -13,6 +13,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from arkalia_metrics_collector import __version__
+
 
 class InteractiveDashboardGenerator:
     """
@@ -56,7 +58,7 @@ class InteractiveDashboardGenerator:
                 }
                 collection_info = {
                     "collection_date": metrics_data.get("collection_date", "Inconnu"),
-                    "collector_version": "1.0.0",
+                    "collector_version": __version__,
                 }
                 test_metrics = {
                     "coverage_percentage": aggregated.get("global_coverage"),
@@ -293,7 +295,7 @@ class InteractiveDashboardGenerator:
 
         <!-- Footer -->
         <footer class="text-center mt-12 text-gray-400">
-            <p>Généré par <strong>Arkalia Metrics Collector</strong> v{collection_info.get("collector_version", "1.0.0")}</p>
+            <p>Généré par <strong>Arkalia Metrics Collector</strong> v{collection_info.get("collector_version", __version__)}</p>
         </footer>
     </div>
 

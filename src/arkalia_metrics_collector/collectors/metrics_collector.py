@@ -294,7 +294,7 @@ class MetricsCollector:
             Dictionnaire complet avec toutes les métriques
         """
         collection_info = {
-            "collector_version": "1.0.0",
+            "collector_version": __version__,
             "python_version": (
                 f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
             ),

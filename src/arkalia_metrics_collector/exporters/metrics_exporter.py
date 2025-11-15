@@ -16,6 +16,7 @@ try:
 except ImportError:
     yaml = None
 
+from arkalia_metrics_collector import __version__
 from arkalia_metrics_collector.exporters.interactive_dashboard import (
     InteractiveDashboardGenerator,
 )
