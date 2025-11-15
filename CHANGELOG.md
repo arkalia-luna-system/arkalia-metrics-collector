@@ -5,6 +5,29 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère à [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-11-14
+
+### ✨ Phase 3 : Intégrations Avancées
+
+#### 🚀 Nouvelles Fonctionnalités
+- **Intégration GitHub API complète** : Collecte automatique stars, forks, issues, PRs (option `--github-api`)
+- **Notifications multi-canaux** : Support Email (SMTP), Slack, Discord via webhooks
+- **Personnalisation avancée** : Labels personnalisés, assignation d'issues, seuils configurables
+- **Statistiques Git** : Analyse commits, lignes, contributeurs, activité temporelle
+- **Export REST API** : Export vers API REST personnalisée
+- **Structure exporteurs externes** : Google Sheets, Notion, Airtable (prêt pour implémentation)
+
+#### 🔧 Améliorations
+- Agrégation multi-projets enrichie avec métriques GitHub et Git
+- Système d'alertes amélioré avec notifications
+- CLI enrichi avec nouvelles options (`--github-api`, `--notify`, `--labels`, `--assignees`)
+- Documentation complète mise à jour
+
+#### 📝 Documentation
+- Guide d'utilisation mis à jour avec toutes les nouvelles fonctionnalités
+- FAQ enrichie (GitHub API, notifications, Git, export REST)
+- API documentation mise à jour
+
 ## [1.0.0] - 2025-09-13
 
 ### 🎉 Version Initiale - Production Ready
