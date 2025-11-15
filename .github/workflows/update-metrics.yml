@@ -97,9 +97,6 @@ jobs:
         run: |
           echo "🚨 Vérification des alertes..."
           if [ -f "metrics/aggregated_metrics.json" ]; then
-            arkalia-metrics alerts metrics/aggregated_metrics.json \
-              --threshold 10.0 \
-              --verbose || echo "has-alerts=true" >> $GITHUB_OUTPUT
             if [ -z "$(arkalia-metrics alerts metrics/aggregated_metrics.json --threshold 10.0 2>&1 | grep 'Aucune alerte')" ]; then
               echo "has-alerts=true" >> $GITHUB_OUTPUT
               echo "🚨 Alertes détectées"
@@ -111,6 +108,19 @@ jobs:
             echo "has-alerts=false" >> $GITHUB_OUTPUT
             echo "ℹ️  Métriques non disponibles pour vérification"
           fi
+
+      - name: "Créer issue GitHub si alertes"
+        if: steps.check-alerts.outputs.has-alerts == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "📝 Création d'une issue GitHub pour les alertes..."
+          arkalia-metrics alerts metrics/aggregated_metrics.json \
+            --threshold 10.0 \
+            --create-issue \
+            --github-owner arkalia-luna-system \
+            --github-repo arkalia-metrics-collector \
+            --verbose || echo "Issue peut-être déjà créée"
 
       - name: "Vérifier les changements"
         id: check-changes

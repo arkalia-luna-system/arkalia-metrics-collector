@@ -8,6 +8,7 @@ des différentes métriques de vos projets Python.
 
 from .coverage_parser import CoverageParser
 from .github_collector import GitHubCollector
+from .github_issues import GitHubIssues
 from .metrics_alerts import MetricsAlerts
 from .metrics_collector import MetricsCollector
 from .metrics_history import MetricsHistory
@@ -20,4 +21,5 @@ __all__ = [
     "CoverageParser",
     "MetricsHistory",
     "MetricsAlerts",
+    "GitHubIssues",
 ]

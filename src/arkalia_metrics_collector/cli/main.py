@@ -23,6 +23,7 @@ try:
         MetricsValidator,
         MultiProjectAggregator,
     )
+    from arkalia_metrics_collector.collectors.github_issues import GitHubIssues
     from arkalia_metrics_collector.collectors.metrics_alerts import MetricsAlerts
 except ImportError as e:
     print(f"❌ Erreur d'import: {e}")
@@ -607,16 +608,45 @@ def alerts(
                     click.echo("\n📝 Création d'une issue GitHub...")
 
                 issue_body = alerts_system.create_github_issue_body(alerts_data)
+                issue_title = "🚨 Alertes Métriques - Changements Significatifs"
 
-                # Note: La création d'issue nécessite un token GitHub
-                # Pour l'instant, on affiche juste le contenu
-                click.echo("\n📋 Contenu de l'issue GitHub:")
-                click.echo("-" * 50)
-                click.echo(issue_body)
-                click.echo("-" * 50)
-                click.echo(
-                    "\n💡 Pour créer l'issue automatiquement, utilisez l'API GitHub"
+                # Vérifier si une issue similaire existe déjà
+                github_issues = GitHubIssues()
+                existing_issue = github_issues.check_existing_issue(
+                    github_owner, github_repo, issue_title
                 )
+
+                if existing_issue:
+                    click.echo(
+                        f"ℹ️  Issue similaire déjà ouverte: #{existing_issue.get('number')}"
+                    )
+                    click.echo(f"   🔗 {existing_issue.get('html_url', '')}")
+                    if verbose:
+                        click.echo("\n💡 Mise à jour de l'issue existante...")
+                        # Pour l'instant, on affiche juste le contenu
+                        click.echo("\n📋 Contenu pour mise à jour:")
+                        click.echo("-" * 50)
+                        click.echo(issue_body)
+                else:
+                    # Créer une nouvelle issue
+                    issue_data = github_issues.create_issue(
+                        owner=github_owner,
+                        repo=github_repo,
+                        title=issue_title,
+                        body=issue_body,
+                        labels=["metrics", "automated", "alerts"],
+                    )
+
+                    if issue_data:
+                        click.echo(f"✅ Issue créée: #{issue_data.get('number')}")
+                        click.echo(f"   🔗 {issue_data.get('html_url', '')}")
+                    else:
+                        click.echo("❌ Échec de la création de l'issue")
+                        click.echo("💡 Vérifiez que GITHUB_TOKEN est défini")
+                        if verbose:
+                            click.echo("\n📋 Contenu de l'issue:")
+                            click.echo("-" * 50)
+                            click.echo(issue_body)
 
             return 1  # Code de sortie pour indiquer des alertes
         else:
