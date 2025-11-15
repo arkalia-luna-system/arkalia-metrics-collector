@@ -340,6 +340,187 @@ aggregated = collector.collect_multiple_repos(repos)
 print(f"Total stars: {aggregated['aggregated']['total_stars']}")
 ```
 
+### Intégration dans l'agrégation multi-projets
+
+```bash
+# Activer la collecte GitHub API lors de l'agrégation
+arkalia-metrics aggregate projects.json --github-api --json
+```
+
+Les métriques GitHub seront automatiquement incluses dans `aggregated_metrics.json` :
+- `github_metrics.total_stars` : Total des stars
+- `github_metrics.total_forks` : Total des forks
+- `github_metrics.total_watchers` : Total des watchers
+- `github_metrics.total_open_issues` : Total des issues ouvertes
+
+## 📊 Statistiques de Contribution Git
+
+### Collecte des statistiques Git
+
+```python
+from arkalia_metrics_collector import GitContributions
+
+# Créer un collecteur Git
+git_collector = GitContributions("/chemin/vers/projet")
+
+# Collecter les statistiques (30 derniers jours par défaut)
+contributions = git_collector.collect_contributions(days=30)
+
+if contributions:
+    print(f"Total commits: {contributions['total_commits']}")
+    print(f"Commits récents (30j): {contributions['recent_commits']}")
+    print(f"Lignes ajoutées: {contributions['lines']['added']}")
+    print(f"Lignes supprimées: {contributions['lines']['deleted']}")
+    print(f"Fichiers modifiés: {contributions['files_changed']}")
+    
+    # Top contributeurs
+    for contrib in contributions['contributors'][:5]:
+        print(f"  {contrib['name']}: {contrib['commits']} commits")
+```
+
+### Intégration automatique
+
+Les statistiques Git sont automatiquement collectées lors de l'agrégation multi-projets et incluses dans `aggregated_metrics.json` :
+- `git_contributions.total_commits` : Total des commits
+- `git_contributions.recent_commits_30d` : Commits des 30 derniers jours
+- `git_contributions.lines.added` : Lignes ajoutées
+- `git_contributions.lines.deleted` : Lignes supprimées
+- `git_contributions.top_contributors` : Top 10 contributeurs
+
+## 📈 Agrégation Multi-Projets
+
+## 📤 Export vers formats multiples
+
+### Export depuis fichier JSON
+
+```bash
+# Exporter dans tous les formats
+arkalia-metrics export metrics.json --format all
+
+# Export spécifique (JSON, Markdown, HTML, CSV, YAML)
+arkalia-metrics export metrics.json --format yaml
+
+# Export vers API REST
+arkalia-metrics export metrics.json \
+  --rest-api https://api.example.com/metrics \
+  --api-key YOUR_API_KEY
+```
+
+### Export programmatique
+
+```python
+from arkalia_metrics_collector import MetricsExporter
+
+# Charger les métriques
+import json
+with open("metrics.json") as f:
+    metrics_data = json.load(f)
+
+# Exporter
+exporter = MetricsExporter(metrics_data)
+
+# Export YAML
+exporter.export_yaml("metrics.yaml")
+
+# Export vers API REST
+from arkalia_metrics_collector.exporters.external_exporters import RESTAPIExporter
+rest_exporter = RESTAPIExporter(
+    api_url="https://api.example.com/metrics",
+    api_key="YOUR_KEY"
+)
+rest_exporter.export(metrics_data)
+```
+
+## 🚨 Système d'alertes et notifications
+
+### Vérification des alertes
+
+```bash
+# Vérifier les changements significatifs (seuil par défaut: 10%)
+arkalia-metrics alerts metrics/aggregated_metrics.json
+
+# Avec seuil personnalisé
+arkalia-metrics alerts metrics/aggregated_metrics.json --threshold 15.0
+```
+
+### Création automatique d'issues GitHub
+
+```bash
+# Créer une issue GitHub si des alertes sont détectées
+arkalia-metrics alerts metrics/aggregated_metrics.json \
+  --create-issue \
+  --github-owner arkalia-luna-system \
+  --github-repo arkalia-metrics-collector
+
+# Avec personnalisation
+arkalia-metrics alerts metrics/aggregated_metrics.json \
+  --create-issue \
+  --labels "metrics,automated,alerts,urgent" \
+  --assignees "user1,user2" \
+  --threshold 20.0
+```
+
+### Notifications multi-canaux
+
+```bash
+# Activer les notifications (Email, Slack, Discord)
+arkalia-metrics alerts metrics/aggregated_metrics.json --notify
+
+# Avec création d'issue
+arkalia-metrics alerts metrics/aggregated_metrics.json \
+  --notify \
+  --create-issue
+```
+
+### Configuration des notifications
+
+#### Email (SMTP)
+
+```bash
+export SMTP_SERVER="smtp.gmail.com"
+export SMTP_PORT="587"
+export SMTP_USERNAME="your-email@gmail.com"
+export SMTP_PASSWORD="your-password"
+export SMTP_FROM="your-email@gmail.com"
+export SMTP_TO="recipient1@example.com,recipient2@example.com"
+```
+
+#### Slack
+
+```bash
+export SLACK_WEBHOOK_URL="https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+```
+
+#### Discord
+
+```bash
+export DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/YOUR/WEBHOOK/URL"
+```
+
+### Utilisation programmatique
+
+```python
+from arkalia_metrics_collector import MetricsAlerts
+from arkalia_metrics_collector.notifications import EmailNotifier, SlackNotifier
+
+# Initialiser le système d'alertes
+alerts = MetricsAlerts(
+    threshold_percent=15.0,
+    enable_notifications=True,
+    custom_labels=["metrics", "automated"],
+    assignees=["user1"]
+)
+
+# Vérifier les changements
+alerts_data = alerts.check_significant_changes(current_metrics)
+
+if alerts_data.get("has_alerts"):
+    # Envoyer les notifications
+    results = alerts.send_notifications(alerts_data)
+    print(f"Email: {results.get('email', False)}")
+    print(f"Slack: {results.get('slack', False)}")
+```
+
 ## 📈 Agrégation Multi-Projets
 
 ### Collecte et agrégation

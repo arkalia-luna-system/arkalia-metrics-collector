@@ -61,7 +61,7 @@ Collecteur de métriques universel et professionnel pour projets Python avec tes
 - 🎨 **Export multi-format** : JSON, Markdown, HTML, CSV, YAML
 - 🔧 **CLI professionnel** avec configuration flexible
 - 🌐 **Dashboard web** interactif et responsive
-- 🔗 **Intégration GitHub API** : stars, forks, issues, PRs, releases
+- 🔗 **Intégration GitHub API complète** : stars, forks, issues, PRs, releases (option `--github-api`)
 - 📈 **Agrégation multi-projets** : coverage global, métriques agrégées
 - 🏷️ **Génération de badges** : Shields.io, Codecov, GitHub Actions
 - 📋 **Tableaux README automatiques** : métriques sourcées et vérifiables
@@ -70,6 +70,10 @@ Collecteur de métriques universel et professionnel pour projets Python avec tes
 - 🔄 **Automatisation CI/CD** : mise à jour quotidienne via GitHub Actions
 - 🧪 **Tests complets** : 120 tests unitaires, intégration et performance
 - 🌐 **Tests sur projets externes** avec validation automatique
+- 📧 **Notifications multi-canaux** : Email (SMTP), Slack, Discord
+- 🎯 **Personnalisation avancée** : labels personnalisés, assignation d'issues, seuils configurables
+- 📊 **Statistiques Git** : commits, lignes, contributeurs, activité temporelle
+- 🌐 **Export vers services externes** : REST API, Google Sheets, Notion, Airtable (structure prête)
 
 ## 🚀 Installation
 

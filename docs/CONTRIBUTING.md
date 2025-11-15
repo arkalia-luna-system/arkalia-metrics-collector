@@ -11,10 +11,13 @@ Merci de votre intérêt pour **Arkalia Metrics Collector** ! Toutes les contrib
 - Traductions (anglais, espagnol, etc.)
 
 ### 🚀 **Features Recherchées**
-- Support de nouveaux formats d'export (XML) - YAML déjà implémenté ✅
+- Support de nouveaux formats d'export (XML)
 - Métriques de qualité avancées (complexité cyclomatique)
 - Intégration avec d'autres outils (SonarQube, CodeClimate)
 - Support d'autres langages (JavaScript, TypeScript)
+- Implémentation complète des exporteurs Google Sheets, Notion, Airtable
+- Amélioration des visualisations du dashboard (plus de graphiques)
+- Support de métriques de performance (temps d'exécution, mémoire)
 
 ### 🧪 **Tests et Validation**
 - Tests sur différents OS (Windows, macOS, Linux)

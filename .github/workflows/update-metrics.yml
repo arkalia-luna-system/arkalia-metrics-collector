@@ -12,7 +12,7 @@ on:
       force_update:
         description: "Forcer la mise à jour même si aucune modification"
         required: false
-        default: "false"
+        default: false
         type: boolean
 
 env:
