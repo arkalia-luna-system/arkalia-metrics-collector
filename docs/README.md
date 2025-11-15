@@ -46,6 +46,6 @@ Bienvenue dans la documentation complète d'**Arkalia Metrics Collector** !
 
 ## 📝 Notes
 
-- Les fichiers dans `archive/` sont des documents historiques
 - Les métriques dans `metrics/` sont générées automatiquement
+- Les fichiers dans `metrics/history/` contiennent l'historique des métriques agrégées
 
