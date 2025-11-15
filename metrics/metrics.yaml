@@ -1,9 +1,9 @@
-timestamp: '2025-11-15T11:19:02.026865'
-project_root: /private/var/folders/7j/xgp8mds53ms6blyzf8g4173m0000gn/T/pytest-of-athalia/pytest-2/test_collect_with_special_char0/projet-avec-espaces_et.symboles
+timestamp: '2025-11-15T11:36:23.234454'
+project_root: /private/var/folders/7j/xgp8mds53ms6blyzf8g4173m0000gn/T/pytest-of-athalia/pytest-4/test_collect_with_special_char0/projet-avec-espaces_et.symboles
 collection_info:
   collector_version: 1.0.0
   python_version: 3.10.14
-  collection_date: '2025-11-15T11:19:01.807113'
+  collection_date: '2025-11-15T11:36:23.058973'
 python_files:
   count: 1
   core_files: 1
