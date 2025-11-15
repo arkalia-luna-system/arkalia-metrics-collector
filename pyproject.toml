@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "arkalia-metrics-collector"
-version = "1.0.0"
+version = "1.1.0"
 description = "Professional metrics collection and analysis for Python projects - Code analysis, test coverage, documentation metrics, GitHub integration, multi-format export, and interactive dashboard"
 readme = "README.md"
 license-files = ["LICENSE"]

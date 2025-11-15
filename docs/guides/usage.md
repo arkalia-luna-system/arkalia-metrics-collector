@@ -80,12 +80,13 @@ exporter.export_yaml("metrics.yaml")
 ### Export en lot
 
 ```python
-# Exporter dans tous les formats
+# Exporter dans tous les formats (JSON, Markdown, HTML, CSV, YAML)
 results = exporter.export_all_formats("output/")
 
 # Vérifier les résultats
 for format, success in results.items():
     print(f"{format}: {'✅' if success else '❌'}")
+# Résultat: {'json': True, 'markdown': True, 'html': True, 'csv': True, 'yaml': True}
 ```
 
 ## ✅ Validation des métriques

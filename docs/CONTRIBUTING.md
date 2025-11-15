@@ -17,7 +17,7 @@ Ce guide vous aidera à comprendre comment contribuer efficacement au projet.
 - Métriques de qualité avancées (complexité cyclomatique)
 - Intégration avec d'autres outils (SonarQube, CodeClimate)
 - Support d'autres langages (JavaScript, TypeScript)
-- Implémentation complète des exporteurs Google Sheets, Notion, Airtable
+- **Implémentation complète des exporteurs externes** : Google Sheets, Notion, Airtable (structure prête, méthodes à compléter)
 - Amélioration des visualisations du dashboard (plus de graphiques)
 - Support de métriques de performance (temps d'exécution, mémoire)
 

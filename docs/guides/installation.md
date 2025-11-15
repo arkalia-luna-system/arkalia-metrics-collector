@@ -2,9 +2,9 @@
 
 ## Prérequis
 
-- **Python** : 3.10 ou supérieur
+- **Python** : 3.8 ou supérieur (testé sur 3.8, 3.9, 3.10, 3.11, 3.12)
 - **pip** : Gestionnaire de paquets Python
-- **Git** : Pour cloner le repository
+- **Git** : Pour cloner le repository (optionnel)
 
 ## 🚀 Installation depuis PyPI (recommandé)
 

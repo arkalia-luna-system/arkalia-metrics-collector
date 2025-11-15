@@ -32,7 +32,7 @@ except ImportError as e:
 
 
 @click.group()
-@click.version_option(version="1.0.0", prog_name="arkalia-metrics")
+@click.version_option(version="1.1.0", prog_name="arkalia-metrics")
 def cli():
     """
     Arkalia Metrics Collector - Outil professionnel de métriques Python.

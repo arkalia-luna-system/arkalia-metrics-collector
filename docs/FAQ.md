@@ -11,13 +11,13 @@ Questions fréquentes et réponses sur **Arkalia Metrics Collector**.
 **A:** Deux options :
 
 ```bash
-# Option 1: Depuis le repository (recommandé actuellement)
+# Option 1: Depuis PyPI (recommandé)
+pip install arkalia-metrics-collector
+
+# Option 2: Depuis le repository (pour développement)
 git clone https://github.com/arkalia-luna-system/arkalia-metrics-collector.git
 cd arkalia-metrics-collector
-pip install -e .
-
-# Option 2: Via PyPI (bientôt disponible)
-pip install arkalia-metrics-collector
+pip install -e ".[dev]"
 ```
 
 ### Q: Quelle version de Python est requise ?

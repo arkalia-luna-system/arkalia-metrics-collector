@@ -1,255 +1,385 @@
-# 📤 Exporters
+# 📤 API Reference - Exporters
 
-## MetricsExporter
+Documentation complète des exporteurs de métriques d'**Arkalia Metrics Collector**.
 
-Classe pour l'export des métriques dans différents formats.
+## 🎯 Vue d'ensemble
 
-### Constructeur
+Les exporteurs permettent d'exporter les métriques dans différents formats :
+- **MetricsExporter** : Export multi-format (JSON, Markdown, HTML, CSV, YAML)
+- **BadgesGenerator** : Génération de badges automatiques
+- **InteractiveDashboardGenerator** : Dashboard interactif HTML
+- **RESTAPIExporter** : Export vers API REST
+- **GoogleSheetsExporter** : Export vers Google Sheets (structure prête)
+- **NotionExporter** : Export vers Notion (structure prête)
+- **AirtableExporter** : Export vers Airtable (structure prête)
+
+---
+
+## 📦 MetricsExporter
+
+Exporteur principal pour tous les formats.
+
+### Import
 
 ```python
-MetricsExporter(metrics_data: dict[str, Any])
+from arkalia_metrics_collector import MetricsExporter
 ```
 
-**Paramètres :**
-- `metrics_data` : Données des métriques à exporter
+### Initialisation
+
+```python
+exporter = MetricsExporter(metrics_data: dict[str, Any])
+```
 
 ### Méthodes d'export
 
-#### export_json(output_path: str) -> bool
+#### `export_json(output_path: str | Path) -> bool`
 
-Exporte les métriques au format JSON.
-
-**Paramètres :**
-- `output_path` : Chemin du fichier de sortie
-
-**Retour :** `bool` - True si l'export a réussi
+Exporte les métriques en JSON.
 
 **Exemple :**
 ```python
-exporter = MetricsExporter(metrics_data)
-success = exporter.export_json("metrics.json")
+exporter.export_json("metrics.json")
 ```
 
-#### export_markdown_summary(output_path: str) -> bool
+#### `export_markdown_summary(output_path: str | Path) -> bool`
 
-Exporte un résumé des métriques au format Markdown.
+Exporte un résumé Markdown formaté.
 
-**Paramètres :**
-- `output_path` : Chemin du fichier de sortie
-
-**Retour :** `bool` - True si l'export a réussi
-
-**Format généré :**
-```markdown
-## 📊 Métriques du Projet
-
-- **Fichiers Python** : 25 fichiers
-- **Lignes de code** : 1,500 lignes
-- **Tests** : 45 tests
-- **Documentation** : 3 fichiers
-```
-
-#### export_html_dashboard(output_path: str) -> bool
+#### `export_html_dashboard(output_path: str | Path) -> bool`
 
 Exporte un dashboard HTML interactif.
 
-**Paramètres :**
-- `output_path` : Chemin du fichier de sortie
+**Note :** Utilise automatiquement `InteractiveDashboardGenerator` si les métriques sont agrégées.
 
-**Retour :** `bool` - True si l'export a réussi
+#### `export_csv(output_path: str | Path) -> bool`
 
-**Caractéristiques :**
-- Design moderne avec Tailwind CSS
-- Interface responsive
-- Métriques visuelles
-- Navigation intuitive
+Exporte les métriques en CSV.
 
-#### export_csv(output_path: str) -> bool
+#### `export_yaml(output_path: str | Path) -> bool`
 
-Exporte les métriques au format CSV.
-
-**Paramètres :**
-- `output_path` : Chemin du fichier de sortie
-
-**Retour :** `bool` - True si l'export a réussi
-
-**Format généré :**
-```csv
-Métrique,Valeur,Unité
-
-Fichiers Python,25,fichiers
-Lignes de Code,1500,lignes
-Tests,45,tests
-Documentation,3,fichiers
-
-Date de collecte,2024-01-01T00:00:00,
-Version collecteur,1.0.0,
-```
-
-#### export_yaml(output_path: str) -> bool
-
-Exporte les métriques au format YAML.
-
-**Paramètres :**
-- `output_path` : Chemin du fichier de sortie
-
-**Retour :** `bool` - True si l'export a réussi
+Exporte les métriques en YAML.
 
 **Note :** Nécessite PyYAML (`pip install pyyaml`). Si PyYAML n'est pas installé, retourne False avec un message d'avertissement.
 
 **Exemple :**
 ```python
-exporter = MetricsExporter(metrics_data)
-success = exporter.export_yaml("metrics.yaml")
+exporter.export_yaml("metrics.yaml")
 ```
 
-#### export_all_formats(output_dir: str = "metrics") -> dict[str, bool]
+#### `export_all_formats(output_dir: str | Path) -> dict[str, bool]`
 
 Exporte dans tous les formats disponibles.
 
-**Paramètres :**
-- `output_dir` : Dossier de sortie (défaut: "metrics")
-
-**Retour :** `dict[str, bool]` - Résultat pour chaque format
+**Retour :** Dictionnaire avec le statut de chaque format :
+```python
+{
+    'json': True,
+    'markdown': True,
+    'html': True,
+    'csv': True,
+    'yaml': True
+}
+```
 
 **Exemple :**
 ```python
 results = exporter.export_all_formats("output/")
-# Retourne : {"json": True, "markdown": True, "html": True, "csv": True, "yaml": True}
+for format, success in results.items():
+    print(f"{format}: {'✅' if success else '❌'}")
 ```
 
-### Gestion des erreurs
+---
 
-L'exporteur gère automatiquement :
-- Création des dossiers de sortie
-- Erreurs d'écriture de fichiers
-- Données manquantes ou invalides
+## 🏷️ BadgesGenerator
 
-**Exemple de gestion d'erreur :**
-```python
-try:
-    success = exporter.export_json("metrics.json")
-    if success:
-        print("✅ Export réussi")
-    else:
-        print("❌ Export échoué")
-except Exception as e:
-    print(f"Erreur lors de l'export : {e}")
-```
+Générateur de badges automatiques.
 
-### Personnalisation des exports
-
-#### Template Markdown personnalisé
+### Import
 
 ```python
-# Créer un template personnalisé
-custom_template = """
-# Métriques de {project_name}
-
-## Résumé
-- Fichiers Python : {python_files}
-- Lignes de code : {lines_of_code}
-- Tests : {tests}
-- Documentation : {documentation}
-
-## Détails
-{details}
-"""
-
-# Utiliser le template (extension future)
-# exporter.export_custom_markdown("custom.md", template=custom_template)
+from arkalia_metrics_collector import BadgesGenerator
 ```
 
-#### Format CSV personnalisé
+### Initialisation
 
 ```python
-# Ajouter des colonnes personnalisées
-custom_columns = [
-    "Métrique",
-    "Valeur",
-    "Unité",
-    "Pourcentage",
-    "Tendance"
-]
-
-# Utiliser les colonnes personnalisées (extension future)
-# exporter.export_custom_csv("custom.csv", columns=custom_columns)
+generator = BadgesGenerator()
 ```
 
-### Formats de sortie
+### Méthodes statiques
 
-#### JSON
-- **Avantages** : Structuré, facile à parser
-- **Utilisation** : API, intégration, analyse programmatique
+#### `generate_shields_badge(label: str, message: str, color: str = "blue", style: str = "flat", logo: str | None = None) -> str`
 
-#### Markdown
-- **Avantages** : Lisible, compatible GitHub, documentation
-- **Utilisation** : README, documentation, rapports
+Génère un badge Shields.io.
 
-#### HTML
-- **Avantages** : Interactif, visuel, navigation
-- **Utilisation** : Dashboards, présentations, web
-
-#### CSV
-- **Avantages** : Compatible Excel, analyse de données
-- **Utilisation** : Rapports, analyse, import dans d'autres outils
-
-#### YAML
-- **Avantages** : Lisible, configuration, scripts
-- **Utilisation** : Configuration, CI/CD, scripts d'automatisation
-
-### Intégration avec d'autres outils
-
-#### GitHub Actions
-```yaml
-- name: Export Metrics
-  run: |
-    arkalia-metrics collect . --format all --output metrics/
-    # Les métriques sont maintenant disponibles dans metrics/
-    # Formats disponibles: JSON, Markdown, HTML, CSV, YAML
+**Exemple :**
+```python
+badge_url = generator.generate_shields_badge(
+    label="Python Modules",
+    message="52,320",
+    color="blue",
+    logo="python"
+)
 ```
 
-#### Commande export dédiée
+#### `generate_codecov_badge(owner: str, repo: str, branch: str = "main") -> str`
+
+Génère un badge Codecov.
+
+#### `generate_github_actions_badge(owner: str, repo: str, workflow: str = "ci") -> str`
+
+Génère un badge GitHub Actions.
+
+#### `generate_pypi_badge(package_name: str) -> str`
+
+Génère un badge PyPI.
+
+### Méthodes d'instance
+
+#### `generate_metrics_badges(metrics: dict[str, Any], github_owner: str | None = None, github_repo: str | None = None) -> str`
+
+Génère tous les badges de métriques (modules, LOC, tests, coverage, CI, Codecov).
+
+#### `generate_status_badges(github_owner: str | None = None, github_repo: str | None = None, pypi_name: str | None = None, license_name: str = "MIT") -> str`
+
+Génère les badges de statut (license, Python, stars, PyPI).
+
+#### `generate_all_badges(metrics: dict[str, Any], github_owner: str | None = None, github_repo: str | None = None, pypi_name: str | None = None, license_name: str = "MIT") -> str`
+
+Génère tous les badges (statut + métriques).
+
+---
+
+## 🎨 InteractiveDashboardGenerator
+
+Générateur de dashboard interactif HTML.
+
+### Import
+
+```python
+from arkalia_metrics_collector.exporters.interactive_dashboard import InteractiveDashboardGenerator
+```
+
+### Initialisation
+
+```python
+generator = InteractiveDashboardGenerator()
+```
+
+### Méthodes principales
+
+#### `generate(metrics: dict[str, Any], output_path: str | Path, historical_data: list[dict] | None = None) -> None`
+
+Génère un dashboard HTML interactif.
+
+**Paramètres :**
+- `metrics` : Métriques à visualiser (simple ou agrégées)
+- `output_path` : Chemin de sortie
+- `historical_data` : Données historiques pour graphiques d'évolution (optionnel)
+
+**Fonctionnalités :**
+- 📊 Graphiques Chart.js (modules, lignes, tests, overview)
+- 📈 Graphiques d'évolution temporelle (si historique disponible)
+- 🔍 Tableaux interactifs avec tri et filtrage
+- 📤 Export JSON/CSV
+- 📱 Interface responsive
+
+**Exemple :**
+```python
+from arkalia_metrics_collector.exporters.interactive_dashboard import InteractiveDashboardGenerator
+
+generator = InteractiveDashboardGenerator()
+generator.generate(metrics, "dashboard.html", historical_data=history)
+```
+
+---
+
+## 🌐 RESTAPIExporter
+
+Exporteur vers API REST.
+
+### Import
+
+```python
+from arkalia_metrics_collector.exporters.external_exporters import RESTAPIExporter
+```
+
+### Initialisation
+
+```python
+exporter = RESTAPIExporter(
+    api_url: str,
+    api_key: str | None = None,
+    headers: dict[str, str] | None = None
+)
+```
+
+### Méthodes principales
+
+#### `export(metrics: dict[str, Any]) -> bool`
+
+Exporte les métriques vers l'API REST.
+
+**Exemple :**
+```python
+exporter = RESTAPIExporter(
+    api_url="https://api.example.com/metrics",
+    api_key="YOUR_API_KEY"
+)
+success = exporter.export(metrics)
+```
+
+---
+
+## 📊 Exporteurs Externes (Structure Prête)
+
+Les exporteurs suivants ont une structure prête mais nécessitent l'implémentation complète des méthodes `export()` :
+
+### GoogleSheetsExporter
+
+```python
+from arkalia_metrics_collector.exporters.external_exporters import GoogleSheetsExporter
+
+exporter = GoogleSheetsExporter(
+    spreadsheet_id: str,
+    credentials_path: str | None = None
+)
+# exporter.export(metrics)  # À implémenter
+```
+
+### NotionExporter
+
+```python
+from arkalia_metrics_collector.exporters.external_exporters import NotionExporter
+
+exporter = NotionExporter(
+    notion_token: str,
+    database_id: str
+)
+# exporter.export(metrics)  # À implémenter
+```
+
+### AirtableExporter
+
+```python
+from arkalia_metrics_collector.exporters.external_exporters import AirtableExporter
+
+exporter = AirtableExporter(
+    base_id: str,
+    table_name: str,
+    api_key: str
+)
+# exporter.export(metrics)  # À implémenter
+```
+
+**Note :** Ces exporteurs sont prêts pour l'implémentation. Voir [CONTRIBUTING.md](../CONTRIBUTING.md) pour contribuer.
+
+---
+
+## 💡 Exemples d'utilisation
+
+### Export complet
+
+```python
+from arkalia_metrics_collector import MetricsExporter
+
+exporter = MetricsExporter(metrics)
+
+# Export individuel
+exporter.export_json("metrics.json")
+exporter.export_yaml("metrics.yaml")
+
+# Export tous formats
+results = exporter.export_all_formats("output/")
+```
+
+### Export avec dashboard interactif
+
+```python
+from arkalia_metrics_collector import MetricsExporter
+
+exporter = MetricsExporter(aggregated_metrics)
+exporter.export_html_dashboard("dashboard.html")
+# Génère automatiquement un dashboard interactif si métriques agrégées
+```
+
+### Export vers API REST
+
+```python
+from arkalia_metrics_collector.exporters.external_exporters import RESTAPIExporter
+
+exporter = RESTAPIExporter(
+    api_url="https://api.example.com/metrics",
+    api_key="YOUR_KEY"
+)
+exporter.export(metrics)
+```
+
+### Génération de badges
+
+```python
+from arkalia_metrics_collector import BadgesGenerator, MetricsCollector
+
+collector = MetricsCollector(".")
+metrics = collector.collect_all_metrics()
+
+generator = BadgesGenerator()
+badges = generator.generate_all_badges(
+    metrics,
+    github_owner="arkalia-luna-system",
+    github_repo="arkalia-metrics-collector",
+    pypi_name="arkalia-metrics-collector"
+)
+
+print(badges)
+```
+
+### Utilisation via CLI
+
 ```bash
-# Exporter depuis un fichier JSON existant
+# Export depuis fichier JSON
 arkalia-metrics export metrics.json --format yaml
 
-# Exporter dans tous les formats
+# Export tous formats
 arkalia-metrics export metrics.json --format all --output exports/
+
+# Export vers API REST
+arkalia-metrics export metrics.json \
+  --rest-api https://api.example.com/metrics \
+  --api-key YOUR_KEY
 ```
 
-#### CI/CD
-```bash
-# Collecter et exporter
-arkalia-metrics collect . --format json --output artifacts/
+---
 
-# Utiliser dans le pipeline
-python -c "
-import json
-with open('artifacts/metrics.json') as f:
-    metrics = json.load(f)
-    print(f'Tests: {metrics[\"summary\"][\"collected_tests\"]}')
-"
-```
+## 📋 Formats de sortie
 
-#### Monitoring
-```python
-# Collecter des métriques périodiquement
-import schedule
-import time
+### JSON
+- Structure complète des métriques
+- Format standard et lisible
+- Facile à parser programmatiquement
 
-def export_metrics():
-    collector = MetricsCollector("./mon-projet")
-    metrics = collector.collect_all_metrics()
-    
-    exporter = MetricsExporter(metrics)
-    timestamp = time.strftime("%Y%m%d_%H%M%S")
-    exporter.export_json(f"metrics_{timestamp}.json")
+### Markdown
+- Résumé formaté pour documentation
+- Tableaux et sections organisées
+- Compatible GitHub/GitLab
 
-# Planifier l'export toutes les heures
-schedule.every().hour.do(export_metrics)
+### HTML
+- Dashboard interactif avec Chart.js
+- Graphiques d'évolution
+- Tableaux interactifs
+- Export JSON/CSV intégré
 
-while True:
-    schedule.run_pending()
-    time.sleep(60)
-```
+### CSV
+- Format tabulaire
+- Compatible Excel/Google Sheets
+- Facile à analyser
+
+### YAML
+- Format lisible et structuré
+- Compatible avec outils DevOps
+- Nécessite PyYAML
+
+---
+
+**📚 [Retour à l'API](../index.md) | [Collectors](collectors.md) | [Validators](validators.md)**
