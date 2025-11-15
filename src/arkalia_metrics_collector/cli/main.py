@@ -23,6 +23,7 @@ try:
         MetricsValidator,
         MultiProjectAggregator,
     )
+    from arkalia_metrics_collector.collectors.metrics_alerts import MetricsAlerts
 except ImportError as e:
     print(f"❌ Erreur d'import: {e}")
     print("📍 Assurez-vous que le package est installé correctement.")
@@ -532,6 +533,103 @@ def badges(
 
     except Exception as e:
         click.echo(f"❌ Erreur lors de la génération des badges: {e}")
+        if verbose:
+            import traceback
+
+            traceback.print_exc()
+        sys.exit(1)
+
+
+@cli.command()
+@click.argument(
+    "metrics_file", type=click.Path(exists=True, file_okay=True, dir_okay=False)
+)
+@click.option(
+    "--threshold",
+    "-t",
+    default=10.0,
+    type=float,
+    help="Seuil de changement significatif en % (défaut: 10.0)",
+)
+@click.option(
+    "--create-issue",
+    is_flag=True,
+    help="Créer une issue GitHub si des alertes sont détectées",
+)
+@click.option(
+    "--github-owner",
+    default="arkalia-luna-system",
+    help="Propriétaire du repository GitHub",
+)
+@click.option(
+    "--github-repo",
+    default="arkalia-metrics-collector",
+    help="Nom du repository GitHub",
+)
+@click.option("--verbose", is_flag=True, help="Mode verbeux")
+def alerts(
+    metrics_file: str,
+    threshold: float,
+    create_issue: bool,
+    github_owner: str,
+    github_repo: str,
+    verbose: bool,
+):
+    """
+    Vérifie les changements significatifs dans les métriques et génère des alertes.
+
+    METRICS_FILE: Fichier JSON contenant les métriques à analyser
+    """
+    if verbose:
+        click.echo(f"🔍 Analyse des alertes depuis {metrics_file}...")
+        click.echo(f"   📊 Seuil: {threshold}%")
+
+    try:
+        import json
+
+        # Charger les métriques
+        with open(metrics_file, encoding="utf-8") as f:
+            metrics_data = json.load(f)
+
+        # Initialiser le système d'alertes
+        alerts_system = MetricsAlerts(threshold_percent=threshold)
+
+        # Vérifier les changements significatifs
+        alerts_data = alerts_system.check_significant_changes(metrics_data)
+
+        if alerts_data.get("has_alerts"):
+            click.echo("\n🚨 ALERTES DÉTECTÉES:")
+            click.echo("=" * 50)
+            click.echo(alerts_system.generate_alert_message(alerts_data))
+
+            if create_issue:
+                if verbose:
+                    click.echo("\n📝 Création d'une issue GitHub...")
+
+                issue_body = alerts_system.create_github_issue_body(alerts_data)
+
+                # Note: La création d'issue nécessite un token GitHub
+                # Pour l'instant, on affiche juste le contenu
+                click.echo("\n📋 Contenu de l'issue GitHub:")
+                click.echo("-" * 50)
+                click.echo(issue_body)
+                click.echo("-" * 50)
+                click.echo(
+                    "\n💡 Pour créer l'issue automatiquement, utilisez l'API GitHub"
+                )
+
+            return 1  # Code de sortie pour indiquer des alertes
+        else:
+            click.echo("✅ Aucune alerte détectée")
+            if verbose:
+                click.echo(f"   ℹ️  Aucun changement significatif (seuil: {threshold}%)")
+            return 0
+
+    except FileNotFoundError:
+        click.echo(f"❌ Fichier non trouvé: {metrics_file}")
+        sys.exit(1)
+    except Exception as e:
+        click.echo(f"❌ Erreur lors de l'analyse: {e}")
         if verbose:
             import traceback
 
