@@ -13,6 +13,8 @@ try:
     from defusedxml import ElementTree as ET
 except ImportError:
     # Fallback si defusedxml n'est pas installé
+    # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
+    # nosemgrep: python.lang.security.use-defused-xml-parse.use-defused-xml-parse
     import xml.etree.ElementTree as ET  # noqa: S405
 
     logging.warning(
