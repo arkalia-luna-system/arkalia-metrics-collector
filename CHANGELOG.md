@@ -76,20 +76,16 @@ et ce projet adhère à [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### 🔮 Prochaines Versions
 
-#### [1.1.0] - Prévu Q1 2025
-- 🌐 API REST pour métriques temps réel
-- 📱 Support JavaScript/TypeScript
-- 🔌 Système de plugins extensible
-
 #### [1.2.0] - Prévu Q2 2025
 - 📓 Support Jupyter Notebooks
 - 🚀 Support langage Go
 - 💾 Stockage persistant des métriques
+- 📊 Métriques de complexité cyclomatique
 
 #### [1.3.0] - Prévu Q3 2025
 - ⚙️ Support Rust
 - 🤖 Intégrations CI/CD avancées
-- 📊 Métriques de complexité cyclomatique
+- 🔌 Système de plugins extensible
 
 ---
 

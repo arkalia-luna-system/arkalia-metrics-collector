@@ -276,7 +276,6 @@ metrics:
 - **Notebooks** : Jupyter .ipynb (prévu v1.2)
 - **Métriques avancées** : Complexité cyclomatique détaillée
 - **Base de données** : Stockage persistant des métriques
-- **API REST** : Endpoints temps réel (prévu v1.1)
 
 ### 🎯 **Scope volontaire**
 
@@ -289,8 +288,7 @@ metrics:
 
 | Version | Features Prévues | Timeline |
 |---------|------------------|----------|
-| **v1.1** | API REST + JavaScript support | Q1 2025 |
-| **v1.2** | Jupyter notebooks + Go support | Q2 2025 |
+| **v1.2** | Jupyter notebooks + Go support + Complexité cyclomatique | Q2 2025 |
 | **v1.3** | Plugins système + Rust support | Q3 2025 |
 
 ## 🤝 Contributing

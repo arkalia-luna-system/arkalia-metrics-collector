@@ -228,10 +228,10 @@ python_files = metrics['summary']['total_python_files']
 
 ### Q: API REST prévue ?
 
-**A:** 🎯 En développement pour v1.1 :
-- Endpoint `/metrics`
-- Webhook pour CI/CD
-- Dashboard temps réel
+**A:** ✅ **Déjà disponible !** Utilisez la commande `export` avec `--rest-api` :
+```bash
+arkalia-metrics export metrics.json --rest-api https://api.example.com/metrics --api-key YOUR_KEY
+```
 
 ### Q: Support des notebooks Jupyter ?
 
