@@ -1,6 +1,15 @@
-# 📊 Guide du Dashboard Interactif
+# 🎨 Guide du Dashboard Interactif
 
-Le dashboard interactif d'Arkalia Metrics Collector offre une visualisation avancée de vos métriques avec des graphiques d'évolution, des tableaux interactifs et des fonctionnalités d'export.
+Le dashboard interactif d'**Arkalia Metrics Collector** offre une visualisation complète et interactive de vos métriques avec des graphiques, tableaux et export de données.
+
+## 🎯 Vue d'ensemble
+
+Le dashboard permet de :
+- 📊 Visualiser les métriques avec des graphiques Chart.js
+- 📈 Comparer l'évolution temporelle des métriques
+- 🔍 Filtrer et rechercher dans les projets
+- 📤 Exporter les données (JSON, CSV)
+- 📱 Interface responsive et mobile-friendly
 
 ## 🚀 Génération du Dashboard
 

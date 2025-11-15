@@ -1,5 +1,9 @@
 # ❓ FAQ - Questions Fréquentes
 
+Questions fréquentes et réponses sur **Arkalia Metrics Collector**.
+
+> 💡 **Astuce** : Si votre question n'est pas dans cette FAQ, n'hésitez pas à [créer une issue](https://github.com/arkalia-luna-system/arkalia-metrics-collector/issues) !
+
 ## 🚀 Installation & Usage
 
 ### Q: Comment installer Arkalia Metrics Collector ?

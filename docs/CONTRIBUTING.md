@@ -1,6 +1,8 @@
 # 🤝 Guide de Contribution
 
-Merci de votre intérêt pour **Arkalia Metrics Collector** ! Toutes les contributions sont les bienvenues.
+Bienvenue ! Nous sommes ravis que vous souhaitiez contribuer à **Arkalia Metrics Collector**. 🎉
+
+Ce guide vous aidera à comprendre comment contribuer efficacement au projet.
 
 ## 🎯 Types de Contributions Recherchées
 
