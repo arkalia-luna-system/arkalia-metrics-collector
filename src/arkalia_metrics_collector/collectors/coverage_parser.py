@@ -5,10 +5,20 @@ Parser pour les fichiers coverage.xml (format Cobertura).
 Extrait les métriques de coverage depuis les fichiers XML générés par coverage.py.
 """
 
+import logging
 from pathlib import Path
 from typing import Any
 
-import defusedxml.ElementTree as ET
+try:
+    from defusedxml import ElementTree as ET
+except ImportError:
+    # Fallback si defusedxml n'est pas installé
+    import xml.etree.ElementTree as ET  # noqa: S405
+
+    logging.warning(
+        "defusedxml n'est pas installé. Utilisation de xml.etree.ElementTree "
+        "(non sécurisé pour XML non fiable). Installez defusedxml pour la sécurité."
+    )
 
 
 class CoverageParser:
