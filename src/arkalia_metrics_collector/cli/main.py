@@ -94,9 +94,8 @@ def collect(project_path: str, output: str, format: str, validate: bool, verbose
                         click.echo(f"   • {warning}")
 
                 validation_report = validator.get_validation_report()
-                click.echo(
-                    f"📊 Score de validation: {validation_report['validation_summary']['score']}/100"
-                )
+                score = validation_report["validation_summary"]["score"]
+                click.echo(f"📊 Score de validation: {score}/100")
 
         # Exporter les métriques
         exporter = MetricsExporter(metrics_data)
@@ -289,6 +288,11 @@ def github(owner: str, repo: str, token: str | None, output: str, verbose: bool)
 @click.option(
     "--no-history", is_flag=True, help="Désactiver la sauvegarde de l'historique"
 )
+@click.option(
+    "--github-api",
+    is_flag=True,
+    help="Activer la collecte GitHub API (nécessite GITHUB_TOKEN)",
+)
 @click.option("--verbose", is_flag=True, help="Mode verbeux")
 def aggregate(
     projects_file: str,
@@ -297,6 +301,7 @@ def aggregate(
     export_json: bool,
     evolution: bool,
     no_history: bool,
+    github_api: bool,
     verbose: bool,
 ):
     """
@@ -320,20 +325,25 @@ def aggregate(
             click.echo("❌ Aucun projet trouvé dans le fichier")
             sys.exit(1)
 
-        aggregator = MultiProjectAggregator(enable_history=not no_history)
+        aggregator = MultiProjectAggregator(
+            enable_history=not no_history, enable_github=github_api
+        )
 
         # Collecter les métriques de chaque projet
         for project in projects:
             name = project.get("name", "")
             path = project.get("path", "")
+            github_url = project.get("github", "")
 
             if not name or not path:
                 continue
 
             if verbose:
                 click.echo(f"   📦 Collecte de {name}...")
+                if github_api and github_url:
+                    click.echo(f"      🔗 GitHub: {github_url}")
 
-            metrics = aggregator.collect_project(name, path)
+            metrics = aggregator.collect_project(name, path, github_url)
             if metrics is None:
                 click.echo(f"   ⚠️  Impossible de collecter {name}")
                 continue
@@ -381,8 +391,10 @@ def aggregate(
                             delta = delta_data["delta"]
                             delta_pct = delta_data.get("delta_percent", 0)
                             trend = "📈" if delta > 0 else "📉" if delta < 0 else "➡️"
+                            metric_name = metric.replace("_", " ").title()
                             click.echo(
-                                f"   {trend} {metric.replace('_', ' ').title()}: {delta:+,.0f} ({delta_pct:+.1f}%)"
+                                f"   {trend} {metric_name}: "
+                                f"{delta:+,.0f} ({delta_pct:+.1f}%)"
                             )
 
     except Exception as e:
@@ -406,11 +418,18 @@ def aggregate(
     help="Format d'export (défaut: all)",
 )
 @click.option("--output", "-o", default="metrics", help="Dossier de sortie")
+@click.option(
+    "--rest-api",
+    help="URL de l'API REST pour export (nécessite API_KEY si authentification)",
+)
+@click.option("--api-key", help="Clé API pour export REST")
 @click.option("--verbose", is_flag=True, help="Mode verbeux")
 def export(
     metrics_file: str,
     format: str,
     output: str,
+    rest_api: str | None,
+    api_key: str | None,
     verbose: bool,
 ):
     """
@@ -558,6 +577,11 @@ def badges(
     help="Créer une issue GitHub si des alertes sont détectées",
 )
 @click.option(
+    "--notify",
+    is_flag=True,
+    help="Envoyer des notifications (email, Slack, Discord)",
+)
+@click.option(
     "--github-owner",
     default="arkalia-luna-system",
     help="Propriétaire du repository GitHub",
@@ -572,6 +596,9 @@ def alerts(
     metrics_file: str,
     threshold: float,
     create_issue: bool,
+    notify: bool,
+    labels: str | None,
+    assignees: str | None,
     github_owner: str,
     github_repo: str,
     verbose: bool,
@@ -592,8 +619,25 @@ def alerts(
         with open(metrics_file, encoding="utf-8") as f:
             metrics_data = json.load(f)
 
+        # Parser les labels et assignees
+        custom_labels = (
+            [label.strip() for label in labels.split(",") if label.strip()]
+            if labels
+            else None
+        )
+        assignees_list = (
+            [a.strip() for a in assignees.split(",") if a.strip()]
+            if assignees
+            else None
+        )
+
         # Initialiser le système d'alertes
-        alerts_system = MetricsAlerts(threshold_percent=threshold)
+        alerts_system = MetricsAlerts(
+            threshold_percent=threshold,
+            enable_notifications=notify,
+            custom_labels=custom_labels,
+            assignees=assignees_list,
+        )
 
         # Vérifier les changements significatifs
         alerts_data = alerts_system.check_significant_changes(metrics_data)
@@ -617,9 +661,8 @@ def alerts(
                 )
 
                 if existing_issue:
-                    click.echo(
-                        f"ℹ️  Issue similaire déjà ouverte: #{existing_issue.get('number')}"
-                    )
+                    issue_num = existing_issue.get("number")
+                    click.echo(f"ℹ️  Issue similaire déjà ouverte: #{issue_num}")
                     click.echo(f"   🔗 {existing_issue.get('html_url', '')}")
                     if verbose:
                         click.echo("\n💡 Mise à jour de l'issue existante...")
@@ -634,7 +677,8 @@ def alerts(
                         repo=github_repo,
                         title=issue_title,
                         body=issue_body,
-                        labels=["metrics", "automated", "alerts"],
+                        labels=alerts_system.custom_labels,
+                        assignees=alerts_system.assignees,
                     )
 
                     if issue_data:
@@ -647,6 +691,15 @@ def alerts(
                             click.echo("\n📋 Contenu de l'issue:")
                             click.echo("-" * 50)
                             click.echo(issue_body)
+
+            # Envoyer les notifications si activées
+            if notify:
+                if verbose:
+                    click.echo("\n📧 Envoi des notifications...")
+                notification_results = alerts_system.send_notifications(alerts_data)
+                for channel, success in notification_results.items():
+                    status = "✅" if success else "❌"
+                    click.echo(f"   {status} {channel.capitalize()}")
 
             return 1  # Code de sortie pour indiquer des alertes
         else:

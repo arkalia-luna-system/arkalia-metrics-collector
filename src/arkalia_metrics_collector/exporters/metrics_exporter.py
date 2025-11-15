@@ -115,7 +115,8 @@ class MetricsExporter:
 
         Args:
             output_file: Chemin du fichier de sortie
-            use_interactive: Utiliser le dashboard interactif avec Chart.js (défaut: True)
+            use_interactive: Utiliser le dashboard interactif avec Chart.js
+                (défaut: True)
 
         Returns:
             True si l'export a réussi

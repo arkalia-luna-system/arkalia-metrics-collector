@@ -62,6 +62,7 @@ class GitHubIssues:
         title: str,
         body: str,
         labels: list[str] | None = None,
+        assignees: list[str] | None = None,
     ) -> dict[str, Any] | None:
         """
         Crée une issue GitHub.
@@ -89,6 +90,9 @@ class GitHubIssues:
 
         if labels:
             payload["labels"] = labels
+
+        if assignees:
+            payload["assignees"] = assignees
 
         try:
             response = self.session.post(url, json=payload, timeout=10)

@@ -6,13 +6,13 @@ name: Update Metrics
 on:
   schedule:
     # Tous les jours à 2h UTC (3h CET, 4h CEST)
-    - cron: '0 2 * * *'
+    - cron: "0 2 * * *"
   workflow_dispatch:
     inputs:
       force_update:
-        description: 'Forcer la mise à jour même si aucune modification'
+        description: "Forcer la mise à jour même si aucune modification"
         required: false
-        default: 'false'
+        default: "false"
         type: boolean
 
 env:
@@ -41,7 +41,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'pip'
+          cache: "pip"
 
       - name: "Install Dependencies"
         run: |
@@ -97,7 +97,9 @@ jobs:
         run: |
           echo "🚨 Vérification des alertes..."
           if [ -f "metrics/aggregated_metrics.json" ]; then
-            if [ -z "$(arkalia-metrics alerts metrics/aggregated_metrics.json --threshold 10.0 2>&1 | grep 'Aucune alerte')" ]; then
+            alerts_output=$(arkalia-metrics alerts \
+              metrics/aggregated_metrics.json --threshold 10.0 2>&1)
+            if [ -z "$(echo "$alerts_output" | grep 'Aucune alerte')" ]; then
               echo "has-alerts=true" >> $GITHUB_OUTPUT
               echo "🚨 Alertes détectées"
             else
@@ -125,8 +127,10 @@ jobs:
       - name: "Vérifier les changements"
         id: check-changes
         run: |
-          git diff --exit-code README.md metrics/ || echo "has-changes=true" >> $GITHUB_OUTPUT
-          if [ -z "$(git diff --exit-code README.md metrics/ || echo 'changed')" ]; then
+          git diff --exit-code README.md metrics/ || \
+            echo "has-changes=true" >> $GITHUB_OUTPUT
+          if [ -z "$(git diff --exit-code README.md metrics/ || \
+            echo 'changed')" ]; then
             echo "has-changes=false" >> $GITHUB_OUTPUT
             echo "ℹ️ Aucun changement détecté"
           else
@@ -136,21 +140,27 @@ jobs:
           fi
 
       - name: "Commit et Push"
-        if: steps.check-changes.outputs.has-changes == 'true' || inputs.force_update == 'true'
+        if: >
+          steps.check-changes.outputs.has-changes == 'true' ||
+          inputs.force_update == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          git add README.md metrics/aggregated_metrics.json metrics/README_TABLE.md metrics/badges_final.md
-          
+
+          git add README.md \
+            metrics/aggregated_metrics.json \
+            metrics/README_TABLE.md \
+            metrics/badges_final.md
+
           git commit -m "📊 Auto-update metrics [skip ci]" \
             -m "Mise à jour automatique des métriques:" \
             -m "- Métriques agrégées depuis 12 projets" \
             -m "- Tableau README mis à jour" \
             -m "- Badges régénérés" \
             || echo "Aucun changement à commiter"
-          
-          git push origin main || echo "Push échoué (peut-être déjà à jour)"
+
+          git push origin main || \
+            echo "Push échoué (peut-être déjà à jour)"
 
       - name: "Résumé"
         if: always()
@@ -160,19 +170,19 @@ jobs:
           if [ -f "metrics/aggregated_metrics.json" ]; then
             echo "✅ Métriques agrégées générées" >> $GITHUB_STEP_SUMMARY
             python3 << 'PYEOF'
-import json
-try:
-    with open('metrics/aggregated_metrics.json') as f:
-        data = json.load(f)
-    agg = data.get('aggregated', {})
-    print(f"- **Modules Python**: {agg.get('total_modules', 0):,}")
-    print(f"- **Lignes de code**: {agg.get('total_lines_of_code', 0):,}")
-    print(f"- **Tests**: {agg.get('total_tests', 0):,}")
-    print(f"- **Projets analysés**: {agg.get('total_projects', 0)}")
-except Exception as e:
-    print(f"❌ Erreur: {e}")
-PYEOF
+          import json
+          try:
+              with open('metrics/aggregated_metrics.json') as f:
+                  data = json.load(f)
+              agg = data.get('aggregated', {})
+              print(f"- **Modules Python**: {agg.get('total_modules', 0):,}")
+              lines = agg.get('total_lines_of_code', 0)
+              print(f"- **Lignes de code**: {lines:,}")
+              print(f"- **Tests**: {agg.get('total_tests', 0):,}")
+              print(f"- **Projets analysés**: {agg.get('total_projects', 0)}")
+          except Exception as e:
+              print(f"❌ Erreur: {e}")
+          PYEOF
           else
             echo "❌ Métriques non générées" >> $GITHUB_STEP_SUMMARY
           fi
-
