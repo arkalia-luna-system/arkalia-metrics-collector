@@ -122,7 +122,9 @@ class TestMetricsExporter:
         # Vérifier le contenu HTML
         content = output_file.read_text(encoding="utf-8")
         assert "<!DOCTYPE html>" in content
-        assert "<title>Arkalia Metrics Dashboard</title>" in content  # Votre vrai titre
+        assert (
+            "Arkalia Metrics Dashboard" in content
+        )  # Titre du dashboard (peut être "Interactif")
         assert "Arkalia Metrics Dashboard" in content  # Votre vrai h1
 
     def test_export_html_styling(

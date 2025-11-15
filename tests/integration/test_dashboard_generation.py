@@ -50,7 +50,9 @@ class TestDashboardGeneration:
             assert "Arkalia Metrics Dashboard" in content
             assert "100" in content  # Modules
             assert "5,000" in content  # Lignes
-            assert "chart.js" in content.lower() or "Chart.js" in content  # Chart.js inclus
+            assert (
+                "chart.js" in content.lower() or "Chart.js" in content
+            )  # Chart.js inclus
 
     def test_generate_dashboard_aggregated_metrics(self):
         """Test la génération du dashboard avec métriques agrégées."""

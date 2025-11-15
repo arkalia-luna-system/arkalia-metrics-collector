@@ -38,7 +38,7 @@
                 🚀 Arkalia Metrics Dashboard
             </h1>
             <p class="text-xl text-gray-300 mb-2">
-                Métriques collectées le 2025-11-15T11:19:01.807113
+                Métriques collectées le 2025-11-15T11:18:59.349593
             </p>
             <div class="flex justify-center gap-4 mt-4">
                 <button onclick="exportJSON()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition">
@@ -54,25 +54,25 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             <div class="metric-card bg-gradient-to-br from-blue-600 to-blue-800 p-6 rounded-xl shadow-lg">
                 <div class="text-center">
-                    <div class="text-4xl font-bold mb-2">1</div>
+                    <div class="text-4xl font-bold mb-2">4</div>
                     <div class="text-blue-200">Fichiers Python</div>
                 </div>
             </div>
             <div class="metric-card bg-gradient-to-br from-green-600 to-green-800 p-6 rounded-xl shadow-lg">
                 <div class="text-center">
-                    <div class="text-4xl font-bold mb-2">1</div>
+                    <div class="text-4xl font-bold mb-2">24</div>
                     <div class="text-green-200">Lignes de Code</div>
                 </div>
             </div>
             <div class="metric-card bg-gradient-to-br from-purple-600 to-purple-800 p-6 rounded-xl shadow-lg">
                 <div class="text-center">
-                    <div class="text-4xl font-bold mb-2">0</div>
+                    <div class="text-4xl font-bold mb-2">1</div>
                     <div class="text-purple-200">Tests</div>
                 </div>
             </div>
             <div class="metric-card bg-gradient-to-br from-orange-600 to-orange-800 p-6 rounded-xl shadow-lg">
                 <div class="text-center">
-                    <div class="text-4xl font-bold mb-2">0</div>
+                    <div class="text-4xl font-bold mb-2">2</div>
                     <div class="text-orange-200">Documentation</div>
                 </div>
             </div>
@@ -113,17 +113,17 @@
                 <div>
                     <h3 class="text-lg font-semibold mb-2">🐍 Métriques Python</h3>
                     <ul class="space-y-2 text-gray-300">
-                        <li>• Fichiers core: 1</li>
-                        <li>• Fichiers de test: 0</li>
-                        <li>• Total lignes: 1</li>
+                        <li>• Fichiers core: 2</li>
+                        <li>• Fichiers de test: 2</li>
+                        <li>• Total lignes: 24</li>
                     </ul>
                 </div>
                 <div>
                     <h3 class="text-lg font-semibold mb-2">🧪 Métriques de Tests</h3>
                     <ul class="space-y-2 text-gray-300">
-                        <li>• Fichiers de test: 0</li>
-                        <li>• Dossiers de test: 0</li>
-                        <li>• Tests collectés: 0</li>
+                        <li>• Fichiers de test: 2</li>
+                        <li>• Dossiers de test: 1</li>
+                        <li>• Tests collectés: 1</li>
                         
                     </ul>
                 </div>
@@ -136,7 +136,7 @@
         <!-- Tableau des fichiers Python (si disponible) -->
         
         <div class="bg-gray-800 rounded-xl p-6 mb-8">
-            <h2 class="text-2xl font-bold mb-4">📁 Fichiers Python (1 fichiers)</h2>
+            <h2 class="text-2xl font-bold mb-4">📁 Fichiers Python (4 fichiers)</h2>
             <div class="table-container">
                 <table class="w-full text-left">
                     <thead class="bg-gray-700 sticky top-0">
@@ -146,7 +146,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="hover:bg-gray-700"><td class="px-4 py-2">1</td><td class="px-4 py-2 text-gray-300">main.py</td></tr>
+                        <tr class="hover:bg-gray-700"><td class="px-4 py-2">1</td><td class="px-4 py-2 text-gray-300">tests/__init__.py</td></tr><tr class="hover:bg-gray-700"><td class="px-4 py-2">2</td><td class="px-4 py-2 text-gray-300">tests/test_main.py</td></tr><tr class="hover:bg-gray-700"><td class="px-4 py-2">3</td><td class="px-4 py-2 text-gray-300">src/package/__init__.py</td></tr><tr class="hover:bg-gray-700"><td class="px-4 py-2">4</td><td class="px-4 py-2 text-gray-300">src/package/main.py</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -162,39 +162,48 @@
 
     <!-- Scripts JavaScript -->
     <script>
-        const chartData = {"current": {"modules": 1, "lines": 1, "tests": 0, "docs": 0}, "history": {"labels": ["2025-11-14"], "modules": [52336], "lines": [24792057], "tests": [11208]}};
+        const chartData = {"current": {"modules": 4, "lines": 24, "tests": 1, "docs": 2}, "history": {"labels": ["2025-11-14"], "modules": [52336], "lines": [24792057], "tests": [11208]}};
         const metricsData = {
-  "timestamp": "2025-11-15T11:19:02.026865",
-  "project_root": "/private/var/folders/7j/xgp8mds53ms6blyzf8g4173m0000gn/T/pytest-of-athalia/pytest-2/test_collect_with_special_char0/projet-avec-espaces_et.symboles",
+  "timestamp": "2025-11-15T11:18:59.636272",
+  "project_root": "/private/var/folders/7j/xgp8mds53ms6blyzf8g4173m0000gn/T/pytest-of-athalia/pytest-2/test_dashboard_with_port0/sample_project",
   "collection_info": {
     "collector_version": "1.0.0",
     "python_version": "3.10.14",
-    "collection_date": "2025-11-15T11:19:01.807113"
+    "collection_date": "2025-11-15T11:18:59.349593"
   },
   "python_files": {
-    "count": 1,
-    "core_files": 1,
-    "test_files": 0,
-    "total_lines": 1,
+    "count": 4,
+    "core_files": 2,
+    "test_files": 2,
+    "total_lines": 24,
     "files_list": [
-      "main.py"
+      "tests/__init__.py",
+      "tests/test_main.py",
+      "src/package/__init__.py",
+      "src/package/main.py"
     ]
   },
   "test_metrics": {
-    "test_files_count": 0,
-    "test_directories_count": 0,
-    "collected_tests_count": 0,
-    "test_files_list": []
+    "test_files_count": 2,
+    "test_directories_count": 1,
+    "collected_tests_count": 1,
+    "test_files_list": [
+      "tests/__init__.py",
+      "tests/test_main.py"
+    ]
   },
   "documentation_metrics": {
-    "documentation_files": 0,
-    "documentation_list": []
+    "documentation_files": 2,
+    "documentation_list": [
+      "README.md",
+      ".pytest_cache/README.md"
+    ]
   },
   "summary": {
-    "total_python_files": 1,
-    "lines_of_code": 1,
-    "collected_tests": 0,
-    "documentation_files": 0
+    "total_python_files": 4,
+    "lines_of_code": 24,
+    "collected_tests": 1,
+    "documentation_files": 2
   }
 };
 
