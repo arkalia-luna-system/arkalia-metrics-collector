@@ -42,7 +42,7 @@ et ce projet adhère à [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - **Architecture Technique**
   - 🏗️ Modules séparés : collectors, exporters, validators, cli
-  - ✅ 50 tests automatisés avec 60% de couverture
+  - ✅ 120 tests automatisés avec couverture complète
   - 🔒 Sécurité validée : 0 vulnérabilité (Bandit scan)
   - 🎯 Support Python 3.8, 3.9, 3.10, 3.11, 3.12
   - 🌍 Compatible Windows, macOS, Linux
