@@ -302,7 +302,7 @@ class MetricsExporter:
                 writer.writerow(
                     [
                         "Version collecteur",
-                        collection_info.get("collector_version", "1.0.0"),
+                        collection_info.get("collector_version", __version__),
                         "",
                     ]
                 )

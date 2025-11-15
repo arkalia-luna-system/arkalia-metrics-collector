@@ -78,7 +78,7 @@ class GitHubCollector:
         session.headers.update(
             {
                 "Accept": "application/vnd.github.v3+json",
-                "User-Agent": "Arkalia-Metrics-Collector/1.0.0",
+                "User-Agent": f"Arkalia-Metrics-Collector/{__version__}",
             }
         )
         return session
