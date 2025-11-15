@@ -1,8 +1,6 @@
-# 📖 Utilisation
+# 📖 Guide d'Utilisation
 
-## Description
-
-Guide complet d'utilisation d'Arkalia Metrics Collector
+Guide complet pour utiliser **Arkalia Metrics Collector** avec tous les exemples et cas d'usage.
 
 ## 🚀 Premiers pas
 
@@ -389,6 +387,32 @@ Les statistiques Git sont automatiquement collectées lors de l'agrégation mult
 - `git_contributions.top_contributors` : Top 10 contributeurs
 
 ## 📈 Agrégation Multi-Projets
+
+### Collecte et agrégation
+
+```python
+from arkalia_metrics_collector import MultiProjectAggregator
+
+aggregator = MultiProjectAggregator()
+
+# Collecter plusieurs projets
+aggregator.collect_project("projet1", "/path/to/project1")
+aggregator.collect_project("projet2", "/path/to/project2")
+
+# Agréger les métriques
+aggregated = aggregator.aggregate_metrics()
+
+print(f"Total modules: {aggregated['aggregated']['total_modules']}")
+print(f"Total lignes: {aggregated['aggregated']['total_lines_of_code']}")
+```
+
+### Génération de tableau README
+
+```python
+# Générer un tableau Markdown pour README
+table = aggregator.generate_readme_table()
+print(table)
+```
 
 ## 📤 Export vers formats multiples
 

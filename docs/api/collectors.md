@@ -14,8 +14,6 @@ Les collecteurs sont responsables de la collecte des métriques depuis différen
 - **GitHubIssues** : Création et gestion d'issues GitHub
 - **GitContributions** : Statistiques Git (commits, lignes, contributeurs)
 
----
-
 ## 📦 MetricsCollector
 
 Collecteur principal pour les métriques Python.

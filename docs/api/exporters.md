@@ -13,8 +13,6 @@ Les exporteurs permettent d'exporter les métriques dans différents formats :
 - **NotionExporter** : Export vers Notion (structure prête)
 - **AirtableExporter** : Export vers Airtable (structure prête)
 
----
-
 ## 📦 MetricsExporter
 
 Exporteur principal pour tous les formats.
