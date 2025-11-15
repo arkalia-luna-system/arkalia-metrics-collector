@@ -71,7 +71,7 @@
 - 📊 **Support Coverage automatique** : parsing coverage.xml, calcul global
 - 📅 **Comparaison temporelle** : historique des métriques, rapports d'évolution
 - 🔄 **Automatisation CI/CD** : mise à jour quotidienne via GitHub Actions
-- 🧪 **Tests complets** : 120 tests unitaires, intégration et performance
+- 🧪 **Tests complets** : 110 tests unitaires, intégration et performance
 - 🌐 **Tests sur projets externes** avec validation automatique
 - 📧 **Notifications multi-canaux** : Email (SMTP), Slack, Discord
 - 🎯 **Personnalisation avancée** : labels personnalisés, assignation d'issues, seuils configurables

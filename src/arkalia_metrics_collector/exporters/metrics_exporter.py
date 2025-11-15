@@ -236,7 +236,7 @@ class MetricsExporter:
         </div>
 
         <footer class="text-center mt-12 text-gray-400">
-            <p>Généré par <strong>Arkalia Metrics Collector</strong> v{collection_info.get("collector_version", "1.0.0")}</p>
+            <p>Généré par <strong>Arkalia Metrics Collector</strong> v{collection_info.get("collector_version", "1.1.0")}</p>
         </footer>
     </div>
 </body>

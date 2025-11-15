@@ -12,7 +12,7 @@ Bienvenue dans la documentation complète d'**Arkalia Metrics Collector** !
 
 - **[Installation](guides/installation.md)** - Installation et configuration
 - **[Usage](guides/usage.md)** - Guide complet d'utilisation avec toutes les commandes CLI
-- **[Testing](guides/testing.md)** - Guide des tests (120 tests)
+- **[Testing](guides/testing.md)** - Guide des tests (110 tests)
 - **[Dashboard](guides/dashboard.md)** - Guide du dashboard interactif
 
 

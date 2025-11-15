@@ -16,6 +16,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from arkalia_metrics_collector import __version__
 from arkalia_metrics_collector.collectors.coverage_parser import CoverageParser
 
 

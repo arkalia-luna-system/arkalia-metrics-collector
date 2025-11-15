@@ -173,7 +173,7 @@ arkalia-metrics serve ./mon-projet --port 9000
   "timestamp": "2024-01-01T00:00:00",
   "project_root": "/chemin/vers/projet",
   "collection_info": {
-    "collector_version": "1.0.0",
+    "collector_version": "1.1.0",
     "python_version": "3.10.0",
     "collection_date": "2024-01-01T00:00:00"
   },
