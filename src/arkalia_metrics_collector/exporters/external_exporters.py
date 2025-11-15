@@ -10,15 +10,12 @@ Support pour :
 """
 
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-if TYPE_CHECKING:
-    import requests
-else:
-    try:
-        import requests
-    except ImportError:
-        requests = None  # type: ignore[assignment]
+try:
+    import requests  # type: ignore[import-untyped]
+except ImportError:
+    requests = None
 
 logger = logging.getLogger(__name__)
 

@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-11-15T11:36:23.234454",
-  "project_root": "/private/var/folders/7j/xgp8mds53ms6blyzf8g4173m0000gn/T/pytest-of-athalia/pytest-4/test_collect_with_special_char0/projet-avec-espaces_et.symboles",
+  "timestamp": "2025-11-15T11:37:15.274918",
+  "project_root": "/private/var/folders/7j/xgp8mds53ms6blyzf8g4173m0000gn/T/pytest-of-athalia/pytest-5/test_collect_with_special_char0/projet-avec-espaces_et.symboles",
   "collection_info": {
     "collector_version": "1.0.0",
     "python_version": "3.10.14",
-    "collection_date": "2025-11-15T11:36:23.058973"
+    "collection_date": "2025-11-15T11:37:15.086066"
   },
   "python_files": {
     "count": 1,
