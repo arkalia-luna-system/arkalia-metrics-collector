@@ -1,0 +1,12 @@
+{
+  "aggregated": {
+    "total_modules": 1000,
+    "total_lines_of_code": 50000,
+    "total_tests": 200,
+    "total_documentation_files": 50,
+    "global_coverage": 75.5
+  },
+  "projects": [],
+  "collection_date": "2025-11-14T10:00:00",
+  "saved_at": "2025-11-14T22:36:38.105508"
+}

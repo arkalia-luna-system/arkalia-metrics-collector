@@ -11,7 +11,7 @@ Merci de votre intérêt pour **Arkalia Metrics Collector** ! Toutes les contrib
 - Traductions (anglais, espagnol, etc.)
 
 ### 🚀 **Features Recherchées**
-- Support de nouveaux formats d'export (XML, YAML)
+- Support de nouveaux formats d'export (XML) - YAML déjà implémenté ✅
 - Métriques de qualité avancées (complexité cyclomatique)
 - Intégration avec d'autres outils (SonarQube, CodeClimate)
 - Support d'autres langages (JavaScript, TypeScript)
@@ -79,7 +79,7 @@ git push origin feature/ma-super-feature
 - **Linting** : Ruff
 - **Types** : MyPy avec annotations
 - **Sécurité** : Bandit pour les scans
-- **Tests** : pytest avec couverture >80% (113 tests actuels)
+- **Tests** : pytest avec couverture >80% (120 tests actuels)
 - **Documentation** : Docstrings Google style
 
 ### 4. **Structure des Commits**
@@ -157,7 +157,7 @@ Les contributeurs sont mentionnés dans :
 - **Issues** : Questions, bugs, features
 - **Discussions** : Idées, feedback, aide
 - **Discord** : [Arkalia Community](https://discord.gg/arkalia) (optionnel)
-- **Email** : `contrib@arkalia-luna.com`
+- **Email** : `arkalia.luna.system@gmail.com`
 
 ## 📄 Licence
 

@@ -28,11 +28,11 @@ pip install arkalia-metrics-collector
 
 ### Q: Combien de tests y a-t-il ?
 
-**A:** **113 tests** au total :
-- **50 tests unitaires** : Fonctionnalités individuelles
-- **16 tests d'intégration** : Projets externes et validation
-- **15 tests de performance** : Vitesse et mémoire
-- **32 tests CLI** : Interface en ligne de commande
+**A:** **120 tests** au total :
+- **50+ tests unitaires** : Fonctionnalités individuelles
+- **16+ tests d'intégration** : Projets externes et validation
+- **15+ tests de performance** : Vitesse et mémoire
+- **32+ tests CLI** : Interface en ligne de commande
 
 ### Q: Les tests couvrent-ils tous les cas d'usage ?
 
@@ -74,11 +74,12 @@ pytest tests/ --cov=src/ --cov-report=html
 
 ### Q: Quels formats d'export sont supportés ?
 
-**A:** 4 formats disponibles :
+**A:** 5 formats disponibles :
 - **JSON** : Données complètes pour intégration
 - **Markdown** : Pour README et documentation
 - **HTML** : Dashboard interactif
 - **CSV** : Pour analyse dans Excel/Google Sheets
+- **YAML** : Pour configuration et scripts (nécessite PyYAML)
 
 ### Q: Est-ce compatible avec mon type de projet Python ?
 
@@ -243,7 +244,7 @@ python_files = metrics['summary']['total_python_files']
 **A:** Plusieurs options :
 1. **Issues GitHub** : [github.com/arkalia-luna-system/arkalia-metrics-collector/issues](https://github.com/arkalia-luna-system/arkalia-metrics-collector/issues)
 2. **Discussions** : Pour questions générales
-3. **Email** : `support@arkalia-luna.com`
+3. **Email** : `arkalia.luna.system@gmail.com`
 
 ### Q: Comment signaler un bug ?
 

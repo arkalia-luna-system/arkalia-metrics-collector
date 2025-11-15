@@ -209,10 +209,10 @@ from comprehensive_package.models import User, Product
 
 def test_user_model():
     """Test modèle User."""
-    user = User(1, "John", "john@example.com")
+    user = User(1, "John", "arkalia.luna.system@gmail.com")
     assert user.id == 1
     assert user.name == "John"
-    assert user.email == "john@example.com"
+    assert user.email == "arkalia.luna.system@gmail.com"
     assert user.active is True
 
     user_dict = user.to_dict()

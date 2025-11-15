@@ -16,10 +16,14 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 try:
     from arkalia_metrics_collector import (
+        BadgesGenerator,
+        GitHubCollector,
         MetricsCollector,
         MetricsExporter,
         MetricsValidator,
+        MultiProjectAggregator,
     )
+    from arkalia_metrics_collector.collectors.metrics_alerts import MetricsAlerts
 except ImportError as e:
     print(f"❌ Erreur d'import: {e}")
     print("📍 Assurez-vous que le package est installé correctement.")
@@ -48,7 +52,7 @@ def cli():
 @click.option(
     "--format",
     "-f",
-    type=click.Choice(["json", "markdown", "html", "csv", "all"]),
+    type=click.Choice(["json", "markdown", "html", "csv", "yaml", "all"]),
     default="all",
     help="Format d'export (défaut: all)",
 )
@@ -114,6 +118,8 @@ def collect(project_path: str, output: str, format: str, validate: bool, verbose
                 success = exporter.export_html_dashboard(f"{output}/dashboard.html")
             elif format == "csv":
                 success = exporter.export_csv(f"{output}/metrics.csv")
+            elif format == "yaml":
+                success = exporter.export_yaml(f"{output}/metrics.yaml")
 
             if verbose:
                 status = "✅" if success else "❌"
@@ -214,6 +220,420 @@ def serve(project_path: str, port: int):
 
     except Exception as e:
         click.echo(f"❌ Erreur lors de la génération du dashboard: {e}")
+        sys.exit(1)
+
+
+@cli.command()
+@click.argument("owner")
+@click.argument("repo")
+@click.option("--token", "-t", help="Token GitHub (ou variable GITHUB_TOKEN)")
+@click.option("--output", "-o", default="metrics", help="Dossier de sortie")
+@click.option("--verbose", is_flag=True, help="Mode verbeux")
+def github(owner: str, repo: str, token: str | None, output: str, verbose: bool):
+    """
+    Collecte les métriques GitHub d'un dépôt.
+
+    OWNER: Propriétaire du dépôt (organisation ou utilisateur)
+    REPO: Nom du dépôt
+    """
+    if verbose:
+        click.echo(f"🔍 Collecte des métriques GitHub pour {owner}/{repo}...")
+
+    try:
+        collector = GitHubCollector(token)
+        metrics = collector.collect_repo_metrics(owner, repo)
+
+        if metrics is None:
+            click.echo("❌ Impossible de collecter les métriques GitHub")
+            click.echo("💡 Vérifiez que le dépôt existe et est accessible")
+            sys.exit(1)
+
+        # Exporter en JSON
+        output_path = Path(output)
+        output_path.mkdir(parents=True, exist_ok=True)
+        json_file = output_path / f"github_{owner}_{repo}.json"
+
+        import json
+
+        with open(json_file, "w", encoding="utf-8") as f:
+            json.dump(metrics, f, indent=2, ensure_ascii=False)
+
+        if verbose:
+            stats = metrics.get("stats", {})
+            click.echo("✅ Métriques collectées:")
+            click.echo(f"   ⭐ Stars: {stats.get('stars', 0):,}")
+            click.echo(f"   🍴 Forks: {stats.get('forks', 0):,}")
+            click.echo(f"   👀 Watchers: {stats.get('watchers', 0):,}")
+            click.echo(f"   📝 Open Issues: {stats.get('open_issues', 0):,}")
+
+        click.echo(f"\n💾 Métriques exportées dans: {json_file}")
+
+    except Exception as e:
+        click.echo(f"❌ Erreur lors de la collecte GitHub: {e}")
+        if verbose:
+            import traceback
+
+            traceback.print_exc()
+        sys.exit(1)
+
+
+@cli.command()
+@click.argument(
+    "projects_file", type=click.Path(exists=True, file_okay=True, dir_okay=False)
+)
+@click.option("--output", "-o", default="metrics", help="Dossier de sortie")
+@click.option("--readme-table", is_flag=True, help="Générer un tableau README")
+@click.option("--json", "export_json", is_flag=True, help="Exporter en JSON")
+@click.option("--evolution", is_flag=True, help="Générer un rapport d'évolution")
+@click.option(
+    "--no-history", is_flag=True, help="Désactiver la sauvegarde de l'historique"
+)
+@click.option("--verbose", is_flag=True, help="Mode verbeux")
+def aggregate(
+    projects_file: str,
+    output: str,
+    readme_table: bool,
+    export_json: bool,
+    evolution: bool,
+    no_history: bool,
+    verbose: bool,
+):
+    """
+    Agrège les métriques de plusieurs projets.
+
+    PROJECTS_FILE: Fichier JSON avec la liste des projets
+                   Format: {"projects": [{"name": "...", "path": "..."}]}
+    """
+    if verbose:
+        click.echo(f"🔍 Agrégation des métriques depuis {projects_file}...")
+
+    try:
+        import json
+
+        # Charger la configuration des projets
+        with open(projects_file, encoding="utf-8") as f:
+            config = json.load(f)
+
+        projects = config.get("projects", [])
+        if not projects:
+            click.echo("❌ Aucun projet trouvé dans le fichier")
+            sys.exit(1)
+
+        aggregator = MultiProjectAggregator(enable_history=not no_history)
+
+        # Collecter les métriques de chaque projet
+        for project in projects:
+            name = project.get("name", "")
+            path = project.get("path", "")
+
+            if not name or not path:
+                continue
+
+            if verbose:
+                click.echo(f"   📦 Collecte de {name}...")
+
+            metrics = aggregator.collect_project(name, path)
+            if metrics is None:
+                click.echo(f"   ⚠️  Impossible de collecter {name}")
+                continue
+
+        # Agréger les métriques
+        aggregated = aggregator.aggregate_metrics()
+        agg_data = aggregated.get("aggregated", {})
+
+        if verbose:
+            click.echo("\n✅ Métriques agrégées:")
+            click.echo(f"   📦 Projets: {agg_data.get('total_projects', 0)}")
+            click.echo(f"   🐍 Modules: {agg_data.get('total_modules', 0):,}")
+            click.echo(f"   📝 Lignes: {agg_data.get('total_lines_of_code', 0):,}")
+            click.echo(f"   🧪 Tests: {agg_data.get('total_tests', 0):,}")
+
+        # Exporter
+        output_path = Path(output)
+        output_path.mkdir(parents=True, exist_ok=True)
+
+        if export_json:
+            json_file = output_path / "aggregated_metrics.json"
+            aggregator.export_aggregated_json(json_file)
+            click.echo(f"\n💾 Métriques agrégées exportées dans: {json_file}")
+
+        if readme_table:
+            table = aggregator.generate_readme_table()
+            table_file = output_path / "README_TABLE.md"
+            with open(table_file, "w", encoding="utf-8") as f:
+                f.write(table)
+            click.echo(f"📊 Tableau README généré dans: {table_file}")
+
+        if evolution:
+            evolution_file = output_path / "EVOLUTION_REPORT.md"
+            evolution_report = aggregator.get_evolution_report()
+            evolution_file.write_text(evolution_report, encoding="utf-8")
+            click.echo(f"📈 Rapport d'évolution généré dans: {evolution_file}")
+            if verbose and aggregator.history:
+                # Afficher un résumé
+                comparison = aggregator.history.compare_metrics(aggregated)
+                if comparison and comparison.get("has_previous"):
+                    deltas = comparison.get("deltas", {})
+                    click.echo("\n📊 Résumé de l'évolution:")
+                    for metric, delta_data in deltas.items():
+                        if delta_data.get("delta") is not None:
+                            delta = delta_data["delta"]
+                            delta_pct = delta_data.get("delta_percent", 0)
+                            trend = "📈" if delta > 0 else "📉" if delta < 0 else "➡️"
+                            click.echo(
+                                f"   {trend} {metric.replace('_', ' ').title()}: {delta:+,.0f} ({delta_pct:+.1f}%)"
+                            )
+
+    except Exception as e:
+        click.echo(f"❌ Erreur lors de l'agrégation: {e}")
+        if verbose:
+            import traceback
+
+            traceback.print_exc()
+        sys.exit(1)
+
+
+@cli.command()
+@click.argument(
+    "metrics_file", type=click.Path(exists=True, file_okay=True, dir_okay=False)
+)
+@click.option(
+    "--format",
+    "-f",
+    type=click.Choice(["json", "markdown", "html", "csv", "yaml", "all"]),
+    default="all",
+    help="Format d'export (défaut: all)",
+)
+@click.option("--output", "-o", default="metrics", help="Dossier de sortie")
+@click.option("--verbose", is_flag=True, help="Mode verbeux")
+def export(
+    metrics_file: str,
+    format: str,
+    output: str,
+    verbose: bool,
+):
+    """
+    Exporte des métriques depuis un fichier JSON dans différents formats.
+
+    METRICS_FILE: Fichier JSON contenant les métriques à exporter
+    """
+    if verbose:
+        click.echo(f"📤 Export des métriques depuis {metrics_file}...")
+        click.echo(f"📁 Dossier de sortie: {output}")
+        click.echo(f"📊 Format: {format}")
+
+    try:
+        import json
+
+        # Charger les métriques
+        with open(metrics_file, encoding="utf-8") as f:
+            metrics_data = json.load(f)
+
+        # Exporter
+        exporter = MetricsExporter(metrics_data)
+
+        output_path = Path(output)
+        output_path.mkdir(parents=True, exist_ok=True)
+
+        if format == "all":
+            results = exporter.export_all_formats(str(output_path))
+            if verbose:
+                for fmt, success in results.items():
+                    status = "✅" if success else "❌"
+                    click.echo(
+                        f"{status} Export {fmt}: {'Succès' if success else 'Échec'}"
+                    )
+            click.echo(f"\n💾 Métriques exportées dans: {output_path}")
+        else:
+            success = False
+            if format == "json":
+                success = exporter.export_json(str(output_path / "metrics.json"))
+            elif format == "markdown":
+                success = exporter.export_markdown_summary(
+                    str(output_path / "metrics.md")
+                )
+            elif format == "html":
+                success = exporter.export_html_dashboard(
+                    str(output_path / "dashboard.html")
+                )
+            elif format == "csv":
+                success = exporter.export_csv(str(output_path / "metrics.csv"))
+            elif format == "yaml":
+                success = exporter.export_yaml(str(output_path / "metrics.yaml"))
+
+            if verbose:
+                status = "✅" if success else "❌"
+                click.echo(
+                    f"{status} Export {format}: {'Succès' if success else 'Échec'}"
+                )
+
+            if success:
+                click.echo(f"💾 Métriques exportées dans: {output_path}")
+
+    except Exception as e:
+        click.echo(f"❌ Erreur lors de l'export: {e}")
+        if verbose:
+            import traceback
+
+            traceback.print_exc()
+        sys.exit(1)
+
+
+@cli.command()
+@click.argument(
+    "metrics_file", type=click.Path(exists=True, file_okay=True, dir_okay=False)
+)
+@click.option("--output", "-o", default="badges.md", help="Fichier de sortie")
+@click.option("--github-owner", help="Propriétaire GitHub")
+@click.option("--github-repo", help="Dépôt GitHub")
+@click.option("--pypi-name", help="Nom du package PyPI")
+@click.option("--license", "license_name", default="MIT", help="Nom de la licence")
+@click.option("--verbose", is_flag=True, help="Mode verbeux")
+def badges(
+    metrics_file: str,
+    output: str,
+    github_owner: str | None,
+    github_repo: str | None,
+    pypi_name: str | None,
+    license_name: str,
+    verbose: bool,
+):
+    """
+    Génère des badges automatiques pour README.
+
+    METRICS_FILE: Fichier JSON avec les métriques du projet
+    """
+    if verbose:
+        click.echo(f"🎨 Génération des badges depuis {metrics_file}...")
+
+    try:
+        import json
+
+        with open(metrics_file, encoding="utf-8") as f:
+            metrics = json.load(f)
+
+        generator = BadgesGenerator()
+        badges_content = generator.generate_all_badges(
+            metrics,
+            github_owner,
+            github_repo,
+            pypi_name,
+            license_name,
+        )
+
+        with open(output, "w", encoding="utf-8") as f:
+            f.write(badges_content)
+
+        if verbose:
+            click.echo("✅ Badges générés:")
+            click.echo("   📊 Badges de métriques")
+            click.echo("   🏷️  Badges de statut")
+
+        click.echo(f"\n💾 Badges exportés dans: {output}")
+
+    except Exception as e:
+        click.echo(f"❌ Erreur lors de la génération des badges: {e}")
+        if verbose:
+            import traceback
+
+            traceback.print_exc()
+        sys.exit(1)
+
+
+@cli.command()
+@click.argument(
+    "metrics_file", type=click.Path(exists=True, file_okay=True, dir_okay=False)
+)
+@click.option(
+    "--threshold",
+    "-t",
+    default=10.0,
+    type=float,
+    help="Seuil de changement significatif en % (défaut: 10.0)",
+)
+@click.option(
+    "--create-issue",
+    is_flag=True,
+    help="Créer une issue GitHub si des alertes sont détectées",
+)
+@click.option(
+    "--github-owner",
+    default="arkalia-luna-system",
+    help="Propriétaire du repository GitHub",
+)
+@click.option(
+    "--github-repo",
+    default="arkalia-metrics-collector",
+    help="Nom du repository GitHub",
+)
+@click.option("--verbose", is_flag=True, help="Mode verbeux")
+def alerts(
+    metrics_file: str,
+    threshold: float,
+    create_issue: bool,
+    github_owner: str,
+    github_repo: str,
+    verbose: bool,
+):
+    """
+    Vérifie les changements significatifs dans les métriques et génère des alertes.
+
+    METRICS_FILE: Fichier JSON contenant les métriques à analyser
+    """
+    if verbose:
+        click.echo(f"🔍 Analyse des alertes depuis {metrics_file}...")
+        click.echo(f"   📊 Seuil: {threshold}%")
+
+    try:
+        import json
+
+        # Charger les métriques
+        with open(metrics_file, encoding="utf-8") as f:
+            metrics_data = json.load(f)
+
+        # Initialiser le système d'alertes
+        alerts_system = MetricsAlerts(threshold_percent=threshold)
+
+        # Vérifier les changements significatifs
+        alerts_data = alerts_system.check_significant_changes(metrics_data)
+
+        if alerts_data.get("has_alerts"):
+            click.echo("\n🚨 ALERTES DÉTECTÉES:")
+            click.echo("=" * 50)
+            click.echo(alerts_system.generate_alert_message(alerts_data))
+
+            if create_issue:
+                if verbose:
+                    click.echo("\n📝 Création d'une issue GitHub...")
+
+                issue_body = alerts_system.create_github_issue_body(alerts_data)
+
+                # Note: La création d'issue nécessite un token GitHub
+                # Pour l'instant, on affiche juste le contenu
+                click.echo("\n📋 Contenu de l'issue GitHub:")
+                click.echo("-" * 50)
+                click.echo(issue_body)
+                click.echo("-" * 50)
+                click.echo(
+                    "\n💡 Pour créer l'issue automatiquement, utilisez l'API GitHub"
+                )
+
+            return 1  # Code de sortie pour indiquer des alertes
+        else:
+            click.echo("✅ Aucune alerte détectée")
+            if verbose:
+                click.echo(f"   ℹ️  Aucun changement significatif (seuil: {threshold}%)")
+            return 0
+
+    except FileNotFoundError:
+        click.echo(f"❌ Fichier non trouvé: {metrics_file}")
+        sys.exit(1)
+    except Exception as e:
+        click.echo(f"❌ Erreur lors de l'analyse: {e}")
+        if verbose:
+            import traceback
+
+            traceback.print_exc()
         sys.exit(1)
 
 

@@ -1,0 +1,64 @@
+{
+  "projects": [
+    {
+      "name": "bbia-reachy-sim",
+      "path": "/Volumes/T7/bbia-reachy-sim",
+      "github": "arkalia-luna-system/bbia-sim"
+    },
+    {
+      "name": "bbia-branding",
+      "path": "/Users/athalia/Desktop/logo bbia/bbia_branding",
+      "github": "arkalia-luna-system/bbia_branding"
+    },
+    {
+      "name": "arkalia-luna-logo",
+      "path": "/Volumes/T7/logo/arkalia-luna-logo",
+      "github": "arkalia-luna-system/Arkalia-luna-logo"
+    },
+    {
+      "name": "arkalia-quest",
+      "path": "/Volumes/T7/devstation/arkalia-quest",
+      "github": "arkalia-luna-system/arkalia-quest"
+    },
+    {
+      "name": "arkalia-cia",
+      "path": "/Volumes/T7/arkalia-cia",
+      "github": "arkalia-luna-system/arkalia-cia"
+    },
+    {
+      "name": "arkalia-aria",
+      "path": "/Volumes/T7/arkalia-aria",
+      "github": "arkalia-luna-system/Arkalia-aria"
+    },
+    {
+      "name": "base-template",
+      "path": "/Volumes/T7/base_template",
+      "github": "arkalia-luna-system/base_template"
+    },
+    {
+      "name": "ia-pipeline",
+      "path": "/Volumes/T7/athalia-dev-setup",
+      "github": "arkalia-luna-system/ia-pipeline"
+    },
+    {
+      "name": "arkalia-metrics-collector",
+      "path": "/Volumes/T7/arkalia-metrics-collector",
+      "github": "arkalia-luna-system/arkalia-metrics-collector"
+    },
+    {
+      "name": "arkalia-luna-pro",
+      "path": "/Volumes/T7/devstation/cursor/arkalia-luna-pro",
+      "github": "arkalia-luna-system/arkalia-luna-pro"
+    },
+    {
+      "name": "nours-interface",
+      "path": "/Volumes/T7/nours_interface",
+      "github": "arkalia-luna-system/nours_interface"
+    },
+    {
+      "name": "github-profile-arkalia",
+      "path": "/Volumes/T7/github-profile-arkalia",
+      "github": "arkalia-luna-system/arkalia-luna-system"
+    }
+  ]
+}

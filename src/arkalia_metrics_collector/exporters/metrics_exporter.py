@@ -3,13 +3,22 @@
 Arkalia Metrics Exporter - Export des métriques en différents formats.
 
 Module d'export des métriques en différents formats.
-Supporte JSON, Markdown, HTML et CSV.
+Supporte JSON, Markdown, HTML, CSV et YAML.
 """
 
 import csv
 import json
 from pathlib import Path
 from typing import Any
+
+try:
+    import yaml  # type: ignore[import-untyped]
+except ImportError:
+    yaml = None
+
+from arkalia_metrics_collector.exporters.interactive_dashboard import (
+    InteractiveDashboardGenerator,
+)
 
 
 class MetricsExporter:
@@ -21,6 +30,7 @@ class MetricsExporter:
     - Markdown (pour README)
     - HTML (pour dashboards)
     - CSV (pour analyse)
+    - YAML (pour configuration)
     """
 
     def __init__(self, metrics_data: dict[str, Any]) -> None:
@@ -97,16 +107,51 @@ class MetricsExporter:
             print(f"Erreur lors de l'export Markdown: {e}")
             return False
 
-    def export_html_dashboard(self, output_file: str) -> bool:
+    def export_html_dashboard(
+        self, output_file: str, use_interactive: bool = True
+    ) -> bool:
         """
         Exporte un dashboard HTML interactif.
 
         Args:
             output_file: Chemin du fichier de sortie
+            use_interactive: Utiliser le dashboard interactif avec Chart.js (défaut: True)
 
         Returns:
             True si l'export a réussi
         """
+        # Utiliser le dashboard interactif si demandé
+        if use_interactive:
+            try:
+                # Détecter si ce sont des métriques agrégées
+                is_aggregated = (
+                    "aggregated" in self.metrics_data
+                    and "projects" in self.metrics_data
+                )
+
+                # Essayer de charger l'historique si disponible
+                from arkalia_metrics_collector.collectors.metrics_history import (
+                    MetricsHistory,
+                )
+
+                history = MetricsHistory()
+                latest_history = []
+                # Charger la dernière entrée
+                entry = history.get_latest_metrics()
+                if entry:
+                    latest_history.append(entry)
+
+                return InteractiveDashboardGenerator.generate_dashboard(
+                    self.metrics_data,
+                    latest_history if latest_history else None,
+                    output_file,
+                    is_aggregated=is_aggregated,
+                )
+            except Exception:
+                # Si échec, utiliser le dashboard basique
+                pass
+
+        # Dashboard basique (fallback)
         try:
             output_path = Path(output_file)
             output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -266,6 +311,39 @@ class MetricsExporter:
             print(f"Erreur lors de l'export CSV: {e}")
             return False
 
+    def export_yaml(self, output_file: str) -> bool:
+        """
+        Exporte en format YAML.
+
+        Args:
+            output_file: Chemin du fichier de sortie
+
+        Returns:
+            True si l'export a réussi
+        """
+        if yaml is None:
+            print("⚠️  PyYAML n'est pas installé. Installez-le avec: pip install pyyaml")
+            return False
+
+        try:
+            output_path = Path(output_file)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+
+            with open(output_path, "w", encoding="utf-8") as f:
+                yaml.dump(
+                    self.metrics_data,
+                    f,
+                    default_flow_style=False,
+                    allow_unicode=True,
+                    sort_keys=False,
+                )
+
+            return True
+
+        except (OSError, TypeError) as e:
+            print(f"Erreur lors de l'export YAML: {e}")
+            return False
+
     def export_all_formats(self, output_dir: str = "metrics") -> dict[str, bool]:
         """
         Exporte dans tous les formats disponibles.
@@ -280,7 +358,6 @@ class MetricsExporter:
         output_path.mkdir(parents=True, exist_ok=True)
 
         results = {}
-
         results["json"] = self.export_json(str(output_path / "metrics.json"))
         results["markdown"] = self.export_markdown_summary(
             str(output_path / "metrics.md")
@@ -289,5 +366,6 @@ class MetricsExporter:
             str(output_path / "dashboard.html")
         )
         results["csv"] = self.export_csv(str(output_path / "metrics.csv"))
+        results["yaml"] = self.export_yaml(str(output_path / "metrics.yaml"))
 
         return results
