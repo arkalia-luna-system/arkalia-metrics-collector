@@ -32,7 +32,7 @@ pip install -e ".[dev]"
 
 ### Q: Combien de tests y a-t-il ?
 
-**A:** **120 tests** au total :
+**A:** **110 tests** au total :
 - **50+ tests unitaires** : Fonctionnalités individuelles
 - **16+ tests d'intégration** : Projets externes et validation
 - **15+ tests de performance** : Vitesse et mémoire
