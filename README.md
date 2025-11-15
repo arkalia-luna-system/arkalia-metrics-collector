@@ -1,5 +1,8 @@
 # Arkalia Metrics Collector 🚀
 
+> **Collecteur de métriques universel et professionnel pour projets Python**  
+> Analyse automatique de code, tests, documentation, coverage, et métriques GitHub. Export multi-format (JSON, Markdown, HTML, CSV, YAML), dashboard interactif, agrégation multi-projets, et intégration CI/CD complète.
+
 ![License](https://img.shields.io/badge/License-MIT-blue?style=flat)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat&logo=python)
 [![Stars](https://img.shields.io/github/stars/arkalia-luna-system/arkalia-metrics-collector?style=flat&logo=github)](https://github.com/arkalia-luna-system/arkalia-metrics-collector)
@@ -11,9 +14,9 @@
 [![CI](https://github.com/arkalia-luna-system/arkalia-metrics-collector/actions/workflows/ci.yml/badge.svg)](https://github.com/arkalia-luna-system/arkalia-metrics-collector/actions)
 [![Codecov](https://codecov.io/gh/arkalia-luna-system/arkalia-metrics-collector/branch/main/graph/badge.svg)](https://codecov.io/gh/arkalia-luna-system/arkalia-metrics-collector)
 
-## Description
+## 📋 Description
 
-Collecteur de métriques universel et professionnel pour projets Python avec tests complets
+**Arkalia Metrics Collector** est un outil professionnel et complet pour collecter, analyser et visualiser les métriques de vos projets Python. Il offre une analyse automatique du code source, des tests, de la documentation, du coverage, et des métriques GitHub, avec export multi-format et dashboard interactif.
 
 ## 📊 **Métriques du Projet** *(Mises à jour automatiquement)*
 
