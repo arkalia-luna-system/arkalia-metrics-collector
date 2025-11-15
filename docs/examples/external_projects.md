@@ -1,6 +1,6 @@
 # 🌐 Tests sur Projets Externes
 
-**Guide pour tester Arkalia Metrics Collector sur des projets réels**
+Guide pratique pour utiliser Arkalia Metrics Collector sur des projets réels et valider leurs métriques.
 
 ## 🎯 **Vue d'ensemble**
 

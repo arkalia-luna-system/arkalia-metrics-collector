@@ -559,8 +559,6 @@ aggregator.load_from_json("projects_metrics.json")
 aggregated = aggregator.aggregate_metrics()
 ```
 
----
-
 ## 🏷️ Génération de Badges
 
 ### Badges automatiques

@@ -1,6 +1,8 @@
-# Validation des métriques
+# ✅ Validation des Métriques
 
-## Validation basique
+Guide pour valider la qualité et la cohérence de vos métriques collectées.
+
+## 🔍 Validation Basique
 
 ```python
 from arkalia_metrics_collector import MetricsValidator
@@ -12,4 +14,15 @@ if is_valid:
     print("✅ Métriques valides!")
 else:
     print(f"❌ {len(errors)} erreurs détectées")
+    for error in errors:
+        print(f"  - {error}")
+```
+
+## 📊 Rapport Détaillé
+
+Obtenez un rapport complet avec score de validation :
+
+```python
+report = validator.get_validation_report()
+print(f"Score: {report['validation_summary']['score']}/100")
 ```
