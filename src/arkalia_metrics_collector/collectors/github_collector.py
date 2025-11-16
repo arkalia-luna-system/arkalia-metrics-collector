@@ -17,6 +17,8 @@ import time
 from datetime import datetime
 from typing import Any
 
+from arkalia_metrics_collector import __version__
+
 try:
     import requests  # type: ignore[import-untyped]
 except ImportError:
