@@ -1,6 +1,8 @@
 # 🤝 Guide de Contribution
 
-Merci de votre intérêt pour **Arkalia Metrics Collector** ! Toutes les contributions sont les bienvenues.
+Bienvenue ! Nous sommes ravis que vous souhaitiez contribuer à **Arkalia Metrics Collector**. 🎉
+
+Ce guide vous aidera à comprendre comment contribuer efficacement au projet.
 
 ## 🎯 Types de Contributions Recherchées
 
@@ -11,10 +13,13 @@ Merci de votre intérêt pour **Arkalia Metrics Collector** ! Toutes les contrib
 - Traductions (anglais, espagnol, etc.)
 
 ### 🚀 **Features Recherchées**
-- Support de nouveaux formats d'export (XML) - YAML déjà implémenté ✅
+- Support de nouveaux formats d'export (XML)
 - Métriques de qualité avancées (complexité cyclomatique)
 - Intégration avec d'autres outils (SonarQube, CodeClimate)
 - Support d'autres langages (JavaScript, TypeScript)
+- **Implémentation complète des exporteurs externes** : Google Sheets, Notion, Airtable (structure prête, méthodes à compléter)
+- Amélioration des visualisations du dashboard (plus de graphiques)
+- Support de métriques de performance (temps d'exécution, mémoire)
 
 ### 🧪 **Tests et Validation**
 - Tests sur différents OS (Windows, macOS, Linux)
@@ -79,7 +84,7 @@ git push origin feature/ma-super-feature
 - **Linting** : Ruff
 - **Types** : MyPy avec annotations
 - **Sécurité** : Bandit pour les scans
-- **Tests** : pytest avec couverture >80% (120 tests actuels)
+- **Tests** : pytest avec couverture >80% (110 tests actuels)
 - **Documentation** : Docstrings Google style
 
 ### 4. **Structure des Commits**

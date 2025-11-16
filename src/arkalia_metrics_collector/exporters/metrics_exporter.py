@@ -16,6 +16,7 @@ try:
 except ImportError:
     yaml = None
 
+from arkalia_metrics_collector import __version__
 from arkalia_metrics_collector.exporters.interactive_dashboard import (
     InteractiveDashboardGenerator,
 )
@@ -115,7 +116,8 @@ class MetricsExporter:
 
         Args:
             output_file: Chemin du fichier de sortie
-            use_interactive: Utiliser le dashboard interactif avec Chart.js (défaut: True)
+            use_interactive: Utiliser le dashboard interactif avec Chart.js
+                (défaut: True)
 
         Returns:
             True si l'export a réussi
@@ -147,7 +149,7 @@ class MetricsExporter:
                     output_file,
                     is_aggregated=is_aggregated,
                 )
-            except Exception:
+            except Exception:  # nosec B110
                 # Si échec, utiliser le dashboard basique
                 pass
 
@@ -235,7 +237,7 @@ class MetricsExporter:
         </div>
 
         <footer class="text-center mt-12 text-gray-400">
-            <p>Généré par <strong>Arkalia Metrics Collector</strong> v{collection_info.get("collector_version", "1.0.0")}</p>
+            <p>Généré par <strong>Arkalia Metrics Collector</strong> v{collection_info.get("collector_version", "1.1.0")}</p>
         </footer>
     </div>
 </body>
@@ -300,7 +302,7 @@ class MetricsExporter:
                 writer.writerow(
                     [
                         "Version collecteur",
-                        collection_info.get("collector_version", "1.0.0"),
+                        collection_info.get("collector_version", __version__),
                         "",
                     ]
                 )

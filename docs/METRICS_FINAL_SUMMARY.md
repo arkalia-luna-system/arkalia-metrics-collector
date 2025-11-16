@@ -1,5 +1,10 @@
 # 📊 RÉSUMÉ FINAL DES MÉTRIQUES ARKALIA
 
+> **Note** : Ce fichier est généré automatiquement. Pour mettre à jour, exécutez :
+> ```bash
+> arkalia-metrics aggregate projects.json --readme-table --json --output metrics
+> ```
+
 **Date** : 2025-11-14  
 **Projets analysés** : 12 projets complets
 

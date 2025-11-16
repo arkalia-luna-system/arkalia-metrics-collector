@@ -1,5 +1,9 @@
 # ❓ FAQ - Questions Fréquentes
 
+Questions fréquentes et réponses sur **Arkalia Metrics Collector**.
+
+> 💡 **Astuce** : Si votre question n'est pas dans cette FAQ, n'hésitez pas à [créer une issue](https://github.com/arkalia-luna-system/arkalia-metrics-collector/issues) !
+
 ## 🚀 Installation & Usage
 
 ### Q: Comment installer Arkalia Metrics Collector ?
@@ -7,13 +11,13 @@
 **A:** Deux options :
 
 ```bash
-# Option 1: Depuis le repository (recommandé actuellement)
+# Option 1: Depuis PyPI (recommandé)
+pip install arkalia-metrics-collector
+
+# Option 2: Depuis le repository (pour développement)
 git clone https://github.com/arkalia-luna-system/arkalia-metrics-collector.git
 cd arkalia-metrics-collector
-pip install -e .
-
-# Option 2: Via PyPI (bientôt disponible)
-pip install arkalia-metrics-collector
+pip install -e ".[dev]"
 ```
 
 ### Q: Quelle version de Python est requise ?
@@ -28,7 +32,7 @@ pip install arkalia-metrics-collector
 
 ### Q: Combien de tests y a-t-il ?
 
-**A:** **120 tests** au total :
+**A:** **110 tests** au total :
 - **50+ tests unitaires** : Fonctionnalités individuelles
 - **16+ tests d'intégration** : Projets externes et validation
 - **15+ tests de performance** : Vitesse et mémoire
@@ -228,10 +232,10 @@ python_files = metrics['summary']['total_python_files']
 
 ### Q: API REST prévue ?
 
-**A:** 🎯 En développement pour v1.1 :
-- Endpoint `/metrics`
-- Webhook pour CI/CD
-- Dashboard temps réel
+**A:** ✅ **Déjà disponible !** Utilisez la commande `export` avec `--rest-api` :
+```bash
+arkalia-metrics export metrics.json --rest-api https://api.example.com/metrics --api-key YOUR_KEY
+```
 
 ### Q: Support des notebooks Jupyter ?
 

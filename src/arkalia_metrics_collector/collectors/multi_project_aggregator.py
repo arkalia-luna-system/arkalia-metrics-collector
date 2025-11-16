@@ -10,12 +10,17 @@ Agrège les métriques de plusieurs projets pour générer :
 """
 
 import json
+import logging
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from .git_contributions import GitContributions
+from .github_collector import GitHubCollector
 from .metrics_collector import MetricsCollector
 from .metrics_history import MetricsHistory
+
+logger = logging.getLogger(__name__)
 
 
 class MultiProjectAggregator:
@@ -29,18 +34,25 @@ class MultiProjectAggregator:
     - Créer des tableaux récapitulatifs
     """
 
-    def __init__(self, enable_history: bool = True) -> None:
+    def __init__(
+        self, enable_history: bool = True, enable_github: bool = False
+    ) -> None:
         """
         Initialise l'agrégateur multi-projets.
 
         Args:
             enable_history: Activer la sauvegarde de l'historique
+            enable_github: Activer la collecte GitHub API
         """
         self.projects_metrics: dict[str, Any] = {}
         self.history = MetricsHistory() if enable_history else None
+        self.github_collector = GitHubCollector() if enable_github else None
 
     def collect_project(
-        self, project_name: str, project_path: str | Path
+        self,
+        project_name: str,
+        project_path: str | Path,
+        github_url: str | None = None,
     ) -> dict[str, Any] | None:
         """
         Collecte les métriques d'un projet.
@@ -48,6 +60,7 @@ class MultiProjectAggregator:
         Args:
             project_name: Nom du projet
             project_path: Chemin vers le projet
+            github_url: URL GitHub du projet (format: owner/repo)
 
         Returns:
             Métriques du projet ou None en cas d'erreur
@@ -55,12 +68,40 @@ class MultiProjectAggregator:
         try:
             collector = MetricsCollector(str(project_path))
             metrics = collector.collect_all_metrics()
-            self.projects_metrics[project_name] = {
+
+            # Collecter les métriques GitHub si activé
+            github_metrics = None
+            if self.github_collector and github_url:
+                try:
+                    owner, repo = github_url.split("/")
+                    github_metrics = self.github_collector.collect_repo_metrics(
+                        owner, repo
+                    )
+                except Exception as e:
+                    logger.debug(f"Erreur collecte GitHub pour {project_name}: {e}")
+
+            # Collecter les statistiques Git
+            git_contributions = None
+            try:
+                git_collector = GitContributions(project_path)
+                git_contributions = git_collector.collect_contributions(days=30)
+            except Exception as e:
+                logger.debug(f"Erreur collecte Git pour {project_name}: {e}")
+
+            project_data: dict[str, Any] = {
                 "name": project_name,
                 "path": str(project_path),
                 "metrics": metrics,
                 "collection_date": datetime.now().isoformat(),
             }
+
+            if github_metrics:
+                project_data["github_metrics"] = github_metrics
+
+            if git_contributions:
+                project_data["git_contributions"] = git_contributions
+
+            self.projects_metrics[project_name] = project_data
             return metrics
         except Exception:
             return None
@@ -148,7 +189,7 @@ class MultiProjectAggregator:
         # Calculer le coverage global (moyenne pondérée si disponible)
         global_coverage = self._calculate_global_coverage()
 
-        return {
+        result: dict[str, Any] = {
             "aggregated": {
                 "total_projects": len(self.projects_metrics),
                 "total_python_files": total_python_files,
@@ -161,6 +202,18 @@ class MultiProjectAggregator:
             "projects": projects_summary,
             "collection_date": datetime.now().isoformat(),
         }
+
+        # Ajouter les métriques GitHub agrégées si disponibles
+        github_aggregated = self._aggregate_github_metrics()
+        if github_aggregated:
+            result["github_metrics"] = github_aggregated
+
+        # Ajouter les contributions Git agrégées si disponibles
+        git_aggregated = self._aggregate_git_contributions()
+        if git_aggregated:
+            result["git_contributions"] = git_aggregated
+
+        return result
 
     def _calculate_global_coverage(self) -> float | None:
         """
@@ -205,6 +258,90 @@ class MultiProjectAggregator:
         weighted_sum = sum(coverage * lines for coverage, lines in coverages)
         return round(weighted_sum / total_lines, 2)
 
+    def _aggregate_github_metrics(self) -> dict[str, Any] | None:
+        """Agrège les métriques GitHub de tous les projets."""
+        total_stars = 0
+        total_forks = 0
+        total_watchers = 0
+        total_open_issues = 0
+        repos_with_github = 0
+
+        for project_data in self.projects_metrics.values():
+            github_metrics = project_data.get("github_metrics")
+            if github_metrics:
+                stats = github_metrics.get("stats", {})
+                total_stars += stats.get("stars", 0)
+                total_forks += stats.get("forks", 0)
+                total_watchers += stats.get("watchers", 0)
+                total_open_issues += stats.get("open_issues", 0)
+                repos_with_github += 1
+
+        if repos_with_github == 0:
+            return None
+
+        return {
+            "total_stars": total_stars,
+            "total_forks": total_forks,
+            "total_watchers": total_watchers,
+            "total_open_issues": total_open_issues,
+            "repos_with_github": repos_with_github,
+        }
+
+    def _aggregate_git_contributions(self) -> dict[str, Any] | None:
+        """Agrège les contributions Git de tous les projets."""
+        total_commits = 0
+        recent_commits = 0
+        total_lines_added = 0
+        total_lines_deleted = 0
+        total_files_changed = 0
+        all_contributors: dict[str, int] = {}
+        repos_with_git = 0
+
+        for project_data in self.projects_metrics.values():
+            git_contributions = project_data.get("git_contributions")
+            if git_contributions:
+                total_commits += git_contributions.get("total_commits", 0)
+                recent_commits += git_contributions.get("recent_commits", 0)
+
+                lines = git_contributions.get("lines", {})
+                total_lines_added += lines.get("added", 0)
+                total_lines_deleted += lines.get("deleted", 0)
+
+                total_files_changed += git_contributions.get("files_changed", 0)
+
+                # Agréger les contributeurs
+                contributors = git_contributions.get("contributors", [])
+                for contrib in contributors:
+                    name = contrib.get("name", "")
+                    commits = contrib.get("commits", 0)
+                    if name:
+                        all_contributors[name] = all_contributors.get(name, 0) + commits
+
+                repos_with_git += 1
+
+        if repos_with_git == 0:
+            return None
+
+        # Trier les contributeurs par nombre de commits
+        top_contributors = sorted(
+            all_contributors.items(), key=lambda x: x[1], reverse=True
+        )[:10]
+
+        return {
+            "total_commits": total_commits,
+            "recent_commits_30d": recent_commits,
+            "lines": {
+                "added": total_lines_added,
+                "deleted": total_lines_deleted,
+                "net": total_lines_added - total_lines_deleted,
+            },
+            "files_changed_30d": total_files_changed,
+            "top_contributors": [
+                {"name": name, "commits": commits} for name, commits in top_contributors
+            ],
+            "repos_with_git": repos_with_git,
+        }
+
     def generate_readme_table(self) -> str:
         """
         Génère un tableau Markdown récapitulatif pour README.
@@ -245,7 +382,10 @@ class MultiProjectAggregator:
             else:
                 coverage = "N/A"
 
-            table += f"| **{name}** | `{modules:,}` | `{lines:,}` | `{tests:,}` | `{coverage}` |\n"
+            table += (
+                f"| **{name}** | `{modules:,}` | `{lines:,}` | "
+                f"`{tests:,}` | `{coverage}` |\n"
+            )
 
         # Ligne de total
         table += "| **TOTAL** | "
@@ -259,7 +399,8 @@ class MultiProjectAggregator:
             table += "**N/A** |\n"
 
         table += "\n</div>\n\n"
-        table += f"*Métriques collectées automatiquement le {aggregated.get('collection_date', 'Inconnu')}*\n"
+        collection_date = aggregated.get("collection_date", "Inconnu")
+        table += f"*Métriques collectées automatiquement le {collection_date}*\n"
 
         return table
 

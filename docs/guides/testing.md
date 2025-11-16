@@ -4,7 +4,7 @@
 
 ## 📊 **Vue d'ensemble des Tests**
 
-Arkalia Metrics Collector dispose d'une suite de tests complète avec **120 tests** couvrant tous les aspects du système :
+Arkalia Metrics Collector dispose d'une suite de tests complète avec **110 tests** couvrant tous les aspects du système :
 
 - ✅ **Tests unitaires** : Fonctionnalités individuelles
 - ✅ **Tests d'intégration** : Projets externes et validation
@@ -123,7 +123,7 @@ pytest tests/ --cov=src/arkalia_metrics_collector.collectors --cov-report=term
 - **Mémoire** : < 200 MB pour projets volumineux
 
 ### Fiabilité
-- **120/120 tests** passent (100% de réussite)
+- **110/110 tests** passent (100% de réussite)
 - **0 erreur** de linting (ruff, black, mypy)
 - **0 vulnérabilité** de sécurité (bandit)
 - **Tests robustes** avec gestion d'erreurs

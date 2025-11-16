@@ -1,0 +1,57 @@
+# Configuration Codecov pour Arkalia Metrics Collector
+# https://docs.codecov.com/docs/codecov-yaml
+
+codecov:
+  require_ci_to_pass: true
+  notify:
+    wait_for_ci: true
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 1%
+        base: auto
+        branches:
+          - main
+          - develop
+    patch:
+      default:
+        target: 80%
+        threshold: 1%
+
+comment:
+  layout: "reach, diff, flags, files, footer"
+  behavior: default
+  require_changes: false
+  require_base: false
+  require_head: true
+
+ignore:
+  - "tests/"
+  - "*/tests/*"
+  - "*/test_*"
+  - "*/__pycache__/*"
+  - "*/venv/*"
+  - "*/.venv/*"
+  - "*/archive/*"
+  - "*/backups/*"
+  - "*/logs/*"
+  - "*/htmlcov/*"
+  - "*.pyc"
+  - "*.pyo"
+  - "*.pyd"
+  - ".pytest_cache"
+  - ".mypy_cache"
+  - ".ruff_cache"
+
+flags:
+  unittests:
+    paths:
+      - src/arkalia_metrics_collector/
+    carryforward: true

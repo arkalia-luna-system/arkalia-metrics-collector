@@ -1,5 +1,8 @@
 # Arkalia Metrics Collector 🚀
 
+> **Collecteur de métriques universel et professionnel pour projets Python**  
+> Analyse automatique de code, tests, documentation, coverage, et métriques GitHub. Export multi-format (JSON, Markdown, HTML, CSV, YAML), dashboard interactif, agrégation multi-projets, et intégration CI/CD complète.
+
 ![License](https://img.shields.io/badge/License-MIT-blue?style=flat)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat&logo=python)
 [![Stars](https://img.shields.io/github/stars/arkalia-luna-system/arkalia-metrics-collector?style=flat&logo=github)](https://github.com/arkalia-luna-system/arkalia-metrics-collector)
@@ -11,9 +14,9 @@
 [![CI](https://github.com/arkalia-luna-system/arkalia-metrics-collector/actions/workflows/ci.yml/badge.svg)](https://github.com/arkalia-luna-system/arkalia-metrics-collector/actions)
 [![Codecov](https://codecov.io/gh/arkalia-luna-system/arkalia-metrics-collector/branch/main/graph/badge.svg)](https://codecov.io/gh/arkalia-luna-system/arkalia-metrics-collector)
 
-## Description
+## 📋 Description
 
-Collecteur de métriques universel et professionnel pour projets Python avec tests complets
+**Arkalia Metrics Collector** est un outil professionnel et complet pour collecter, analyser et visualiser les métriques de vos projets Python. Il offre une analyse automatique du code source, des tests, de la documentation, du coverage, et des métriques GitHub, avec export multi-format et dashboard interactif.
 
 ## 📊 **Métriques du Projet** *(Mises à jour automatiquement)*
 
@@ -61,15 +64,19 @@ Collecteur de métriques universel et professionnel pour projets Python avec tes
 - 🎨 **Export multi-format** : JSON, Markdown, HTML, CSV, YAML
 - 🔧 **CLI professionnel** avec configuration flexible
 - 🌐 **Dashboard web** interactif et responsive
-- 🔗 **Intégration GitHub API** : stars, forks, issues, PRs, releases
+- 🔗 **Intégration GitHub API complète** : stars, forks, issues, PRs, releases (option `--github-api`)
 - 📈 **Agrégation multi-projets** : coverage global, métriques agrégées
 - 🏷️ **Génération de badges** : Shields.io, Codecov, GitHub Actions
 - 📋 **Tableaux README automatiques** : métriques sourcées et vérifiables
 - 📊 **Support Coverage automatique** : parsing coverage.xml, calcul global
 - 📅 **Comparaison temporelle** : historique des métriques, rapports d'évolution
 - 🔄 **Automatisation CI/CD** : mise à jour quotidienne via GitHub Actions
-- 🧪 **Tests complets** : 120 tests unitaires, intégration et performance
+- 🧪 **Tests complets** : 110 tests unitaires, intégration et performance
 - 🌐 **Tests sur projets externes** avec validation automatique
+- 📧 **Notifications multi-canaux** : Email (SMTP), Slack, Discord
+- 🎯 **Personnalisation avancée** : labels personnalisés, assignation d'issues, seuils configurables
+- 📊 **Statistiques Git** : commits, lignes, contributeurs, activité temporelle
+- 🌐 **Export vers services externes** : REST API, Google Sheets, Notion, Airtable (structure prête)
 
 ## 🚀 Installation
 
@@ -272,7 +279,6 @@ metrics:
 - **Notebooks** : Jupyter .ipynb (prévu v1.2)
 - **Métriques avancées** : Complexité cyclomatique détaillée
 - **Base de données** : Stockage persistant des métriques
-- **API REST** : Endpoints temps réel (prévu v1.1)
 
 ### 🎯 **Scope volontaire**
 
@@ -285,8 +291,7 @@ metrics:
 
 | Version | Features Prévues | Timeline |
 |---------|------------------|----------|
-| **v1.1** | API REST + JavaScript support | Q1 2025 |
-| **v1.2** | Jupyter notebooks + Go support | Q2 2025 |
+| **v1.2** | Jupyter notebooks + Go support + Complexité cyclomatique | Q2 2025 |
 | **v1.3** | Plugins système + Rust support | Q3 2025 |
 
 ## 🤝 Contributing

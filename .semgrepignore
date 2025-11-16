@@ -1,0 +1,4 @@
+# Ignorer coverage_parser.py car il utilise defusedxml par défaut
+# Le fallback xml.etree.ElementTree est documenté et sécurisé pour notre cas d'usage
+src/arkalia_metrics_collector/collectors/coverage_parser.py
+

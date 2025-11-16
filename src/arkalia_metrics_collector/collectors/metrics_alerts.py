@@ -10,6 +10,11 @@ from pathlib import Path
 from typing import Any
 
 from arkalia_metrics_collector.collectors.metrics_history import MetricsHistory
+from arkalia_metrics_collector.notifications.notifiers import (
+    DiscordNotifier,
+    EmailNotifier,
+    SlackNotifier,
+)
 
 
 class MetricsAlerts:
@@ -23,6 +28,9 @@ class MetricsAlerts:
         self,
         threshold_percent: float = 10.0,
         history_dir: str | Path = "metrics/history",
+        enable_notifications: bool = False,
+        custom_labels: list[str] | None = None,
+        assignees: list[str] | None = None,
     ) -> None:
         """
         Initialise le système d'alertes.
@@ -30,9 +38,20 @@ class MetricsAlerts:
         Args:
             threshold_percent: Seuil de changement significatif (en %)
             history_dir: Dossier contenant l'historique des métriques
+            enable_notifications: Activer les notifications externes
+            custom_labels: Labels personnalisés pour les issues GitHub
+            assignees: Utilisateurs à assigner aux issues GitHub
         """
         self.threshold_percent = threshold_percent
         self.history = MetricsHistory(history_dir)
+        self.enable_notifications = enable_notifications
+        self.custom_labels = custom_labels or ["metrics", "automated", "alerts"]
+        self.assignees = assignees or []
+
+        # Initialiser les notificateurs si activés
+        self.email_notifier = EmailNotifier() if enable_notifications else None
+        self.slack_notifier = SlackNotifier() if enable_notifications else None
+        self.discord_notifier = DiscordNotifier() if enable_notifications else None
 
     def check_significant_changes(
         self, current_metrics: dict[str, Any]
@@ -214,3 +233,34 @@ class MetricsAlerts:
         # Créer une issue seulement si au moins une alerte est significative
         alerts = alerts_data.get("alerts", [])
         return len(alerts) > 0
+
+    def send_notifications(self, alerts_data: dict[str, Any]) -> dict[str, bool]:
+        """
+        Envoie des notifications via tous les canaux configurés.
+
+        Args:
+            alerts_data: Données des alertes
+
+        Returns:
+            Dictionnaire avec le statut de chaque notification
+        """
+        if not self.enable_notifications or not alerts_data.get("has_alerts"):
+            return {}
+
+        message = self.generate_alert_message(alerts_data)
+        results: dict[str, bool] = {}
+
+        # Email
+        if self.email_notifier:
+            subject = "🚨 Alertes Métriques - Changements Significatifs"
+            results["email"] = self.email_notifier.send(subject, message)
+
+        # Slack
+        if self.slack_notifier:
+            results["slack"] = self.slack_notifier.send(message)
+
+        # Discord
+        if self.discord_notifier:
+            results["discord"] = self.discord_notifier.send(message)
+
+        return results
