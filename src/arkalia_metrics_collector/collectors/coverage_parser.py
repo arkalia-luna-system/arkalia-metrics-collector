@@ -14,7 +14,7 @@ try:
 except ImportError:
     # Fallback si defusedxml n'est pas installé
     # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
-    import xml.etree.ElementTree as ET  # noqa: S405  # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
+    import xml.etree.ElementTree as ET  # noqa: S405  # nosec B405  # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
 
     logging.warning(
         "defusedxml n'est pas installé. Utilisation de xml.etree.ElementTree "
@@ -48,7 +48,7 @@ class CoverageParser:
         try:
             tree = ET.parse(
                 coverage_file
-            )  # nosemgrep: python.lang.security.use-defused-xml-parse.use-defused-xml-parse
+            )  # nosec B314  # nosemgrep: python.lang.security.use-defused-xml-parse.use-defused-xml-parse
             root = tree.getroot()
 
             # Extraire les métriques depuis l'élément racine <coverage>

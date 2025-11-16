@@ -149,7 +149,7 @@ class MetricsExporter:
                     output_file,
                     is_aggregated=is_aggregated,
                 )
-            except Exception:
+            except Exception:  # nosec B110
                 # Si échec, utiliser le dashboard basique
                 pass
 

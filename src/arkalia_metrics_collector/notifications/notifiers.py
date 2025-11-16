@@ -75,11 +75,11 @@ class EmailNotifier:
             return False
 
         # Vérifications de type pour mypy (après la vérification ci-dessus)
-        assert self.smtp_server is not None
-        assert self.username is not None
-        assert self.password is not None
-        assert self.from_email is not None
-        assert self.to_emails is not None
+        assert self.smtp_server is not None  # nosec B101
+        assert self.username is not None  # nosec B101
+        assert self.password is not None  # nosec B101
+        assert self.from_email is not None  # nosec B101
+        assert self.to_emails is not None  # nosec B101
 
         try:
             import smtplib

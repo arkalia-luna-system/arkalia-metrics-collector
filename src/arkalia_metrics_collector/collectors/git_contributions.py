@@ -11,7 +11,7 @@ Analyse l'historique Git pour calculer :
 """
 
 import logging
-import subprocess
+import subprocess  # nosec B404
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -78,7 +78,7 @@ class GitContributions:
     def _run_git_command(self, command: list[str]) -> str | None:
         """Exécute une commande Git et retourne la sortie."""
         try:
-            result = subprocess.run(
+            result = subprocess.run(  # nosec B603
                 ["git"] + command,
                 cwd=self.project_path,
                 capture_output=True,

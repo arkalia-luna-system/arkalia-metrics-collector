@@ -274,7 +274,7 @@ class GitHubCollector:
                                     open_count = (last_page - 1) * 100 + len(
                                         last_page_issues
                                     )
-                    except Exception:
+                    except Exception:  # nosec B110
                         pass
                 else:
                     # Pas de pagination, compter directement
@@ -290,7 +290,7 @@ class GitHubCollector:
                 search_response = self._make_request(search_url)
                 if search_response and search_response.status_code == 200:
                     closed_count = search_response.json().get("total_count", 0)
-            except Exception:
+            except Exception:  # nosec B110
                 pass
 
             return {
@@ -347,7 +347,7 @@ class GitHubCollector:
                                     open_count = (last_page - 1) * 100 + len(
                                         last_page_prs
                                     )
-                    except Exception:
+                    except Exception:  # nosec B110
                         pass
                 else:
                     open_count = len(open_response.json())
@@ -362,7 +362,7 @@ class GitHubCollector:
                     closed_count = search_response.json().get("total_count", 0)
                     # Estimation: 80% des PRs fermées sont mergées
                     merged_count = int(closed_count * 0.8)
-            except Exception:
+            except Exception:  # nosec B110
                 pass
 
             return {
