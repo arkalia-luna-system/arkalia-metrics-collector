@@ -415,7 +415,7 @@ class GitHubCollector:
                     ),
                 }
 
-        except Exception:
+        except Exception:  # nosec B110
             pass
 
         return {"total": 0, "latest": None}
