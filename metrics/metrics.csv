@@ -1,9 +1,9 @@
 Métrique,Valeur,Unité
 
-Fichiers Python,1,fichiers
-Lignes de Code,1,lignes
-Tests,0,tests
-Documentation,0,fichiers
+Fichiers Python,4,fichiers
+Lignes de Code,24,lignes
+Tests,1,tests
+Documentation,2,fichiers
 
-Date de collecte,2025-11-15T11:46:42.175888,
-Version collecteur,1.0.0,
+Date de collecte,2025-11-24T16:03:11.445414,
+Version collecteur,1.1.0,

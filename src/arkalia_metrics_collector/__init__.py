@@ -32,6 +32,13 @@ from .collectors.metrics_collector import MetricsCollector
 from .collectors.multi_project_aggregator import MultiProjectAggregator
 from .exporters.badges_generator import BadgesGenerator
 from .exporters.metrics_exporter import MetricsExporter
+from .exporters.external_exporters import (
+    AirtableExporter,
+    GoogleSheetsExporter,
+    NotionExporter,
+    RESTAPIExporter,
+)
+from .notifications.notifiers import DiscordNotifier, EmailNotifier, SlackNotifier
 from .validators.metrics_validator import MetricsValidator
 
 __all__ = [
@@ -41,6 +48,13 @@ __all__ = [
     "MetricsExporter",
     "BadgesGenerator",
     "MetricsValidator",
+    "EmailNotifier",
+    "SlackNotifier",
+    "DiscordNotifier",
+    "RESTAPIExporter",
+    "GoogleSheetsExporter",
+    "NotionExporter",
+    "AirtableExporter",
     "__version__",
     "__author__",
     "__email__",

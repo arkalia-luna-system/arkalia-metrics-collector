@@ -5,7 +5,7 @@ name: Security_Scanning
 
 on:
   schedule:
-    - cron: '0 2 * * 1'  # Tous les lundis à 2h du matin
+    - cron: "0 2 * * 1" # Tous les lundis à 2h du matin
   push:
     branches: [main, develop]
   pull_request:
@@ -38,7 +38,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-          
+
       - name: "Create Logs Directory"
         run: |
           mkdir -p logs
@@ -80,7 +80,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-          
+
       - name: "Create Logs Directory"
         run: |
           mkdir -p logs
@@ -89,15 +89,21 @@ jobs:
         run: |
           # S'assurer que le dossier logs existe
           mkdir -p logs
-          
+
           # Exécuter bandit avec gestion d'erreur robuste
           bandit -r src/arkalia_metrics_collector/ -f json -o logs/bandit_report.json || echo "Bandit JSON failed" > logs/bandit_report.json
           bandit -r src/arkalia_metrics_collector/ -f txt -o logs/bandit_report.txt || echo "Bandit TXT failed" > logs/bandit_report.txt
-          
+
           # Vérifier que les fichiers existent
           ls -la logs/
 
+      - name: "Prepare Semgrep Directory"
+        run: |
+          mkdir -p logs/semgrep
+
       - name: "Semgrep Security Scan"
+        env:
+          BACKUP_DIR: "logs/semgrep"
         uses: returntocorp/semgrep-action@v1
         with:
           config: >-
@@ -137,18 +143,18 @@ jobs:
         run: |
           echo "ANALYSE DES RAPPORTS DE SÉCURITÉ"
           echo "=================================="
-          
+
           # Vérifier les rapports de dépendances
           if [ -f "security-reports/deps/safety_report.txt" ]; then
             echo "Rapport Safety:"
             cat security-reports/deps/safety_report.txt
           fi
-          
+
           if [ -f "security-reports/deps/pip_audit.txt" ]; then
             echo "Rapport Pip Audit:"
             cat security-reports/deps/pip_audit.txt
           fi
-          
+
           # Vérifier les rapports de code
           if [ -f "security-reports/code/bandit_report.txt" ]; then
             echo "Rapport Bandit:"

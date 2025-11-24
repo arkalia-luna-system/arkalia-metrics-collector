@@ -7,6 +7,7 @@ Interface CLI principale pour utiliser le collecteur de métriques.
 
 import sys
 from pathlib import Path
+from typing import Any
 
 import click
 
@@ -224,57 +225,125 @@ def serve(project_path: str, port: int):
 
 
 @cli.command()
-@click.argument("owner")
-@click.argument("repo")
+@click.argument("owner", required=False)
+@click.argument("repo", required=False)
 @click.option("--token", "-t", help="Token GitHub (ou variable GITHUB_TOKEN)")
 @click.option("--output", "-o", default="metrics", help="Dossier de sortie")
+@click.option(
+    "--multiple",
+    "-m",
+    help="Fichier JSON avec liste de dépôts à collecter (format: [{\"owner\": \"...\", \"repo\": \"...\"}])",
+)
 @click.option("--verbose", is_flag=True, help="Mode verbeux")
-def github(owner: str, repo: str, token: str | None, output: str, verbose: bool):
+def github(
+    owner: str | None,
+    repo: str | None,
+    token: str | None,
+    output: str,
+    multiple: str | None,
+    verbose: bool,
+):
     """
-    Collecte les métriques GitHub d'un dépôt.
+    Collecte les métriques GitHub d'un ou plusieurs dépôts.
 
     OWNER: Propriétaire du dépôt (organisation ou utilisateur)
     REPO: Nom du dépôt
+
+    Ou utilisez --multiple pour collecter plusieurs dépôts depuis un fichier JSON.
     """
-    if verbose:
-        click.echo(f"🔍 Collecte des métriques GitHub pour {owner}/{repo}...")
+    if multiple:
+        # Mode collecte multiple
+        if verbose:
+            click.echo(f"🔍 Collecte des métriques GitHub depuis {multiple}...")
 
-    try:
-        collector = GitHubCollector(token)
-        metrics = collector.collect_repo_metrics(owner, repo)
+        try:
+            import json
 
-        if metrics is None:
-            click.echo("❌ Impossible de collecter les métriques GitHub")
-            click.echo("💡 Vérifiez que le dépôt existe et est accessible")
+            with open(multiple, encoding="utf-8") as f:
+                repos_list = json.load(f)
+
+            if not isinstance(repos_list, list):
+                click.echo("❌ Le fichier JSON doit contenir une liste de dépôts")
+                sys.exit(1)
+
+            collector = GitHubCollector(token)
+            metrics = collector.collect_multiple_repos(repos_list)
+
+            if not metrics or not metrics.get("repositories"):
+                click.echo("❌ Impossible de collecter les métriques GitHub")
+                sys.exit(1)
+
+            # Exporter en JSON
+            output_path = Path(output)
+            output_path.mkdir(parents=True, exist_ok=True)
+            json_file = output_path / "github_multiple_repos.json"
+
+            with open(json_file, "w", encoding="utf-8") as f:
+                json.dump(metrics, f, indent=2, ensure_ascii=False)
+
+            if verbose:
+                agg = metrics.get("aggregated", {})
+                click.echo("✅ Métriques collectées:")
+                click.echo(f"   📦 Dépôts: {agg.get('total_repos', 0)}")
+                click.echo(f"   ⭐ Total Stars: {agg.get('total_stars', 0):,}")
+                click.echo(f"   🍴 Total Forks: {agg.get('total_forks', 0):,}")
+                click.echo(f"   👀 Total Watchers: {agg.get('total_watchers', 0):,}")
+
+            click.echo(f"\n💾 Métriques exportées dans: {json_file}")
+
+        except Exception as e:
+            click.echo(f"❌ Erreur lors de la collecte GitHub: {e}")
+            if verbose:
+                import traceback
+
+                traceback.print_exc()
+            sys.exit(1)
+    else:
+        # Mode collecte simple
+        if not owner or not repo:
+            click.echo("❌ OWNER et REPO sont requis (ou utilisez --multiple)")
+            click.echo("💡 Utilisez: arkalia-metrics github owner repo")
             sys.exit(1)
 
-        # Exporter en JSON
-        output_path = Path(output)
-        output_path.mkdir(parents=True, exist_ok=True)
-        json_file = output_path / f"github_{owner}_{repo}.json"
-
-        import json
-
-        with open(json_file, "w", encoding="utf-8") as f:
-            json.dump(metrics, f, indent=2, ensure_ascii=False)
-
         if verbose:
-            stats = metrics.get("stats", {})
-            click.echo("✅ Métriques collectées:")
-            click.echo(f"   ⭐ Stars: {stats.get('stars', 0):,}")
-            click.echo(f"   🍴 Forks: {stats.get('forks', 0):,}")
-            click.echo(f"   👀 Watchers: {stats.get('watchers', 0):,}")
-            click.echo(f"   📝 Open Issues: {stats.get('open_issues', 0):,}")
+            click.echo(f"🔍 Collecte des métriques GitHub pour {owner}/{repo}...")
 
-        click.echo(f"\n💾 Métriques exportées dans: {json_file}")
+        try:
+            collector = GitHubCollector(token)
+            repo_metrics: dict[str, Any] | None = collector.collect_repo_metrics(owner, repo)
 
-    except Exception as e:
-        click.echo(f"❌ Erreur lors de la collecte GitHub: {e}")
-        if verbose:
-            import traceback
+            if repo_metrics is None:
+                click.echo("❌ Impossible de collecter les métriques GitHub")
+                click.echo("💡 Vérifiez que le dépôt existe et est accessible")
+                sys.exit(1)
 
-            traceback.print_exc()
-        sys.exit(1)
+            # Exporter en JSON
+            output_path = Path(output)
+            output_path.mkdir(parents=True, exist_ok=True)
+            json_file = output_path / f"github_{owner}_{repo}.json"
+
+            import json
+
+            with open(json_file, "w", encoding="utf-8") as f:
+                json.dump(repo_metrics, f, indent=2, ensure_ascii=False)
+
+            if verbose:
+                stats = repo_metrics.get("stats", {})
+                click.echo("✅ Métriques collectées:")
+                click.echo(f"   ⭐ Stars: {stats.get('stars', 0):,}")
+                click.echo(f"   🍴 Forks: {stats.get('forks', 0):,}")
+                click.echo(f"   👀 Watchers: {stats.get('watchers', 0):,}")
+                click.echo(f"   📝 Open Issues: {stats.get('open_issues', 0):,}")
+
+            click.echo(f"\n💾 Métriques exportées dans: {json_file}")
+
+        except Exception as e:
+            click.echo(f"❌ Erreur lors de la collecte GitHub: {e}")
+            if verbose:
+                import traceback
+
+                traceback.print_exc()
+            sys.exit(1)
 
 
 @cli.command()
@@ -293,6 +362,11 @@ def github(owner: str, repo: str, token: str | None, output: str, verbose: bool)
     is_flag=True,
     help="Activer la collecte GitHub API (nécessite GITHUB_TOKEN)",
 )
+@click.option(
+    "--load-from-json",
+    is_flag=True,
+    help="Charger les métriques depuis un fichier JSON existant au lieu de collecter",
+)
 @click.option("--verbose", is_flag=True, help="Mode verbeux")
 def aggregate(
     projects_file: str,
@@ -302,6 +376,7 @@ def aggregate(
     evolution: bool,
     no_history: bool,
     github_api: bool,
+    load_from_json: bool,
     verbose: bool,
 ):
     """
@@ -309,25 +384,56 @@ def aggregate(
 
     PROJECTS_FILE: Fichier JSON avec la liste des projets
                    Format: {"projects": [{"name": "...", "path": "..."}]}
+                   Ou fichier JSON avec métriques déjà collectées si --load-from-json
     """
     if verbose:
         click.echo(f"🔍 Agrégation des métriques depuis {projects_file}...")
 
     try:
-        import json
-
-        # Charger la configuration des projets
-        with open(projects_file, encoding="utf-8") as f:
-            config = json.load(f)
-
-        projects = config.get("projects", [])
-        if not projects:
-            click.echo("❌ Aucun projet trouvé dans le fichier")
-            sys.exit(1)
-
         aggregator = MultiProjectAggregator(
             enable_history=not no_history, enable_github=github_api
         )
+
+        # Si on charge depuis JSON, utiliser load_from_json
+        if load_from_json:
+            if verbose:
+                click.echo("📂 Chargement des métriques depuis JSON...")
+            success = aggregator.load_from_json(projects_file)
+            if not success:
+                click.echo("❌ Impossible de charger les métriques depuis le fichier JSON")
+                sys.exit(1)
+            if verbose:
+                click.echo("✅ Métriques chargées avec succès")
+        else:
+            # Charger la configuration des projets
+            import json
+
+            with open(projects_file, encoding="utf-8") as f:
+                config = json.load(f)
+
+            projects = config.get("projects", [])
+            if not projects:
+                click.echo("❌ Aucun projet trouvé dans le fichier")
+                sys.exit(1)
+
+            # Collecter les métriques de chaque projet
+            for project in projects:
+                name = project.get("name", "")
+                path = project.get("path", "")
+                github_url = project.get("github", "")
+
+                if not name or not path:
+                    continue
+
+                if verbose:
+                    click.echo(f"   📦 Collecte de {name}...")
+                    if github_api and github_url:
+                        click.echo(f"      🔗 GitHub: {github_url}")
+
+                metrics = aggregator.collect_project(name, path, github_url)
+                if metrics is None:
+                    click.echo(f"   ⚠️  Impossible de collecter {name}")
+                    continue
 
         # Collecter les métriques de chaque projet
         for project in projects:
