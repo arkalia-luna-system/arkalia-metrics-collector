@@ -209,7 +209,7 @@ jobs:
   build:
     name: "Build Package"
     needs: [validate, test-matrix, code-quality, security]
-    if: needs.validate.outputs.should-continue == 'true' && github.ref == 'refs/heads/main'
+    if: needs.validate.outputs.should-continue == 'true'
     runs-on: ubuntu-latest
 
     steps:
