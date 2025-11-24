@@ -4,175 +4,190 @@
 name: Backup on Merge to Main
 
 on:
-    push:
-        branches: [main]
-    workflow_dispatch:
-        inputs:
-            version:
-                description: "Version à sauvegarder (optionnel, utilise la version du pyproject.toml si non fournie)"
-                required: false
-                type: string
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version à sauvegarder (optionnel, utilise la version du pyproject.toml si non fournie)"
+        required: false
+        type: string
 
 env:
-    PYTHON_VERSION: "3.11"
-    PYTHONUNBUFFERED: 1
+  PYTHON_VERSION: "3.11"
+  PYTHONUNBUFFERED: 1
 
 permissions:
-    contents: write
+  contents: write
 
 jobs:
-    create-backup:
-        name: "Créer backup de version"
-        runs-on: ubuntu-latest
-        timeout-minutes: 10
+  create-backup:
+    name: "Créer backup de version"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
 
-        steps:
-            - name: "Checkout Code"
-              uses: actions/checkout@v5
-              with:
-                  fetch-depth: 0
-                  token: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: "Checkout Code"
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: "Setup Python"
-              uses: actions/setup-python@v5
-              with:
-                  python-version: ${{ env.PYTHON_VERSION }}
+      - name: "Setup Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
 
-            - name: "Déterminer la version"
-              id: version
-              env:
-                  INPUT_VERSION: ${{ inputs.version }}
-              run: |
-                  if [ -n "$INPUT_VERSION" ]; then
-                      VERSION="$INPUT_VERSION"
-                  else
-                      # Extraire la version depuis pyproject.toml
-                      VERSION=$(grep -E '^version\s*=' pyproject.toml | sed -E "s/^version\s*=\s*[\"']([^\"']+)[\"'].*/\1/" | head -1)
-                      if [ -z "$VERSION" ]; then
-                          VERSION="unknown"
-                      fi
-                  fi
-                  echo "version=$VERSION" >> $GITHUB_OUTPUT
-                  echo "📦 Version détectée: $VERSION"
+      - name: "Déterminer la version"
+        id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [ -n "$INPUT_VERSION" ]; then
+              VERSION="$INPUT_VERSION"
+          else
+              # Extraire la version depuis pyproject.toml
+              VERSION=$(grep -E '^version\s*=' pyproject.toml | sed -E "s/^version\s*=\s*[\"']([^\"']+)[\"'].*/\1/" | head -1)
+              if [ -z "$VERSION" ]; then
+                  VERSION="unknown"
+              fi
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Version détectée: $VERSION"
 
             - name: "Créer le dossier de backup"
               env:
                   VERSION: ${{ steps.version.outputs.version }}
               run: |
+                  VERSION="${VERSION:-unknown}"
                   BACKUP_DIR="backups/v$VERSION"
-                  mkdir -p "$BACKUP_DIR"
+                  mkdir -p "$BACKUP_DIR" || {
+                      echo "❌ Erreur lors de la création du dossier de backup"
+                      exit 1
+                  }
                   echo "backup-dir=$BACKUP_DIR" >> $GITHUB_OUTPUT
                   echo "📁 Dossier de backup créé: $BACKUP_DIR"
 
-            - name: "Sauvegarder les métriques"
-              id: backup-metrics
-              env:
-                  BACKUP_DIR_ENV: ${{ steps.version.outputs.backup-dir }}
-                  VERSION_ENV: ${{ steps.version.outputs.version }}
-                  GITHUB_SHA_ENV: ${{ github.sha }}
-                  GITHUB_REF_NAME_ENV: ${{ github.ref_name }}
-                  GITHUB_RUN_ID_ENV: ${{ github.run_id }}
-              run: |
-                  BACKUP_DIR="$BACKUP_DIR_ENV"
-                  TIMESTAMP=$(date -u +"%Y%m%d_%H%M%S")
+      - name: "Sauvegarder les métriques"
+        id: backup-metrics
+        env:
+          BACKUP_DIR_ENV: ${{ steps.version.outputs.backup-dir }}
+          VERSION_ENV: ${{ steps.version.outputs.version }}
+          GITHUB_SHA_ENV: ${{ github.sha }}
+          GITHUB_REF_NAME_ENV: ${{ github.ref_name }}
+          GITHUB_RUN_ID_ENV: ${{ github.run_id }}
+        run: |
+          # Utiliser BACKUP_DIR_ENV ou une valeur par défaut
+          if [ -z "$BACKUP_DIR_ENV" ]; then
+              BACKUP_DIR="backups/v${VERSION_ENV:-unknown}"
+          else
+              BACKUP_DIR="$BACKUP_DIR_ENV"
+          fi
+          TIMESTAMP=$(date -u +"%Y%m%d_%H%M%S")
 
-                  # Créer le dossier de backup
-                  mkdir -p "$BACKUP_DIR"
+          # Créer le dossier de backup
+          mkdir -p "$BACKUP_DIR"
 
-                  # Sauvegarder les métriques si elles existent
-                  if [ -f "metrics/aggregated_metrics.json" ]; then
-                    cp "metrics/aggregated_metrics.json" "$BACKUP_DIR/aggregated_metrics_${TIMESTAMP}.json"
-                    echo "✅ Métriques agrégées sauvegardées"
-                  fi
+          # Sauvegarder les métriques si elles existent
+          if [ -f "metrics/aggregated_metrics.json" ]; then
+            cp "metrics/aggregated_metrics.json" "$BACKUP_DIR/aggregated_metrics_${TIMESTAMP}.json"
+            echo "✅ Métriques agrégées sauvegardées"
+          fi
 
-                  if [ -f "metrics/README_TABLE.md" ]; then
-                    cp "metrics/README_TABLE.md" "$BACKUP_DIR/README_TABLE_${TIMESTAMP}.md"
-                    echo "✅ Tableau README sauvegardé"
-                  fi
+          if [ -f "metrics/README_TABLE.md" ]; then
+            cp "metrics/README_TABLE.md" "$BACKUP_DIR/README_TABLE_${TIMESTAMP}.md"
+            echo "✅ Tableau README sauvegardé"
+          fi
 
-                  if [ -f "metrics/badges_final.md" ]; then
-                    cp "metrics/badges_final.md" "$BACKUP_DIR/badges_${TIMESTAMP}.md"
-                    echo "✅ Badges sauvegardés"
-                  fi
+          if [ -f "metrics/badges_final.md" ]; then
+            cp "metrics/badges_final.md" "$BACKUP_DIR/badges_${TIMESTAMP}.md"
+            echo "✅ Badges sauvegardés"
+          fi
 
-                  # Sauvegarder l'historique des métriques si disponible
-                  if [ -d "metrics/history" ]; then
-                    cp -r "metrics/history" "$BACKUP_DIR/history_${TIMESTAMP}"
-                    echo "✅ Historique sauvegardé"
-                  fi
+          # Sauvegarder l'historique des métriques si disponible
+          if [ -d "metrics/history" ]; then
+            cp -r "metrics/history" "$BACKUP_DIR/history_${TIMESTAMP}"
+            echo "✅ Historique sauvegardé"
+          fi
 
-                  # Créer un fichier de métadonnées
-                  cat > "$BACKUP_DIR/backup_info.json" << EOF
-                  {
-                    "version": "$VERSION_ENV",
-                    "timestamp": "${TIMESTAMP}",
-                    "commit": "$GITHUB_SHA_ENV",
-                    "branch": "$GITHUB_REF_NAME_ENV",
-                    "workflow_run": "$GITHUB_RUN_ID_ENV",
-                    "backup_date": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-                  }
-                  EOF
+          # Créer un fichier de métadonnées
+          cat > "$BACKUP_DIR/backup_info.json" << EOF
+          {
+            "version": "$VERSION_ENV",
+            "timestamp": "${TIMESTAMP}",
+            "commit": "$GITHUB_SHA_ENV",
+            "branch": "$GITHUB_REF_NAME_ENV",
+            "workflow_run": "$GITHUB_RUN_ID_ENV",
+            "backup_date": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          }
+          EOF
 
-                  echo "backup-timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
-                  echo "✅ Métadonnées de backup créées"
+          echo "backup-timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
+          echo "✅ Métadonnées de backup créées"
 
-            - name: "Créer un fichier README pour le backup"
-              env:
-                  BACKUP_DIR_ENV: ${{ steps.version.outputs.backup-dir }}
-              run: |
-                  BACKUP_DIR="$BACKUP_DIR_ENV"
-                  cat > "$BACKUP_DIR/README.md" << 'EOF'
-                  # Backup de Version
+      - name: "Créer un fichier README pour le backup"
+        env:
+          BACKUP_DIR_ENV: ${{ steps.version.outputs.backup-dir }}
+          VERSION_ENV: ${{ steps.version.outputs.version }}
+        run: |
+          # Utiliser BACKUP_DIR_ENV ou une valeur par défaut
+          if [ -z "$BACKUP_DIR_ENV" ]; then
+              BACKUP_DIR="backups/v${VERSION_ENV:-unknown}"
+          else
+              BACKUP_DIR="$BACKUP_DIR_ENV"
+          fi
+          cat > "$BACKUP_DIR/README.md" << 'EOF'
+          # Backup de Version
 
-                  Ce dossier contient un backup des métriques et fichiers associés pour cette version.
+          Ce dossier contient un backup des métriques et fichiers associés pour cette version.
 
-                  ## Contenu
+          ## Contenu
 
-                  - `aggregated_metrics_*.json` : Métriques agrégées au moment du backup
-                  - `README_TABLE_*.md` : Tableau README généré
-                  - `badges_*.md` : Badges générés
-                  - `history_*` : Historique des métriques (si disponible)
-                  - `backup_info.json` : Métadonnées du backup
+          - `aggregated_metrics_*.json` : Métriques agrégées au moment du backup
+          - `README_TABLE_*.md` : Tableau README généré
+          - `badges_*.md` : Badges générés
+          - `history_*` : Historique des métriques (si disponible)
+          - `backup_info.json` : Métadonnées du backup
 
-                  ## Utilisation
+          ## Utilisation
 
-                  Ce backup a été créé automatiquement lors du merge sur la branche `main`.
-                  Il permet de conserver un historique des métriques pour chaque version.
-                  EOF
-                  echo "✅ README de backup créé"
+          Ce backup a été créé automatiquement lors du merge sur la branche `main`.
+          Il permet de conserver un historique des métriques pour chaque version.
+          EOF
+          echo "✅ README de backup créé"
 
-            - name: "Commit et Push du backup"
-              env:
-                  VERSION_ENV: ${{ steps.version.outputs.version }}
-                  GITHUB_SHA_ENV: ${{ github.sha }}
-              run: |
-                  git config user.name "github-actions[bot]"
-                  git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: "Commit et Push du backup"
+        env:
+          VERSION_ENV: ${{ steps.version.outputs.version }}
+          GITHUB_SHA_ENV: ${{ github.sha }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-                  git add "backups/"
+          git add "backups/"
 
-                  git commit -m "💾 Backup version $VERSION_ENV" \
-                    -m "Backup automatique créé lors du merge sur main" \
-                    -m "Version: $VERSION_ENV" \
-                    -m "Commit: $GITHUB_SHA_ENV" \
-                    || echo "Aucun changement à commiter"
+          git commit -m "💾 Backup version $VERSION_ENV" \
+            -m "Backup automatique créé lors du merge sur main" \
+            -m "Version: $VERSION_ENV" \
+            -m "Commit: $GITHUB_SHA_ENV" \
+            || echo "Aucun changement à commiter"
 
-                  git push origin main || \
-                    echo "Push échoué (peut-être déjà à jour)"
+          git push origin main || \
+            echo "Push échoué (peut-être déjà à jour)"
 
-            - name: "Résumé"
-              if: always()
-              env:
-                  VERSION_ENV: ${{ steps.version.outputs.version }}
-                  BACKUP_DIR_ENV: ${{ steps.version.outputs.backup-dir }}
-                  BACKUP_TIMESTAMP_ENV: ${{ steps.backup-metrics.outputs.backup-timestamp }}
-                  GITHUB_SHA_ENV: ${{ github.sha }}
-              run: |
-                  echo "## 💾 Résumé du Backup" >> $GITHUB_STEP_SUMMARY
-                  echo "" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Version**: $VERSION_ENV" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Dossier**: $BACKUP_DIR_ENV" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Timestamp**: $BACKUP_TIMESTAMP_ENV" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Commit**: $GITHUB_SHA_ENV" >> $GITHUB_STEP_SUMMARY
-                  echo "" >> $GITHUB_STEP_SUMMARY
-                  echo "✅ Backup créé avec succès" >> $GITHUB_STEP_SUMMARY
+      - name: "Résumé"
+        if: always()
+        env:
+          VERSION_ENV: ${{ steps.version.outputs.version }}
+          BACKUP_DIR_ENV: ${{ steps.version.outputs.backup-dir }}
+          BACKUP_TIMESTAMP_ENV: ${{ steps.backup-metrics.outputs.backup-timestamp }}
+          GITHUB_SHA_ENV: ${{ github.sha }}
+        run: |
+          echo "## 💾 Résumé du Backup" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: $VERSION_ENV" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dossier**: $BACKUP_DIR_ENV" >> $GITHUB_STEP_SUMMARY
+          echo "- **Timestamp**: $BACKUP_TIMESTAMP_ENV" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: $GITHUB_SHA_ENV" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Backup créé avec succès" >> $GITHUB_STEP_SUMMARY
