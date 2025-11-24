@@ -160,15 +160,36 @@ arkalia-metrics aggregate projects.json --evolution --json --readme-table
 arkalia-metrics aggregate projects.json --no-history
 ```
 
+### Alertes et notifications
+
+```bash
+# Vérifier les changements significatifs
+arkalia-metrics alerts metrics/aggregated_metrics.json
+
+# Avec seuil personnalisé
+arkalia-metrics alerts metrics/aggregated_metrics.json --threshold 15.0
+
+# Créer une issue GitHub si alertes détectées
+arkalia-metrics alerts metrics/aggregated_metrics.json --create-issue \
+  --github-owner arkalia-luna-system \
+  --github-repo arkalia-metrics-collector
+
+# Envoyer des notifications (Email, Slack, Discord)
+arkalia-metrics alerts metrics/aggregated_metrics.json --notify
+```
+
 ### Aide complète
 
 ```bash
 arkalia-metrics --help
 arkalia-metrics collect --help
+arkalia-metrics validate --help
+arkalia-metrics serve --help
 arkalia-metrics export --help
 arkalia-metrics github --help
 arkalia-metrics aggregate --help
 arkalia-metrics badges --help
+arkalia-metrics alerts --help
 ```
 
 ## 🏗️ Architecture
