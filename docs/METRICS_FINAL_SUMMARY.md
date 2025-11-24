@@ -64,4 +64,6 @@ arkalia-metrics badges metrics/metrics_for_badges.json --output metrics/badges_f
 
 ---
 
+---
+
 **Statut** : ✅ Agrégation complète terminée avec succès
