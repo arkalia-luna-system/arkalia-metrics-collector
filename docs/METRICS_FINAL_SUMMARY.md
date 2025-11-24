@@ -51,31 +51,16 @@
 3. **`metrics/badges_final.md`** (1.3K) - Badges avec métriques réelles
 4. **`projects.json`** - Configuration avec 12 projets
 
-## 🔄 MISE À JOUR DU README PRINCIPAL
+## 🔄 MISE À JOUR AUTOMATIQUE
 
-### Remplacements à faire :
+Les métriques sont mises à jour automatiquement via GitHub Actions.
 
-1. **"550+ modules"** → **[52,320 modules](lien-inventaire)**
-2. **"~64% coverage"** → **[X% coverage](lien-codecov)** (à calculer)
-3. **Tableau récap** → Copier depuis `metrics/README_TABLE.md`
-4. **Badges** → Copier depuis `metrics/badges_final.md`
-
-### Commandes pour mise à jour automatique :
+Pour mettre à jour manuellement :
 
 ```bash
-cd /Volumes/T7/arkalia-metrics-collector
 arkalia-metrics aggregate projects.json --readme-table --json --output metrics
 arkalia-metrics badges metrics/metrics_for_badges.json --output metrics/badges_final.md
 ```
-
-## ✅ VALIDATION
-
-- [x] 12 projets analysés (au lieu de 6)
-- [x] Tous les chemins valides
-- [x] Métriques agrégées générées
-- [x] Tableau README créé
-- [x] Badges générés avec métriques réelles
-- [ ] README principal mis à jour (à faire)
 
 ---
 
