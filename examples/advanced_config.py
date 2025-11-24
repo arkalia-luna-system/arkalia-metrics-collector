@@ -8,9 +8,16 @@ Ce script montre comment utiliser le collecteur avec des configurations avancée
 
 from pathlib import Path
 
-import yaml
+try:
+    import yaml  # type: ignore[import-untyped]
+except ImportError:
+    yaml = None
 
-from arkalia_metrics_collector import MetricsCollector, MetricsExporter
+from arkalia_metrics_collector import (
+    MetricsCollector,
+    MetricsExporter,
+    MultiProjectAggregator,
+)
 
 
 def create_custom_config():
@@ -58,7 +65,8 @@ def analyze_multiple_projects():
         {"name": "docs", "path": "./docs"},
     ]
 
-    all_metrics = {}
+    # Utiliser MultiProjectAggregator pour une meilleure intégration
+    aggregator = MultiProjectAggregator(enable_history=False, enable_github=False)
 
     for project in projects:
         print(f"\n🔍 Analyse de {project['name']}...")
@@ -69,34 +77,32 @@ def analyze_multiple_projects():
             print(f"⚠️  Projet {project['name']} non trouvé à {project_path}")
             continue
 
-        # Collecter les métriques
-        collector = MetricsCollector(project["path"])
-        metrics = collector.collect_all_metrics()
-        all_metrics[project["name"]] = metrics
+        # Collecter les métriques via l'agrégateur
+        metrics = aggregator.collect_project(project["name"], project["path"])
 
-        # Afficher résumé
-        summary = metrics.get("summary", {})
-        print(f"   🐍 Python: {summary.get('total_python_files', 0)} fichiers")
-        print(f"   📝 Code: {summary.get('lines_of_code', 0):,} lignes")
-        print(f"   🧪 Tests: {summary.get('collected_tests', 0)} tests")
+        if metrics:
+            # Afficher résumé
+            summary = metrics.get("summary", {})
+            print(f"   🐍 Python: {summary.get('total_python_files', 0)} fichiers")
+            print(f"   📝 Code: {summary.get('lines_of_code', 0):,} lignes")
+            print(f"   🧪 Tests: {summary.get('collected_tests', 0)} tests")
 
-    return all_metrics
+    # Agréger toutes les métriques
+    aggregated = aggregator.aggregate_metrics()
+    return aggregated
 
 
-def generate_comparison_report(all_metrics):
+def generate_comparison_report(aggregated_metrics):
     """Génère un rapport de comparaison entre projets."""
     print("\n📊 Génération du rapport de comparaison...")
 
-    # Calculer les totaux
-    total_files = sum(
-        m.get("summary", {}).get("total_python_files", 0) for m in all_metrics.values()
-    )
-    total_lines = sum(
-        m.get("summary", {}).get("lines_of_code", 0) for m in all_metrics.values()
-    )
-    total_tests = sum(
-        m.get("summary", {}).get("collected_tests", 0) for m in all_metrics.values()
-    )
+    # Extraire les données agrégées
+    agg_data = aggregated_metrics.get("aggregated", {})
+    projects = aggregated_metrics.get("projects", [])
+
+    total_files = agg_data.get("total_modules", 0)
+    total_lines = agg_data.get("total_lines_of_code", 0)
+    total_tests = agg_data.get("total_tests", 0)
 
     # Créer le rapport
     report = f"""# 📊 Rapport de Comparaison Multi-Projets
@@ -111,12 +117,12 @@ def generate_comparison_report(all_metrics):
 
 """
 
-    for project_name, metrics in all_metrics.items():
-        summary = metrics.get("summary", {})
-        files = summary.get("total_python_files", 0)
-        lines = summary.get("lines_of_code", 0)
-        tests = summary.get("collected_tests", 0)
-        docs = summary.get("documentation_files", 0)
+    for project in projects:
+        project_name = project.get("name", "Unknown")
+        files = project.get("modules", 0)
+        lines = project.get("lines_of_code", 0)
+        tests = project.get("tests", 0)
+        docs = project.get("documentation_files", 0)
 
         # Calculer les pourcentages
         files_pct = (files / total_files * 100) if total_files > 0 else 0

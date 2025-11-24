@@ -9,6 +9,7 @@ Ce script montre comment utiliser le collecteur de métriques de manière progra
 from pathlib import Path
 
 from arkalia_metrics_collector import (
+    BadgesGenerator,
     MetricsCollector,
     MetricsExporter,
     MetricsValidator,
@@ -70,6 +71,19 @@ def main():
     for format_name, success in results.items():
         status = "✅" if success else "❌"
         print(f"   {status} {format_name}: {'Succès' if success else 'Échec'}")
+
+    # 6. Générer des badges (optionnel)
+    print("\n🏷️  Génération de badges...")
+    badges_gen = BadgesGenerator()
+    badges_content = badges_gen.generate_all_badges(
+        metrics,
+        github_owner="arkalia-luna-system",
+        github_repo="arkalia-metrics-collector",
+        pypi_name="arkalia-metrics-collector",
+    )
+    badges_file = outputs / "badges.md"
+    badges_file.write_text(badges_content, encoding="utf-8")
+    print(f"   ✅ Badges générés dans : {badges_file}")
 
     print(f"\n🎉 Métriques exportées dans : {outputs.absolute()}")
     print(f"📊 Ouvrez {outputs / 'dashboard.html'} dans votre navigateur !")

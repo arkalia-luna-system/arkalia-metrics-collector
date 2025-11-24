@@ -51,4 +51,12 @@ htmlcov/
 # Logs
 *.log
 logs/
+
+# OS files (AppleDouble, etc.)
 ._*
+.DS_Store
+Thumbs.db
+
+# Temporary files
+temp_*.html
+*.tmp
