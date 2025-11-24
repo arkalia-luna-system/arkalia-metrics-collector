@@ -15,7 +15,7 @@ from typing import Any
 try:
     import requests  # type: ignore[import-untyped]
 except ImportError:
-    requests = None  # type: ignore[assignment]
+    requests = None
 
 logger = logging.getLogger(__name__)
 
