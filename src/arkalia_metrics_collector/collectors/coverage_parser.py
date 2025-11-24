@@ -14,7 +14,7 @@ try:
 except ImportError:
     # Fallback si defusedxml n'est pas installé
     # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
-    import xml.etree.ElementTree as ET  # noqa: S405  # nosec B405  # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
+    import xml.etree.ElementTree as ET  # noqa: S405  # nosec B405  # type: ignore[no-redef]  # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
 
     logging.warning(
         "defusedxml n'est pas installé. Utilisation de xml.etree.ElementTree "

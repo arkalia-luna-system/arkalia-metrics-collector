@@ -10,11 +10,15 @@ Support pour :
 
 import logging
 import os
+from typing import TYPE_CHECKING, Any
 
-try:
-    import requests  # type: ignore[import-untyped]
-except ImportError:
-    requests = None  # type: ignore[assignment]
+if TYPE_CHECKING:
+    import requests
+else:
+    try:
+        import requests
+    except ImportError:
+        requests = None  # type: ignore[assignment,unused-ignore]
 
 logger = logging.getLogger(__name__)
 
@@ -138,7 +142,9 @@ class SlackNotifier:
             logger.warning("requests n'est pas installé. Message Slack non envoyé.")
             return False
 
-        assert requests is not None  # Pour MyPy
+        # Import local pour mypy
+        import requests as requests_module  # type: ignore[assignment]
+
         try:
             payload = {
                 "text": title,
@@ -154,7 +160,7 @@ class SlackNotifier:
                 ],
             }
 
-            response = requests.post(self.webhook_url, json=payload, timeout=10)
+            response = requests_module.post(self.webhook_url, json=payload, timeout=10)
 
             if response.status_code == 200:
                 logger.info("Message Slack envoyé")
@@ -199,7 +205,9 @@ class DiscordNotifier:
             logger.warning("requests n'est pas installé. Message Discord non envoyé.")
             return False
 
-        assert requests is not None  # Pour MyPy
+        # Import local pour mypy
+        import requests as requests_module  # type: ignore[assignment]
+
         try:
             # Discord limite à 2000 caractères
             content = message[:1900] if len(message) > 1900 else message
@@ -214,7 +222,7 @@ class DiscordNotifier:
                 ]
             }
 
-            response = requests.post(self.webhook_url, json=payload, timeout=10)
+            response = requests_module.post(self.webhook_url, json=payload, timeout=10)
 
             if response.status_code in (200, 204):
                 logger.info("Message Discord envoyé")

@@ -10,12 +10,15 @@ Support pour :
 """
 
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-try:
-    import requests  # type: ignore[import-untyped]
-except ImportError:
-    requests = None  # type: ignore[assignment,unused-ignore]
+if TYPE_CHECKING:
+    import requests
+else:
+    try:
+        import requests
+    except ImportError:
+        requests = None  # type: ignore[assignment,unused-ignore]
 
 logger = logging.getLogger(__name__)
 
@@ -89,7 +92,6 @@ class NotionExporter:
             logger.warning("requests n'est pas installé")
             return False
 
-        assert requests is not None  # Pour MyPy
         # Note: Nécessite l'API Notion
         # Pour l'instant, retourne False car nécessite une configuration complexe
         logger.warning(
@@ -140,7 +142,6 @@ class AirtableExporter:
             logger.warning("requests n'est pas installé")
             return False
 
-        assert requests is not None  # Pour MyPy
         # Note: Nécessite l'API Airtable
         # Pour l'instant, retourne False car nécessite une configuration complexe
         logger.warning(
@@ -182,13 +183,15 @@ class RESTAPIExporter:
             logger.warning("requests n'est pas installé")
             return False
 
-        assert requests is not None  # Pour MyPy
+        # Import local pour mypy
+        import requests as requests_module  # type: ignore[assignment]
+
         try:
             headers = {"Content-Type": "application/json"}
             if self.api_key:
                 headers["Authorization"] = f"Bearer {self.api_key}"
 
-            response = requests.post(
+            response = requests_module.post(
                 self.api_url, json=metrics, headers=headers, timeout=10
             )
 
