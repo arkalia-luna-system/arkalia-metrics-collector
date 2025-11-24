@@ -13,7 +13,7 @@ jobs:
   test-pages:
     name: "Test GitHub Pages"
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: "Checkout Code"
         uses: actions/checkout@v5
@@ -56,20 +56,23 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    
+
     steps:
       - name: "Deploy to GitHub Pages"
         id: deployment
         uses: actions/deploy-pages@v4
-        
+
       - name: "Test Result"
+        env:
+          DEPLOYMENT_OUTCOME: ${{ steps.deployment.outputs.outcome }}
+          DEPLOYMENT_URL: ${{ steps.deployment.outputs.page_url }}
         run: |
           echo "🚀 TEST GITHUB PAGES TERMINÉ"
           echo "============================"
-          echo "Status: ${{ steps.deployment.outputs.outcome }}"
-          echo "URL: ${{ steps.deployment.outputs.page_url }}"
-          
-          if [ "${{ steps.deployment.outputs.outcome }}" = "success" ]; then
+          echo "Status: $DEPLOYMENT_OUTCOME"
+          echo "URL: $DEPLOYMENT_URL"
+
+          if [ "$DEPLOYMENT_OUTCOME" = "success" ]; then
             echo "✅ GitHub Pages fonctionne parfaitement !"
           else
             echo "❌ Problème avec GitHub Pages"

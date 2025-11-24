@@ -40,9 +40,11 @@ jobs:
 
             - name: "Déterminer la version"
               id: version
+              env:
+                  INPUT_VERSION: ${{ inputs.version }}
               run: |
-                  if [ -n "${{ inputs.version }}" ]; then
-                      VERSION="${{ inputs.version }}"
+                  if [ -n "$INPUT_VERSION" ]; then
+                      VERSION="$INPUT_VERSION"
                   else
                       # Extraire la version depuis pyproject.toml
                       VERSION=$(grep -E '^version\s*=' pyproject.toml | sed -E "s/^version\s*=\s*[\"']([^\"']+)[\"'].*/\1/" | head -1)
@@ -54,16 +56,24 @@ jobs:
                   echo "📦 Version détectée: $VERSION"
 
             - name: "Créer le dossier de backup"
+              env:
+                  VERSION: ${{ steps.version.outputs.version }}
               run: |
-                  BACKUP_DIR="backups/v${{ steps.version.outputs.version }}"
+                  BACKUP_DIR="backups/v$VERSION"
                   mkdir -p "$BACKUP_DIR"
                   echo "backup-dir=$BACKUP_DIR" >> $GITHUB_OUTPUT
                   echo "📁 Dossier de backup créé: $BACKUP_DIR"
 
             - name: "Sauvegarder les métriques"
               id: backup-metrics
+              env:
+                  BACKUP_DIR_ENV: ${{ steps.version.outputs.backup-dir }}
+                  VERSION_ENV: ${{ steps.version.outputs.version }}
+                  GITHUB_SHA_ENV: ${{ github.sha }}
+                  GITHUB_REF_NAME_ENV: ${{ github.ref_name }}
+                  GITHUB_RUN_ID_ENV: ${{ github.run_id }}
               run: |
-                  BACKUP_DIR="${{ steps.version.outputs.backup-dir }}"
+                  BACKUP_DIR="$BACKUP_DIR_ENV"
                   TIMESTAMP=$(date -u +"%Y%m%d_%H%M%S")
 
                   # Créer le dossier de backup
@@ -94,11 +104,11 @@ jobs:
                   # Créer un fichier de métadonnées
                   cat > "$BACKUP_DIR/backup_info.json" << EOF
                   {
-                    "version": "${{ steps.version.outputs.version }}",
+                    "version": "$VERSION_ENV",
                     "timestamp": "${TIMESTAMP}",
-                    "commit": "${{ github.sha }}",
-                    "branch": "${{ github.ref_name }}",
-                    "workflow_run": "${{ github.run_id }}",
+                    "commit": "$GITHUB_SHA_ENV",
+                    "branch": "$GITHUB_REF_NAME_ENV",
+                    "workflow_run": "$GITHUB_RUN_ID_ENV",
                     "backup_date": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
                   }
                   EOF
@@ -107,8 +117,10 @@ jobs:
                   echo "✅ Métadonnées de backup créées"
 
             - name: "Créer un fichier README pour le backup"
+              env:
+                  BACKUP_DIR_ENV: ${{ steps.version.outputs.backup-dir }}
               run: |
-                  BACKUP_DIR="${{ steps.version.outputs.backup-dir }}"
+                  BACKUP_DIR="$BACKUP_DIR_ENV"
                   cat > "$BACKUP_DIR/README.md" << 'EOF'
                   # Backup de Version
 
@@ -130,16 +142,19 @@ jobs:
                   echo "✅ README de backup créé"
 
             - name: "Commit et Push du backup"
+              env:
+                  VERSION_ENV: ${{ steps.version.outputs.version }}
+                  GITHUB_SHA_ENV: ${{ github.sha }}
               run: |
                   git config user.name "github-actions[bot]"
                   git config user.email "github-actions[bot]@users.noreply.github.com"
 
                   git add "backups/"
 
-                  git commit -m "💾 Backup version ${{ steps.version.outputs.version }}" \
+                  git commit -m "💾 Backup version $VERSION_ENV" \
                     -m "Backup automatique créé lors du merge sur main" \
-                    -m "Version: ${{ steps.version.outputs.version }}" \
-                    -m "Commit: ${{ github.sha }}" \
+                    -m "Version: $VERSION_ENV" \
+                    -m "Commit: $GITHUB_SHA_ENV" \
                     || echo "Aucun changement à commiter"
 
                   git push origin main || \
@@ -147,12 +162,17 @@ jobs:
 
             - name: "Résumé"
               if: always()
+              env:
+                  VERSION_ENV: ${{ steps.version.outputs.version }}
+                  BACKUP_DIR_ENV: ${{ steps.version.outputs.backup-dir }}
+                  BACKUP_TIMESTAMP_ENV: ${{ steps.backup-metrics.outputs.backup-timestamp }}
+                  GITHUB_SHA_ENV: ${{ github.sha }}
               run: |
                   echo "## 💾 Résumé du Backup" >> $GITHUB_STEP_SUMMARY
                   echo "" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Version**: ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Dossier**: ${{ steps.version.outputs.backup-dir }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Timestamp**: ${{ steps.backup-metrics.outputs.backup-timestamp }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+                  echo "- **Version**: $VERSION_ENV" >> $GITHUB_STEP_SUMMARY
+                  echo "- **Dossier**: $BACKUP_DIR_ENV" >> $GITHUB_STEP_SUMMARY
+                  echo "- **Timestamp**: $BACKUP_TIMESTAMP_ENV" >> $GITHUB_STEP_SUMMARY
+                  echo "- **Commit**: $GITHUB_SHA_ENV" >> $GITHUB_STEP_SUMMARY
                   echo "" >> $GITHUB_STEP_SUMMARY
                   echo "✅ Backup créé avec succès" >> $GITHUB_STEP_SUMMARY

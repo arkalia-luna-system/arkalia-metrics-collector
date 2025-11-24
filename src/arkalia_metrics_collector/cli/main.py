@@ -208,16 +208,20 @@ def serve(project_path: str, port: int):
         collector = MetricsCollector(project_path)
         metrics_data = collector.collect_all_metrics()
 
-        # Exporter le dashboard HTML
+        # Exporter le dashboard HTML dans un dossier temporaire
+        import tempfile
+
+        temp_dir = Path(tempfile.mkdtemp(prefix="arkalia_metrics_"))
+        dashboard_path = temp_dir / "dashboard.html"
         exporter = MetricsExporter(metrics_data)
-        dashboard_path = "temp_dashboard.html"
-        exporter.export_html_dashboard(dashboard_path)
+        exporter.export_html_dashboard(str(dashboard_path))
 
         click.echo(f"🌐 Dashboard généré: {dashboard_path}")
         click.echo(f"🚀 Ouvrez {dashboard_path} dans votre navigateur")
         click.echo(
-            f"💡 Pour un serveur web complet, utilisez: python -m http.server {port}"
+            f"💡 Pour un serveur web complet, utilisez: cd {temp_dir} && python -m http.server {port}"
         )
+        click.echo(f"📁 Dossier temporaire: {temp_dir}")
 
     except Exception as e:
         click.echo(f"❌ Erreur lors de la génération du dashboard: {e}")
@@ -790,7 +794,10 @@ def alerts(
             click.echo("=" * 50)
             click.echo(alerts_system.generate_alert_message(alerts_data))
 
-            if create_issue:
+            # Vérifier si une issue doit être créée
+            should_create = alerts_system.should_create_issue(alerts_data)
+
+            if create_issue and should_create:
                 if verbose:
                     click.echo("\n📝 Création d'une issue GitHub...")
 

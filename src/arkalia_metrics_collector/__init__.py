@@ -31,13 +31,14 @@ from .collectors.github_collector import GitHubCollector
 from .collectors.metrics_collector import MetricsCollector
 from .collectors.multi_project_aggregator import MultiProjectAggregator
 from .exporters.badges_generator import BadgesGenerator
-from .exporters.metrics_exporter import MetricsExporter
 from .exporters.external_exporters import (
     AirtableExporter,
     GoogleSheetsExporter,
     NotionExporter,
     RESTAPIExporter,
 )
+from .exporters.interactive_dashboard import InteractiveDashboardGenerator
+from .exporters.metrics_exporter import MetricsExporter
 from .notifications.notifiers import DiscordNotifier, EmailNotifier, SlackNotifier
 from .validators.metrics_validator import MetricsValidator
 
@@ -47,6 +48,7 @@ __all__ = [
     "MultiProjectAggregator",
     "MetricsExporter",
     "BadgesGenerator",
+    "InteractiveDashboardGenerator",
     "MetricsValidator",
     "EmailNotifier",
     "SlackNotifier",
