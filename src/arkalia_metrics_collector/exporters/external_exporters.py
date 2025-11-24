@@ -13,9 +13,9 @@ import logging
 from typing import Any
 
 try:
-    import requests  # type: ignore
+    import requests
 except ImportError:
-    requests = None
+    requests = None  # type: ignore[assignment]
 
 logger = logging.getLogger(__name__)
 
@@ -89,6 +89,7 @@ class NotionExporter:
             logger.warning("requests n'est pas installé")
             return False
 
+        assert requests is not None  # Pour MyPy
         # Note: Nécessite l'API Notion
         # Pour l'instant, retourne False car nécessite une configuration complexe
         logger.warning(
@@ -139,6 +140,7 @@ class AirtableExporter:
             logger.warning("requests n'est pas installé")
             return False
 
+        assert requests is not None  # Pour MyPy
         # Note: Nécessite l'API Airtable
         # Pour l'instant, retourne False car nécessite une configuration complexe
         logger.warning(
@@ -180,6 +182,7 @@ class RESTAPIExporter:
             logger.warning("requests n'est pas installé")
             return False
 
+        assert requests is not None  # Pour MyPy
         try:
             headers = {"Content-Type": "application/json"}
             if self.api_key:

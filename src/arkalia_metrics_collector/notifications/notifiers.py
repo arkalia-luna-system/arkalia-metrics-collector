@@ -14,7 +14,7 @@ import os
 try:
     import requests  # type: ignore[import-untyped]
 except ImportError:
-    requests = None
+    requests = None  # type: ignore[assignment]
 
 logger = logging.getLogger(__name__)
 
@@ -138,6 +138,7 @@ class SlackNotifier:
             logger.warning("requests n'est pas installé. Message Slack non envoyé.")
             return False
 
+        assert requests is not None  # Pour MyPy
         try:
             payload = {
                 "text": title,
@@ -198,6 +199,7 @@ class DiscordNotifier:
             logger.warning("requests n'est pas installé. Message Discord non envoyé.")
             return False
 
+        assert requests is not None  # Pour MyPy
         try:
             # Discord limite à 2000 caractères
             content = message[:1900] if len(message) > 1900 else message

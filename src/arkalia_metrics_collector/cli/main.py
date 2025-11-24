@@ -236,7 +236,7 @@ def serve(project_path: str, port: int):
 @click.option(
     "--multiple",
     "-m",
-    help="Fichier JSON avec liste de dépôts à collecter (format: [{\"owner\": \"...\", \"repo\": \"...\"}])",
+    help='Fichier JSON avec liste de dépôts à collecter (format: [{"owner": "...", "repo": "..."}])',
 )
 @click.option("--verbose", is_flag=True, help="Mode verbeux")
 def github(
@@ -314,7 +314,9 @@ def github(
 
         try:
             collector = GitHubCollector(token)
-            repo_metrics: dict[str, Any] | None = collector.collect_repo_metrics(owner, repo)
+            repo_metrics: dict[str, Any] | None = collector.collect_repo_metrics(
+                owner, repo
+            )
 
             if repo_metrics is None:
                 click.echo("❌ Impossible de collecter les métriques GitHub")
@@ -404,7 +406,9 @@ def aggregate(
                 click.echo("📂 Chargement des métriques depuis JSON...")
             success = aggregator.load_from_json(projects_file)
             if not success:
-                click.echo("❌ Impossible de charger les métriques depuis le fichier JSON")
+                click.echo(
+                    "❌ Impossible de charger les métriques depuis le fichier JSON"
+                )
                 sys.exit(1)
             if verbose:
                 click.echo("✅ Métriques chargées avec succès")
