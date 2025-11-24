@@ -490,6 +490,35 @@ def export(
             if success:
                 click.echo(f"💾 Métriques exportées dans: {output_path}")
 
+        # Export REST API si demandé
+        if rest_api:
+            try:
+                from arkalia_metrics_collector.exporters.external_exporters import (
+                    RESTAPIExporter,
+                )
+
+                rest_exporter = RESTAPIExporter(api_url=rest_api, api_key=api_key)
+                rest_success = rest_exporter.export(metrics_data)
+
+                if verbose:
+                    status = "✅" if rest_success else "❌"
+                    click.echo(
+                        f"{status} Export REST API: {'Succès' if rest_success else 'Échec'}"
+                    )
+
+                if rest_success:
+                    click.echo(f"🌐 Métriques exportées vers: {rest_api}")
+                else:
+                    click.echo(
+                        "⚠️  Échec de l'export REST API. Vérifiez l'URL et les clés API."
+                    )
+            except Exception as e:
+                click.echo(f"❌ Erreur lors de l'export REST API: {e}")
+                if verbose:
+                    import traceback
+
+                    traceback.print_exc()
+
     except Exception as e:
         click.echo(f"❌ Erreur lors de l'export: {e}")
         if verbose:
@@ -590,6 +619,14 @@ def badges(
     "--github-repo",
     default="arkalia-metrics-collector",
     help="Nom du repository GitHub",
+)
+@click.option(
+    "--labels",
+    help="Labels personnalisés pour les issues GitHub (séparés par des virgules)",
+)
+@click.option(
+    "--assignees",
+    help="Utilisateurs à assigner aux issues GitHub (séparés par des virgules)",
 )
 @click.option("--verbose", is_flag=True, help="Mode verbeux")
 def alerts(
