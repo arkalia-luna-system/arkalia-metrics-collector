@@ -5,7 +5,7 @@
 > arkalia-metrics aggregate projects.json --readme-table --json --output metrics
 > ```
 
-**Date** : 2025-11-14  
+**Date** : 2025-11-24  
 **Projets analysés** : 12 projets complets
 
 ## 🎯 MÉTRIQUES GLOBALES

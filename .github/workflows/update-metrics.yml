@@ -94,11 +94,13 @@ jobs:
 
       - name: "Vérifier les alertes"
         id: check-alerts
+        continue-on-error: true
         run: |
           echo "🚨 Vérification des alertes..."
           if [ -f "metrics/aggregated_metrics.json" ]; then
             alerts_output=$(arkalia-metrics alerts \
-              metrics/aggregated_metrics.json --threshold 10.0 2>&1)
+              metrics/aggregated_metrics.json --threshold 10.0 2>&1) || true
+            exit_code=$?
             if [ -z "$(echo "$alerts_output" | grep 'Aucune alerte')" ]; then
               echo "has-alerts=true" >> $GITHUB_OUTPUT
               echo "🚨 Alertes détectées"
@@ -159,8 +161,16 @@ jobs:
             -m "- Badges régénérés" \
             || echo "Aucun changement à commiter"
 
-          git push origin main || \
-            echo "Push échoué (peut-être déjà à jour)"
+          # Déterminer la branche cible
+          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          if [ "$CURRENT_BRANCH" = "develop" ] || [ "$CURRENT_BRANCH" = "main" ]; then
+            git push origin "$CURRENT_BRANCH" || \
+              echo "Push échoué (peut-être déjà à jour)"
+          else
+            # Par défaut, push sur develop si on n'est pas sur main ou develop
+            git push origin develop || \
+              echo "Push échoué (peut-être déjà à jour)"
+          fi
 
       - name: "Résumé"
         if: always()
