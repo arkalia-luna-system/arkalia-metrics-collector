@@ -10,10 +10,10 @@ Support pour :
 
 import logging
 import os
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    import requests
+    import requests  # type: ignore[import-untyped]
 else:
     try:
         import requests

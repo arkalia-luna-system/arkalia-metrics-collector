@@ -7,6 +7,7 @@ Extrait les métriques de coverage depuis les fichiers XML générés par covera
 
 import logging
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 
 try:
@@ -14,7 +15,9 @@ try:
 except ImportError:
     # Fallback si defusedxml n'est pas installé
     # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
-    import xml.etree.ElementTree as ET  # noqa: S405  # nosec B405  # type: ignore[no-redef]  # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
+    import xml.etree.ElementTree as _ET  # noqa: S405  # nosec B405  # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
+
+    ET: ModuleType = _ET  # type: ignore[no-redef]
 
     logging.warning(
         "defusedxml n'est pas installé. Utilisation de xml.etree.ElementTree "

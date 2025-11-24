@@ -13,7 +13,7 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    import requests
+    import requests  # type: ignore[import-untyped]
 else:
     try:
         import requests
