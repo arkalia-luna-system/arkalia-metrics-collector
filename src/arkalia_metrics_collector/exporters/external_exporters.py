@@ -13,9 +13,9 @@ import logging
 from typing import Any
 
 try:
-    import requests  # type: ignore[import-untyped]
+    import requests
 except ImportError:
-    requests = None
+    requests = None  # type: ignore[assignment]
 
 logger = logging.getLogger(__name__)
 
