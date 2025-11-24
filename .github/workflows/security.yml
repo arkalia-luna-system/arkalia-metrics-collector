@@ -54,7 +54,7 @@ jobs:
           echo "No vulnerabilities found" > logs/pip_audit.txt
 
       - name: "Upload Security Reports"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: dependency-security-reports
           path: logs/
@@ -112,7 +112,7 @@ jobs:
             p/owasp-top-ten
 
       - name: "Upload Code Security Reports"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: code-security-reports
           path: logs/
@@ -178,7 +178,7 @@ jobs:
           fi
 
       - name: "Upload Security Summary"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: security-summary
           path: SECURITY_SUMMARY.md

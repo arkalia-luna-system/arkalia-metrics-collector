@@ -198,7 +198,7 @@ jobs:
           bandit -r src/arkalia_metrics_collector/ -f txt -o logs/bandit_report.txt
 
       - name: "Upload Security Report"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: security-reports
           path: logs/bandit_report.*
@@ -231,7 +231,7 @@ jobs:
         run: python -m build
 
       - name: "Upload Build Artifacts"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: dist
           path: dist/
