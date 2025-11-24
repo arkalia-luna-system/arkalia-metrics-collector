@@ -16,7 +16,6 @@
 - [x] Version dans `pyproject.toml` : `1.1.0`
 - [x] CHANGELOG.md mis à jour avec date `2025-11-24`
 - [x] Workflows GitHub Actions corrigés
-- [x] Backup automatique configuré
 
 ### 2. Synchronisation des Branches
 
@@ -164,16 +163,6 @@ git push origin v1.1.0
 
 4. **Cliquer** : "Publish release"
 
-### Étape 3 : Vérifier le Backup Automatique
-
-Le workflow `.github/workflows/backup-on-merge.yml` créera automatiquement un backup dans `backups/v1.1.0/` lors du push sur main.
-
-Vérifier que le backup a été créé :
-
-```bash
-ls -la backups/v1.1.0/
-```
-
 ## 📊 Après la Release
 
 ### 1. Mettre à jour develop
@@ -198,7 +187,6 @@ Une fois la release créée :
 
 - ✅ Tag `v1.1.0` créé et poussé
 - ✅ Release GitHub publiée
-- ✅ Backup automatique créé dans `backups/v1.1.0/`
 - ✅ Documentation mise à jour
 - ✅ Branches synchronisées
 
