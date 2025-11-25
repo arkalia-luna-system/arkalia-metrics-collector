@@ -31,7 +31,7 @@
 
 </div>
 
-*Métriques collectées automatiquement le 2025-11-24 par le Collecteur de Métriques Arkalia*
+*Métriques collectées automatiquement le 2025-11-25 par le Collecteur de Métriques Arkalia*
 
 ## 📊 **Métriques Globales** *(Mise à jour automatique)*
 
@@ -39,23 +39,23 @@
 
 | **Projet** | **Modules** | **Lignes** | **Tests** | **Coverage** |
 |:-----------|:-----------:|:----------:|:---------:|:------------:|
-| **arkalia-aria** | `6,082` | `3,764,289` | `2,218` | `N/A` |
-| **arkalia-cia** | `3,419` | `1,251,969` | `230` | `N/A` |
-| **arkalia-luna-logo** | `17,671` | `6,946,020` | `2,230` | `N/A` |
-| **arkalia-luna-pro** | `208` | `46,471` | `95` | `N/A` |
-| **arkalia-metrics-collector** | `23` | `5,841` | `120` | `N/A` |
-| **arkalia-quest** | `118` | `74,490` | `79` | `N/A` |
-| **athalia-dev-setup** | `168` | `86,370` | `196` | `N/A` |
-| **base-template** | `3,303` | `928,195` | `429` | `N/A` |
-| **bbia-branding** | `11` | `2,411` | `2` | `N/A` |
-| **bbia-reachy-sim** | `21,282` | `11,682,651` | `5,605` | `N/A` |
-| **github-profile-arkalia** | `4` | `1,257` | `0` | `N/A` |
-| **nours-interface** | `31` | `112` | `0` | `N/A` |
-| **TOTAL** | **`52,320`** | **`24,790,076`** | **`11,204`** | **N/A** |
+| **arkalia-aria** | `0` | `0` | `0` | `N/A` |
+| **arkalia-cia** | `0` | `0` | `0` | `N/A` |
+| **arkalia-luna-logo** | `0` | `0` | `0` | `N/A` |
+| **arkalia-luna-pro** | `0` | `0` | `0` | `N/A` |
+| **arkalia-metrics-collector** | `0` | `0` | `0` | `N/A` |
+| **arkalia-quest** | `0` | `0` | `0` | `N/A` |
+| **base-template** | `0` | `0` | `0` | `N/A` |
+| **bbia-branding** | `0` | `0` | `0` | `N/A` |
+| **bbia-reachy-sim** | `0` | `0` | `0` | `N/A` |
+| **github-profile-arkalia** | `0` | `0` | `0` | `N/A` |
+| **ia-pipeline** | `0` | `0` | `0` | `N/A` |
+| **nours-interface** | `0` | `0` | `0` | `N/A` |
+| **TOTAL** | **`0`** | **`0`** | **`0`** | **N/A** |
 
 </div>
 
-*Métriques collectées automatiquement le 2025-11-24 par le Collecteur de Métriques Arkalia*
+*Métriques collectées automatiquement le 2025-11-25T02:30:33.099429*
 
 ## ✨ Features
 

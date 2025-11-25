@@ -3,8 +3,8 @@
 [![Stars](https://img.shields.io/github/stars/arkalia-luna-system/arkalia-metrics-collector?style=flat&logo=github)](https://github.com/arkalia-luna-system/arkalia-metrics-collector)
 [![PyPI](https://img.shields.io/pypi/v/arkalia-metrics-collector?logo=pypi&logoColor=white)](https://pypi.org/project/arkalia-metrics-collector/)
 
-[![Modules](https://img.shields.io/badge/Python%20Modules-52,320-blue?style=flat&logo=python)](https://github.com/arkalia-luna-system/arkalia-metrics-collector)
-[![LOC](https://img.shields.io/badge/Lines%20of%20Code-24,790,076-green?style=flat)](https://github.com/arkalia-luna-system/arkalia-metrics-collector)
-[![Tests](https://img.shields.io/badge/Tests-11,204-purple?style=flat)](https://github.com/arkalia-luna-system/arkalia-metrics-collector)
+[![Modules](https://img.shields.io/badge/Python%20Modules-0-blue?style=flat&logo=python)](https://github.com/arkalia-luna-system/arkalia-metrics-collector)
+[![LOC](https://img.shields.io/badge/Lines%20of%20Code-0-green?style=flat)](https://github.com/arkalia-luna-system/arkalia-metrics-collector)
+[![Tests](https://img.shields.io/badge/Tests-0-purple?style=flat)](https://github.com/arkalia-luna-system/arkalia-metrics-collector)
 [![CI](https://github.com/arkalia-luna-system/arkalia-metrics-collector/actions/workflows/ci.yml/badge.svg)](https://github.com/arkalia-luna-system/arkalia-metrics-collector/actions)
 [![Codecov](https://codecov.io/gh/arkalia-luna-system/arkalia-metrics-collector/branch/main/graph/badge.svg)](https://codecov.io/gh/arkalia-luna-system/arkalia-metrics-collector)
