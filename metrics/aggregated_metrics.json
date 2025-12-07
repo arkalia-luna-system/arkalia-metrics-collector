@@ -118,18 +118,18 @@
       "documentation_files": 0
     }
   ],
-  "collection_date": "2025-12-06T02:29:20.339772",
+  "collection_date": "2025-12-07T02:36:30.329263",
   "projects_details": {
     "bbia-reachy-sim": {
       "name": "bbia-reachy-sim",
       "path": "/Volumes/T7/bbia-reachy-sim",
       "metrics": {
-        "timestamp": "2025-12-06T02:29:20.336167",
+        "timestamp": "2025-12-07T02:36:30.325762",
         "project_root": "/Volumes/T7/bbia-reachy-sim",
         "collection_info": {
           "collector_version": "1.1.0",
           "python_version": "3.11.14",
-          "collection_date": "2025-12-06T02:29:20.335981"
+          "collection_date": "2025-12-07T02:36:30.325621"
         },
         "python_files": {
           "count": 0,
@@ -155,18 +155,18 @@
           "documentation_files": 0
         }
       },
-      "collection_date": "2025-12-06T02:29:20.336221"
+      "collection_date": "2025-12-07T02:36:30.325808"
     },
     "bbia-branding": {
       "name": "bbia-branding",
       "path": "/Users/athalia/Desktop/logo bbia/bbia_branding",
       "metrics": {
-        "timestamp": "2025-12-06T02:29:20.336489",
+        "timestamp": "2025-12-07T02:36:30.326024",
         "project_root": "/Users/athalia/Desktop/logo bbia/bbia_branding",
         "collection_info": {
           "collector_version": "1.1.0",
           "python_version": "3.11.14",
-          "collection_date": "2025-12-06T02:29:20.336316"
+          "collection_date": "2025-12-07T02:36:30.325891"
         },
         "python_files": {
           "count": 0,
@@ -192,18 +192,18 @@
           "documentation_files": 0
         }
       },
-      "collection_date": "2025-12-06T02:29:20.336541"
+      "collection_date": "2025-12-07T02:36:30.326069"
     },
     "arkalia-luna-logo": {
       "name": "arkalia-luna-logo",
       "path": "/Volumes/T7/logo/arkalia-luna-logo",
       "metrics": {
-        "timestamp": "2025-12-06T02:29:20.336790",
+        "timestamp": "2025-12-07T02:36:30.326250",
         "project_root": "/Volumes/T7/logo/arkalia-luna-logo",
         "collection_info": {
           "collector_version": "1.1.0",
           "python_version": "3.11.14",
-          "collection_date": "2025-12-06T02:29:20.336625"
+          "collection_date": "2025-12-07T02:36:30.326140"
         },
         "python_files": {
           "count": 0,
@@ -229,18 +229,18 @@
           "documentation_files": 0
         }
       },
-      "collection_date": "2025-12-06T02:29:20.336843"
+      "collection_date": "2025-12-07T02:36:30.326296"
     },
     "arkalia-quest": {
       "name": "arkalia-quest",
       "path": "/Volumes/T7/devstation/arkalia-quest",
       "metrics": {
-        "timestamp": "2025-12-06T02:29:20.337120",
+        "timestamp": "2025-12-07T02:36:30.326572",
         "project_root": "/Volumes/T7/devstation/arkalia-quest",
         "collection_info": {
           "collector_version": "1.1.0",
           "python_version": "3.11.14",
-          "collection_date": "2025-12-06T02:29:20.336930"
+          "collection_date": "2025-12-07T02:36:30.326398"
         },
         "python_files": {
           "count": 0,
@@ -266,18 +266,18 @@
           "documentation_files": 0
         }
       },
-      "collection_date": "2025-12-06T02:29:20.337172"
+      "collection_date": "2025-12-07T02:36:30.326620"
     },
     "arkalia-cia": {
       "name": "arkalia-cia",
       "path": "/Volumes/T7/arkalia-cia",
       "metrics": {
-        "timestamp": "2025-12-06T02:29:20.337413",
+        "timestamp": "2025-12-07T02:36:30.326871",
         "project_root": "/Volumes/T7/arkalia-cia",
         "collection_info": {
           "collector_version": "1.1.0",
           "python_version": "3.11.14",
-          "collection_date": "2025-12-06T02:29:20.337252"
+          "collection_date": "2025-12-07T02:36:30.326710"
         },
         "python_files": {
           "count": 0,
@@ -303,18 +303,18 @@
           "documentation_files": 0
         }
       },
-      "collection_date": "2025-12-06T02:29:20.337467"
+      "collection_date": "2025-12-07T02:36:30.326936"
     },
     "arkalia-aria": {
       "name": "arkalia-aria",
       "path": "/Volumes/T7/arkalia-aria",
       "metrics": {
-        "timestamp": "2025-12-06T02:29:20.337715",
+        "timestamp": "2025-12-07T02:36:30.327174",
         "project_root": "/Volumes/T7/arkalia-aria",
         "collection_info": {
           "collector_version": "1.1.0",
           "python_version": "3.11.14",
-          "collection_date": "2025-12-06T02:29:20.337549"
+          "collection_date": "2025-12-07T02:36:30.327015"
         },
         "python_files": {
           "count": 0,
@@ -340,18 +340,18 @@
           "documentation_files": 0
         }
       },
-      "collection_date": "2025-12-06T02:29:20.337771"
+      "collection_date": "2025-12-07T02:36:30.327226"
     },
     "base-template": {
       "name": "base-template",
       "path": "/Volumes/T7/base_template",
       "metrics": {
-        "timestamp": "2025-12-06T02:29:20.338035",
+        "timestamp": "2025-12-07T02:36:30.327527",
         "project_root": "/Volumes/T7/base_template",
         "collection_info": {
           "collector_version": "1.1.0",
           "python_version": "3.11.14",
-          "collection_date": "2025-12-06T02:29:20.337854"
+          "collection_date": "2025-12-07T02:36:30.327338"
         },
         "python_files": {
           "count": 0,
@@ -377,18 +377,18 @@
           "documentation_files": 0
         }
       },
-      "collection_date": "2025-12-06T02:29:20.338090"
+      "collection_date": "2025-12-07T02:36:30.327583"
     },
     "ia-pipeline": {
       "name": "ia-pipeline",
       "path": "/Volumes/T7/athalia-dev-setup",
       "metrics": {
-        "timestamp": "2025-12-06T02:29:20.338335",
+        "timestamp": "2025-12-07T02:36:30.327825",
         "project_root": "/Volumes/T7/athalia-dev-setup",
         "collection_info": {
           "collector_version": "1.1.0",
           "python_version": "3.11.14",
-          "collection_date": "2025-12-06T02:29:20.338170"
+          "collection_date": "2025-12-07T02:36:30.327657"
         },
         "python_files": {
           "count": 0,
@@ -414,18 +414,18 @@
           "documentation_files": 0
         }
       },
-      "collection_date": "2025-12-06T02:29:20.338386"
+      "collection_date": "2025-12-07T02:36:30.327879"
     },
     "arkalia-metrics-collector": {
       "name": "arkalia-metrics-collector",
       "path": "/Volumes/T7/arkalia-metrics-collector",
       "metrics": {
-        "timestamp": "2025-12-06T02:29:20.338622",
+        "timestamp": "2025-12-07T02:36:30.328124",
         "project_root": "/Volumes/T7/arkalia-metrics-collector",
         "collection_info": {
           "collector_version": "1.1.0",
           "python_version": "3.11.14",
-          "collection_date": "2025-12-06T02:29:20.338465"
+          "collection_date": "2025-12-07T02:36:30.327965"
         },
         "python_files": {
           "count": 0,
@@ -451,18 +451,18 @@
           "documentation_files": 0
         }
       },
-      "collection_date": "2025-12-06T02:29:20.338673"
+      "collection_date": "2025-12-07T02:36:30.328175"
     },
     "arkalia-luna-pro": {
       "name": "arkalia-luna-pro",
       "path": "/Volumes/T7/devstation/cursor/arkalia-luna-pro",
       "metrics": {
-        "timestamp": "2025-12-06T02:29:20.338930",
+        "timestamp": "2025-12-07T02:36:30.328446",
         "project_root": "/Volumes/T7/devstation/cursor/arkalia-luna-pro",
         "collection_info": {
           "collector_version": "1.1.0",
           "python_version": "3.11.14",
-          "collection_date": "2025-12-06T02:29:20.338761"
+          "collection_date": "2025-12-07T02:36:30.328253"
         },
         "python_files": {
           "count": 0,
@@ -488,18 +488,18 @@
           "documentation_files": 0
         }
       },
-      "collection_date": "2025-12-06T02:29:20.338982"
+      "collection_date": "2025-12-07T02:36:30.328499"
     },
     "nours-interface": {
       "name": "nours-interface",
       "path": "/Volumes/T7/nours_interface",
       "metrics": {
-        "timestamp": "2025-12-06T02:29:20.339235",
+        "timestamp": "2025-12-07T02:36:30.328730",
         "project_root": "/Volumes/T7/nours_interface",
         "collection_info": {
           "collector_version": "1.1.0",
           "python_version": "3.11.14",
-          "collection_date": "2025-12-06T02:29:20.339077"
+          "collection_date": "2025-12-07T02:36:30.328567"
         },
         "python_files": {
           "count": 0,
@@ -525,18 +525,18 @@
           "documentation_files": 0
         }
       },
-      "collection_date": "2025-12-06T02:29:20.339289"
+      "collection_date": "2025-12-07T02:36:30.328778"
     },
     "github-profile-arkalia": {
       "name": "github-profile-arkalia",
       "path": "/Volumes/T7/github-profile-arkalia",
       "metrics": {
-        "timestamp": "2025-12-06T02:29:20.339531",
+        "timestamp": "2025-12-07T02:36:30.329024",
         "project_root": "/Volumes/T7/github-profile-arkalia",
         "collection_info": {
           "collector_version": "1.1.0",
           "python_version": "3.11.14",
-          "collection_date": "2025-12-06T02:29:20.339372"
+          "collection_date": "2025-12-07T02:36:30.328856"
         },
         "python_files": {
           "count": 0,
@@ -562,7 +562,7 @@
           "documentation_files": 0
         }
       },
-      "collection_date": "2025-12-06T02:29:20.339583"
+      "collection_date": "2025-12-07T02:36:30.329076"
     }
   }
 }
