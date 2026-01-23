@@ -2,8 +2,36 @@
 
 Toutes les modifications notables de ce projet seront documentées dans ce fichier.
 
-Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
-et ce projet adhère à [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/), et ce projet adhère à [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.1.1] - 2026-01-23
+
+### Corrections et Améliorations
+
+#### Sécurité
+- Protection des tokens GitHub : masquage dans les logs et messages d'erreur
+- Gestion sécurisée des exceptions : ne plus exposer les détails d'erreurs contenant des informations sensibles
+
+#### Qualité du Code
+- Remplacement des `print()` par `logger` : standardisation dans `metrics_exporter.py` et `interactive_dashboard.py`
+- Optimisation des imports : centralisation de `json`, `logging`, `traceback` au niveau module dans `cli/main.py`
+- Correction bug critique : fonction `aggregate()` corrigée (boucle exécutée uniquement si nécessaire)
+- Amélioration typage : ajout de type hints manquants, correction dans `github_issues.py`
+- Exceptions personnalisées : création du module `exceptions.py` avec hiérarchie complète d'exceptions
+- Refactoring validation des chemins : fonction centralisée `_validate_and_normalize_path()` pour éliminer la duplication
+- Extraction de constantes : port serveur, codes HTTP, timeout extraits en constantes
+- Métriques de performance : temps de collecte mesuré automatiquement dans `collect_all_metrics()`
+- Cache persistant GitHub API : cache avec fichier JSON et TTL configurable
+- Retry avec backoff exponentiel : gestion robuste des erreurs temporaires GitHub API
+- Progress bar : barre de progression avec tqdm pour collecte de fichiers Python (option `--progress`)
+- Tests exporteurs externes : tests améliorés pour Google Sheets, Notion, Airtable avec validation complète
+- Extraction constantes GitHub collector : toutes les valeurs magiques extraites en constantes nommées
+- Amélioration gestion exceptions cache : exceptions spécifiques (OSError, IOError, JSONDecodeError) au lieu de Exception générique
+
+#### Documentation
+- Audit complet mis à jour avec toutes les corrections du 23 janvier 2026
+- Mise à jour des dates et versions dans tous les fichiers de documentation
+- Allègement des fichiers markdown pour améliorer la lisibilité
 
 ## [1.1.0] - 2025-11-24
 
@@ -22,11 +50,21 @@ et ce projet adhère à [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Système d'alertes amélioré avec notifications
 - CLI enrichi avec nouvelles options (`--github-api`, `--notify`, `--labels`, `--assignees`)
 - Documentation complète mise à jour
+- Correction duplication de code : Refactoring CLI
+- Correction erreurs MyPy : Typage amélioré pour imports conditionnels
+- Dependabot configuré : Mise à jour automatique des dépendances
+
+#### 🧪 Tests
+- **16 nouveaux tests** : Tests complets pour exporteurs externes (REST API, Google Sheets, Notion, Airtable)
+- Couverture améliorée pour les exporteurs externes
 
 #### 📝 Documentation
 - Guide d'utilisation mis à jour avec toutes les nouvelles fonctionnalités
 - FAQ enrichie (GitHub API, notifications, Git, export REST)
 - API documentation mise à jour
+- **Référence Métriques** : Nouveau document `docs/METRICS_REFERENCE.md`
+- **Audit Complet 2025** : Analyse exhaustive du projet
+- **CONTRIBUTORS.md** : Fichier créé pour reconnaître les contributeurs
 
 ## [1.0.0] - 2025-09-13
 

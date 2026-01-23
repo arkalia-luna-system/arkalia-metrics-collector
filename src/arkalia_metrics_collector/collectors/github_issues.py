@@ -7,12 +7,15 @@ Utilise l'API GitHub pour créer des issues automatiquement.
 
 import logging
 import os
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-try:
+if TYPE_CHECKING:
     import requests  # type: ignore[import-untyped]
-except ImportError:
-    requests = None
+else:
+    try:
+        import requests
+    except ImportError:
+        requests = None  # type: ignore[assignment,unused-ignore]
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +36,7 @@ class GitHubIssues:
         self.base_url = "https://api.github.com"
         self.session = self._create_session()
 
-    def _create_session(self) -> requests.Session | None:
+    def _create_session(self) -> "requests.Session | None":
         """Crée une session requests avec authentification."""
         if requests is None:
             logger.warning(
@@ -111,13 +114,17 @@ class GitHubIssues:
                 logger.error(f"Dépôt {owner}/{repo} non trouvé ou inaccessible.")
                 return None
             else:
+                # Ne pas logger response.text pour éviter d'exposer des tokens
                 logger.error(
-                    f"Erreur lors de la création de l'issue: {response.status_code} - {response.text}"
+                    f"Erreur lors de la création de l'issue: {response.status_code}"
                 )
                 return None
 
-        except Exception as e:
-            logger.error(f"Exception lors de la création de l'issue: {e}")
+        except Exception:
+            # Ne pas logger l'exception complète pour éviter d'exposer des tokens
+            logger.error(
+                "Exception lors de la création de l'issue (détails masqués pour sécurité)"
+            )
             return None
 
     def check_existing_issue(
@@ -138,7 +145,7 @@ class GitHubIssues:
             return None
 
         url = f"{self.base_url}/repos/{owner}/{repo}/issues"
-        params = {"state": "open", "per_page": 100}
+        params: dict[str, str | int] = {"state": "open", "per_page": 100}
 
         try:
             response = self.session.get(url, params=params, timeout=10)

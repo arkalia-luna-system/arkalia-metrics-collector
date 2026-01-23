@@ -38,8 +38,7 @@ class TestExternalProjectsIntegration:
 
         # Fichiers source
         (src_dir / "__init__.py").write_text('"""Package externe."""\n')
-        (src_dir / "core.py").write_text(
-            '''"""Module principal."""
+        (src_dir / "core.py").write_text('''"""Module principal."""
 def main():
     """Fonction principale."""
     return "Hello World"
@@ -53,10 +52,8 @@ class ExternalClass:
     def process(self, data):
         """Traite les données."""
         return data * 2
-'''
-        )
-        (src_dir / "utils.py").write_text(
-            '''"""Utilitaires."""
+''')
+        (src_dir / "utils.py").write_text('''"""Utilitaires."""
 import os
 from typing import List
 
@@ -67,13 +64,11 @@ def get_files(directory: str) -> List[str]:
 def validate_path(path: str) -> bool:
     """Valide un chemin."""
     return os.path.exists(path)
-'''
-        )
+''')
 
         # Fichiers de test
         (tests_dir / "__init__.py").write_text('"""Tests du package externe."""\n')
-        (tests_dir / "test_core.py").write_text(
-            '''"""Tests du module core."""
+        (tests_dir / "test_core.py").write_text('''"""Tests du module core."""
 import pytest
 from external_package.core import main, ExternalClass
 
@@ -91,10 +86,8 @@ def test_external_class_process_zero():
     """Test avec valeur zéro."""
     obj = ExternalClass()
     assert obj.process(0) == 0
-'''
-        )
-        (tests_dir / "test_utils.py").write_text(
-            '''"""Tests des utilitaires."""
+''')
+        (tests_dir / "test_utils.py").write_text('''"""Tests des utilitaires."""
 import pytest
 from external_package.utils import get_files, validate_path
 from unittest.mock import patch
@@ -112,12 +105,10 @@ def test_validate_path():
 
     with patch('os.path.exists', return_value=False):
         assert validate_path('/test/path') is False
-'''
-        )
+''')
 
         # Documentation
-        (docs_dir / "README.md").write_text(
-            """# External Package
+        (docs_dir / "README.md").write_text("""# External Package
 
 Package externe pour les tests d'intégration.
 
@@ -133,10 +124,8 @@ pip install external-package
 from external_package import main
 print(main())
 ```
-"""
-        )
-        (docs_dir / "api.md").write_text(
-            """# API Reference
+""")
+        (docs_dir / "api.md").write_text("""# API Reference
 
 ## Functions
 
@@ -147,12 +136,10 @@ Fonction principale du package.
 
 ### ExternalClass
 Classe principale avec méthode process().
-"""
-        )
+""")
 
         # Configuration
-        (project / "pyproject.toml").write_text(
-            """[build-system]
+        (project / "pyproject.toml").write_text("""[build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
@@ -161,8 +148,7 @@ name = "external-package"
 version = "1.0.0"
 description = "Package externe pour tests"
 authors = [{name = "Test Author", email = "arkalia.luna.system@gmail.com"}]
-"""
-        )
+""")
 
         return project
 

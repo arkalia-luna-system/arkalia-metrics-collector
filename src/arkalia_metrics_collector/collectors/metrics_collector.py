@@ -12,12 +12,29 @@ Collecte des métriques fiables sur :
 
 import subprocess  # nosec B404
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from arkalia_metrics_collector import __version__
 from arkalia_metrics_collector.collectors.coverage_parser import CoverageParser
+from arkalia_metrics_collector.exceptions import (
+    InvalidProjectPathError,
+    ProjectNotFoundError,
+)
+
+# Import optionnel de tqdm pour progress bar
+try:
+    from tqdm import tqdm  # type: ignore[import-untyped]
+
+    TQDM_AVAILABLE = True
+except ImportError:
+    TQDM_AVAILABLE = False
+
+    # Créer un mock tqdm qui ne fait rien
+    def tqdm(iterable, *args, **kwargs):  # type: ignore[misc]
+        return iterable
 
 
 class MetricsCollector:
@@ -37,14 +54,33 @@ class MetricsCollector:
         metrics_data: Données des métriques collectées
     """
 
-    def __init__(self, project_root: str = ".") -> None:
+    def __init__(self, project_root: str = ".", show_progress: bool = False) -> None:
         """
         Initialise le collecteur de métriques.
 
         Args:
             project_root: Chemin racine du projet (défaut: répertoire courant)
+            show_progress: Afficher une barre de progression (nécessite tqdm)
+
+        Raises:
+            ProjectNotFoundError: Si le projet n'existe pas
+            InvalidProjectPathError: Si le chemin est invalide
         """
-        self.project_root = Path(project_root).resolve()
+        try:
+            self.project_root = Path(project_root).resolve()
+        except (OSError, ValueError) as e:
+            raise InvalidProjectPathError(
+                f"Chemin de projet invalide: {project_root}"
+            ) from e
+
+        if not self.project_root.exists():
+            raise ProjectNotFoundError(f"Projet non trouvé: {self.project_root}")
+
+        if not self.project_root.is_dir():
+            raise InvalidProjectPathError(
+                f"Le chemin doit être un répertoire: {self.project_root}"
+            )
+        self.show_progress = show_progress and TQDM_AVAILABLE
         self.exclude_patterns: set[str] = {
             "__pycache__",
             ".venv",
@@ -114,16 +150,33 @@ class MetricsCollector:
         python_files: list[Path] = []
         total_lines = 0
 
-        for py_file in self.project_root.rglob("*.py"):
-            if not self._is_excluded(py_file):
-                python_files.append(py_file)
-                try:
-                    with open(py_file, encoding="utf-8") as f:
-                        lines = len(f.readlines())
-                        total_lines += lines
-                except (UnicodeDecodeError, OSError):
-                    # Ignorer les fichiers qui ne peuvent pas être lus
-                    continue
+        # Collecter tous les fichiers Python d'abord pour avoir le total
+        all_py_files = list(self.project_root.rglob("*.py"))
+
+        # Filtrer les fichiers exclus
+        valid_py_files = [f for f in all_py_files if not self._is_excluded(f)]
+
+        # Utiliser tqdm si disponible et demandé
+        iterator = (
+            tqdm(
+                valid_py_files,
+                desc="Analyse fichiers Python",
+                disable=not self.show_progress,
+                unit=" fichier",
+            )
+            if self.show_progress
+            else valid_py_files
+        )
+
+        for py_file in iterator:
+            python_files.append(py_file)
+            try:
+                with open(py_file, encoding="utf-8") as f:
+                    lines = len(f.readlines())
+                    total_lines += lines
+            except (UnicodeDecodeError, OSError):
+                # Ignorer les fichiers qui ne peuvent pas être lus
+                continue
 
         # Séparation par type de fichier
         test_files = [f for f in python_files if self._is_test_file(f)]
@@ -292,7 +345,12 @@ class MetricsCollector:
 
         Returns:
             Dictionnaire complet avec toutes les métriques
+
+        Raises:
+            CollectionError: Si une erreur survient lors de la collecte
         """
+        start_time = time.time()
+
         collection_info = {
             "collector_version": __version__,
             "python_version": (
@@ -301,9 +359,19 @@ class MetricsCollector:
             "collection_date": datetime.now().isoformat(),
         }
 
-        python_metrics = self.collect_python_metrics()
-        test_metrics = self.collect_test_metrics()
-        doc_metrics = self.collect_documentation_metrics()
+        try:
+            python_metrics = self.collect_python_metrics()
+            test_metrics = self.collect_test_metrics()
+            doc_metrics = self.collect_documentation_metrics()
+        except Exception as e:
+            from arkalia_metrics_collector.exceptions import CollectionError
+
+            raise CollectionError(
+                f"Erreur lors de la collecte des métriques: {e}"
+            ) from e
+
+        # Calculer le temps de collecte
+        collection_time = time.time() - start_time
 
         # Créer un résumé
         summary = {
@@ -312,6 +380,9 @@ class MetricsCollector:
             "collected_tests": test_metrics["collected_tests_count"],
             "documentation_files": doc_metrics["documentation_files"],
         }
+
+        # Ajouter les métriques de performance
+        collection_info["collection_time_seconds"] = str(round(collection_time, 3))
 
         self.metrics_data = {
             "timestamp": datetime.now().isoformat(),

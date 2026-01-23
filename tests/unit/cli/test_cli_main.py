@@ -37,8 +37,7 @@ class TestCLIMain:
 
         # Fichiers source
         (src_dir / "__init__.py").write_text('"""Package principal."""\n')
-        (src_dir / "main.py").write_text(
-            '''"""Module principal."""
+        (src_dir / "main.py").write_text('''"""Module principal."""
 def main():
     """Fonction principale."""
     return "Hello World"
@@ -48,13 +47,11 @@ class SampleClass:
 
     def __init__(self):
         self.value = 42
-'''
-        )
+''')
 
         # Fichiers de test
         (tests_dir / "__init__.py").write_text('"""Tests du package."""\n')
-        (tests_dir / "test_main.py").write_text(
-            '''"""Tests du module principal."""
+        (tests_dir / "test_main.py").write_text('''"""Tests du module principal."""
 import pytest
 from package.main import main, SampleClass
 
@@ -66,12 +63,10 @@ def test_sample_class():
     """Test de la classe SampleClass."""
     obj = SampleClass()
     assert obj.value == 42
-'''
-        )
+''')
 
         # Documentation
-        (project / "README.md").write_text(
-            """# Sample Project
+        (project / "README.md").write_text("""# Sample Project
 
 Projet d'exemple pour les tests CLI.
 
@@ -87,8 +82,7 @@ pip install sample-project
 from package import main
 print(main())
 ```
-"""
-        )
+""")
 
         return project
 

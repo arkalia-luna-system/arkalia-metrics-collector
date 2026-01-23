@@ -2,36 +2,33 @@
 
 Bienvenue ! Nous sommes ravis que vous souhaitiez contribuer à **Arkalia Metrics Collector**. 🎉
 
-Ce guide vous aidera à comprendre comment contribuer efficacement au projet.
-
 ## 🎯 Types de Contributions Recherchées
 
-### 🐛 **Issues Faciles pour Débuter**
+### 🐛 Issues Faciles pour Débuter
 - Amélioration de la documentation
 - Ajout d'exemples d'utilisation
 - Tests sur nouveaux types de projets
 - Traductions (anglais, espagnol, etc.)
 
-### 🚀 **Features Recherchées**
+### 🚀 Features Recherchées
 - Support de nouveaux formats d'export (XML)
 - Métriques de qualité avancées (complexité cyclomatique)
 - Intégration avec d'autres outils (SonarQube, CodeClimate)
 - Support d'autres langages (JavaScript, TypeScript)
-- **Implémentation complète des exporteurs externes** : Google Sheets, Notion, Airtable (structure prête, méthodes à compléter)
-- Amélioration des visualisations du dashboard (plus de graphiques)
-- Support de métriques de performance (temps d'exécution, mémoire)
+- **Implémentation complète des exporteurs externes** : Google Sheets, Notion, Airtable
+- Amélioration des visualisations du dashboard
+- Support de métriques de performance
 
-### 🧪 **Tests et Validation**
+### 🧪 Tests et Validation
 - Tests sur différents OS (Windows, macOS, Linux)
 - Tests avec des projets de grande taille (>10k fichiers)
 - Benchmarks de performance
 - Tests d'intégration avec CI/CD
 - Tests sur projets externes réels
-- Validation des outputs en production
 
 ## 🛠️ Comment Contribuer
 
-### 1. **Setup de Développement**
+### 1. Setup de Développement
 
 ```bash
 # Cloner le projet
@@ -47,7 +44,7 @@ source .venv/bin/activate  # Linux/macOS
 pip install -e ".[dev]"
 ```
 
-### 2. **Processus de Développement**
+### 2. Processus de Développement
 
 ```bash
 # Créer une branche pour votre feature
@@ -65,11 +62,6 @@ bandit -r src/            # Sécurité
 # Lancer les tests
 pytest tests/ -v --cov=arkalia_metrics_collector
 
-# Tests spécifiques
-pytest tests/unit/ -v                    # Tests unitaires
-pytest tests/integration/ -v             # Tests d'intégration
-pytest tests/performance/ -v             # Tests de performance
-
 # Committer vos changements
 git add .
 git commit -m "✨ Ajout de ma super feature"
@@ -78,16 +70,16 @@ git commit -m "✨ Ajout de ma super feature"
 git push origin feature/ma-super-feature
 ```
 
-### 3. **Standards de Code**
+### 3. Standards de Code
 
 - **Formatage** : Black (line-length=88)
 - **Linting** : Ruff
 - **Types** : MyPy avec annotations
 - **Sécurité** : Bandit pour les scans
-- **Tests** : pytest avec couverture >80% (110 tests actuels)
+- **Tests** : pytest avec couverture >80%
 - **Documentation** : Docstrings Google style
 
-### 4. **Structure des Commits**
+### 4. Structure des Commits
 
 Utilisez des préfixes clairs :
 
@@ -115,19 +107,19 @@ Utilisez des préfixes clairs :
 
 ## 🎯 Issues "Help Wanted"
 
-### 🟢 **Niveau Débutant**
+### 🟢 Niveau Débutant
 - Améliorer les messages d'erreur CLI
 - Ajouter des exemples dans `/examples/`
 - Traduire la documentation
 - Tester sur différents projets Python
 
-### 🟡 **Niveau Intermédiaire**
+### 🟡 Niveau Intermédiaire
 - Optimiser les performances de collecte
 - Ajouter support pour Poetry/Pipenv
 - Créer templates de configuration
 - Intégrer avec pre-commit hooks
 
-### 🔴 **Niveau Avancé**
+### 🔴 Niveau Avancé
 - Support multi-langages (JS, Go, Rust)
 - API REST pour métriques en temps réel
 - Plugin système pour extensibilité
@@ -171,13 +163,3 @@ En contribuant, vous acceptez que votre code soit sous licence MIT.
 ---
 
 **Merci de rendre Arkalia Metrics Collector encore meilleur ! 🚀**
-
-## 🎯 Idées de Contributions Rapides
-
-Vous voulez contribuer mais ne savez pas par où commencer ? Voici des idées simples :
-
-1. **Testez sur votre projet** et signalez les problèmes
-2. **Ajoutez un exemple** dans `/examples/`
-3. **Améliorez la documentation** existante
-4. **Créez un template** de configuration
-5. **Partagez votre expérience** dans les discussions

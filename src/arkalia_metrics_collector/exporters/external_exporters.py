@@ -3,14 +3,18 @@
 Exporteurs vers services externes.
 
 Support pour :
-- Google Sheets
-- Notion
-- Airtable
-- API REST personnalisée
+- Google Sheets (⚠️ Prévu - non implémenté)
+- Notion (⚠️ Prévu - non implémenté)
+- Airtable (⚠️ Prévu - non implémenté)
+- API REST personnalisée (✅ Implémenté)
 """
 
 import logging
 from typing import TYPE_CHECKING, Any
+
+# Constantes
+HTTP_SUCCESS_CODES = (200, 201)
+HTTP_TIMEOUT = 10
 
 if TYPE_CHECKING:
     import requests  # type: ignore[import-untyped]
@@ -24,7 +28,14 @@ logger = logging.getLogger(__name__)
 
 
 class GoogleSheetsExporter:
-    """Exporteur vers Google Sheets via API."""
+    """
+    Exporteur vers Google Sheets via API.
+
+    ⚠️ **Statut** : Prévu pour version future (v1.2+)
+
+    Cette classe est présente pour la structure mais n'est pas encore implémentée.
+    Pour exporter vers Google Sheets, utilisez l'export CSV et importez-le manuellement.
+    """
 
     def __init__(self, spreadsheet_id: str | None = None) -> None:
         """
@@ -39,23 +50,30 @@ class GoogleSheetsExporter:
         """
         Exporte les métriques vers Google Sheets.
 
+        ⚠️ **Non implémenté** : Cette fonctionnalité est prévue pour une version future.
+
         Args:
             metrics: Métriques à exporter
 
         Returns:
-            True si l'export a réussi
+            False (fonctionnalité non implémentée)
         """
-        # Note: Nécessite l'API Google Sheets
-        # Pour l'instant, retourne False car nécessite une configuration complexe
         logger.warning(
-            "Export Google Sheets nécessite une configuration API. "
-            "Utilisez l'export CSV et importez-le manuellement."
+            "Export Google Sheets non implémenté (prévu v1.2+). "
+            "Utilisez l'export CSV et importez-le manuellement dans Google Sheets."
         )
         return False
 
 
 class NotionExporter:
-    """Exporteur vers Notion via API."""
+    """
+    Exporteur vers Notion via API.
+
+    ⚠️ **Statut** : Prévu pour version future (v1.2+)
+
+    Cette classe est présente pour la structure mais n'est pas encore implémentée.
+    Pour exporter vers Notion, utilisez l'export JSON et importez-le manuellement.
+    """
 
     def __init__(
         self,
@@ -76,11 +94,13 @@ class NotionExporter:
         """
         Exporte les métriques vers Notion.
 
+        ⚠️ **Non implémenté** : Cette fonctionnalité est prévue pour une version future.
+
         Args:
             metrics: Métriques à exporter
 
         Returns:
-            True si l'export a réussi
+            False (fonctionnalité non implémentée)
         """
         if not self.notion_token or not self.database_id:
             logger.warning(
@@ -92,17 +112,22 @@ class NotionExporter:
             logger.warning("requests n'est pas installé")
             return False
 
-        # Note: Nécessite l'API Notion
-        # Pour l'instant, retourne False car nécessite une configuration complexe
         logger.warning(
-            "Export Notion nécessite une configuration API. "
-            "Utilisez l'export JSON et importez-le manuellement."
+            "Export Notion non implémenté (prévu v1.2+). "
+            "Utilisez l'export JSON et importez-le manuellement dans Notion."
         )
         return False
 
 
 class AirtableExporter:
-    """Exporteur vers Airtable via API."""
+    """
+    Exporteur vers Airtable via API.
+
+    ⚠️ **Statut** : Prévu pour version future (v1.2+)
+
+    Cette classe est présente pour la structure mais n'est pas encore implémentée.
+    Pour exporter vers Airtable, utilisez l'export JSON et importez-le manuellement.
+    """
 
     def __init__(
         self,
@@ -126,11 +151,13 @@ class AirtableExporter:
         """
         Exporte les métriques vers Airtable.
 
+        ⚠️ **Non implémenté** : Cette fonctionnalité est prévue pour une version future.
+
         Args:
             metrics: Métriques à exporter
 
         Returns:
-            True si l'export a réussi
+            False (fonctionnalité non implémentée)
         """
         if not all([self.api_key, self.base_id, self.table_name]):
             logger.warning(
@@ -142,11 +169,9 @@ class AirtableExporter:
             logger.warning("requests n'est pas installé")
             return False
 
-        # Note: Nécessite l'API Airtable
-        # Pour l'instant, retourne False car nécessite une configuration complexe
         logger.warning(
-            "Export Airtable nécessite une configuration API. "
-            "Utilisez l'export JSON et importez-le manuellement."
+            "Export Airtable non implémenté (prévu v1.2+). "
+            "Utilisez l'export JSON et importez-le manuellement dans Airtable."
         )
         return False
 
@@ -192,10 +217,10 @@ class RESTAPIExporter:
                 headers["Authorization"] = f"Bearer {self.api_key}"
 
             response = requests_module.post(
-                self.api_url, json=metrics, headers=headers, timeout=10
+                self.api_url, json=metrics, headers=headers, timeout=HTTP_TIMEOUT
             )
 
-            if response.status_code in (200, 201):
+            if response.status_code in HTTP_SUCCESS_CODES:
                 logger.info(f"Métriques exportées vers {self.api_url}")
                 return True
             else:

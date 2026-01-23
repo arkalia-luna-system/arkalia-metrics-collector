@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-11-24T16:26:41.246907",
-  "project_root": "/private/var/folders/7j/xgp8mds53ms6blyzf8g4173m0000gn/T/pytest-of-athalia/pytest-21/test_collect_with_special_char0/projet-avec-espaces_et.symboles",
+  "timestamp": "2026-01-23T16:26:47.384844",
+  "project_root": "/private/var/folders/7j/xgp8mds53ms6blyzf8g4173m0000gn/T/pytest-of-athalia/pytest-19/test_collect_with_special_char0/projet-avec-espaces_et.symboles",
   "collection_info": {
     "collector_version": "1.1.0",
     "python_version": "3.10.14",
-    "collection_date": "2025-11-24T16:26:41.013418"
+    "collection_date": "2026-01-23T16:26:46.730676"
   },
   "python_files": {
     "count": 1,
@@ -22,13 +22,15 @@
     "test_files_list": []
   },
   "documentation_metrics": {
-    "documentation_files": 0,
-    "documentation_list": []
+    "documentation_files": 1,
+    "documentation_list": [
+      ".pytest_cache/README.md"
+    ]
   },
   "summary": {
     "total_python_files": 1,
     "lines_of_code": 1,
     "collected_tests": 0,
-    "documentation_files": 0
+    "documentation_files": 1
   }
 }

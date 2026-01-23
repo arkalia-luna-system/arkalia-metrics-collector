@@ -12,15 +12,15 @@ Bienvenue dans la documentation complète d'**Arkalia Metrics Collector** !
 
 - **[Installation](guides/installation.md)** - Installation et configuration
 - **[Usage](guides/usage.md)** - Guide complet d'utilisation avec toutes les commandes CLI
-- **[Testing](guides/testing.md)** - Guide des tests (110 tests)
+- **[Testing](guides/testing.md)** - Guide des tests
 - **[Dashboard](guides/dashboard.md)** - Guide du dashboard interactif
-
 
 ## 📊 API Reference
 
 - **[Collectors](api/collectors.md)** - Collecteurs de métriques (MetricsCollector, GitHubCollector, CoverageParser, etc.)
 - **[Exporters](api/exporters.md)** - Exporteurs de données (JSON, Markdown, HTML, CSV, YAML, REST API)
 - **[Validators](api/validators.md)** - Validateurs de métriques
+- **[Référence Métriques](METRICS_REFERENCE.md)** - Documentation complète de toutes les métriques collectées
 
 ## 💡 Exemples
 
@@ -41,9 +41,10 @@ Bienvenue dans la documentation complète d'**Arkalia Metrics Collector** !
 - **[GitHub Pages](GITHUB_PAGES_SETUP.md)** - Déploiement documentation
 - **[Workflows](WORKFLOWS_SUMMARY.md)** - Résumé workflows GitHub Actions
 
-## 📈 Métriques
+## 📈 Métriques & Analyse
 
-- **[Résumé des métriques](METRICS_FINAL_SUMMARY.md)** - Métriques agrégées du projet
+- **[Référence Métriques](METRICS_REFERENCE.md)** - Documentation complète de toutes les métriques
+- **[Audit Complet 2025](AUDIT_COMPLET_2025.md)** - Analyse exhaustive du projet (janvier 2026)
 
 ## 📝 Notes
 

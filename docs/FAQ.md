@@ -2,7 +2,7 @@
 
 Questions fréquentes et réponses sur **Arkalia Metrics Collector**.
 
-> 💡 **Astuce** : Si votre question n'est pas dans cette FAQ, n'hésitez pas à [créer une issue](https://github.com/arkalia-luna-system/arkalia-metrics-collector/issues) !
+> 💡 **Astuce** : Si votre question n'est pas dans cette FAQ, [créez une issue](https://github.com/arkalia-luna-system/arkalia-metrics-collector/issues) !
 
 ## 🚀 Installation & Usage
 
@@ -32,25 +32,15 @@ pip install -e ".[dev]"
 
 ### Q: Combien de tests y a-t-il ?
 
-**A:** **110 tests** au total :
+**A:** **110+ tests** au total :
 - **50+ tests unitaires** : Fonctionnalités individuelles
 - **16+ tests d'intégration** : Projets externes et validation
 - **15+ tests de performance** : Vitesse et mémoire
 - **32+ tests CLI** : Interface en ligne de commande
 
-### Q: Les tests couvrent-ils tous les cas d'usage ?
-
-**A:** ✅ Oui ! Les tests couvrent :
-- Projets de différentes tailles (petit, moyen, grand)
-- Tous les formats d'export (JSON, Markdown, HTML, CSV)
-- Validation des métriques et cohérence
-- Gestion d'erreurs et cas limites
-- Performance et utilisation mémoire
-- Interface CLI complète
-
 ### Q: Comment exécuter les tests ?
 
-**A:** Plusieurs options :
+**A:**
 
 ```bash
 # Tous les tests
@@ -64,15 +54,6 @@ pytest tests/performance/ -v             # Tests de performance
 # Avec couverture
 pytest tests/ --cov=src/ --cov-report=html
 ```
-
-### Q: Les tests valident-ils les projets externes ?
-
-**A:** ✅ Oui ! Les tests d'intégration incluent :
-- Tests sur projets simulés de différentes tailles
-- Validation des métriques collectées
-- Tests d'export sur projets externes
-- Mesures de performance
-- Gestion d'erreurs avec projets invalides
 
 ## 📊 Formats et Compatibilité
 
@@ -92,8 +73,7 @@ pytest tests/ --cov=src/ --cov-report=html
 - Packages Python (setuptools, poetry, flit)
 - Scripts simples
 - Projets de data science (Jupyter notebooks exclus par défaut)
-- Applications CLI
-- APIs et microservices
+- Applications CLI, APIs et microservices
 
 ### Q: Ça marche avec Poetry/Pipenv ?
 
@@ -111,10 +91,6 @@ exclusions:
   - "**/data/**"
   - "**/models/**"
 ```
-
-### Q: Puis-je collecter seulement certaines métriques ?
-
-**A:** Pas encore directement, mais c'est prévu ! Actuellement toutes les métriques sont collectées.
 
 ### Q: Comment configurer pour un projet monorepo ?
 
@@ -161,18 +137,6 @@ exclusions:
 - Sont dans un dossier `tests/`
 - Ont des noms comme `test_*.py` ou `*_test.py`
 - Sont détectables par pytest
-
-### Q: Erreur "Permission denied"
-
-**A:** Sur certains projets, lancez avec les bonnes permissions :
-
-```bash
-# Linux/macOS
-sudo arkalia-metrics collect .
-
-# Ou changez les permissions
-chmod -R 755 mon_projet/
-```
 
 ### Q: Le collecteur est lent sur mon gros projet
 
@@ -225,21 +189,15 @@ python_files = metrics['summary']['total_python_files']
 
 ### Q: Support d'autres langages prévu ?
 
-**A:** 🎯 Oui ! Roadmap :
-- JavaScript/TypeScript (v1.1)
-- Go (v1.2)
-- Rust (v1.3)
+**A:** Le support multi-langages est prévu dans les versions futures. Consultez les [issues GitHub](https://github.com/arkalia-luna-system/arkalia-metrics-collector/issues) pour suivre l'avancement.
 
-### Q: API REST prévue ?
+### Q: API REST disponible ?
 
-**A:** ✅ **Déjà disponible !** Utilisez la commande `export` avec `--rest-api` :
+**A:** ✅ Oui ! Utilisez la commande `export` avec `--rest-api` :
+
 ```bash
 arkalia-metrics export metrics.json --rest-api https://api.example.com/metrics --api-key YOUR_KEY
 ```
-
-### Q: Support des notebooks Jupyter ?
-
-**A:** 🎯 Prévu pour v1.2 avec métriques spécialisées.
 
 ## 💬 Support
 
@@ -267,4 +225,4 @@ arkalia-metrics export metrics.json --rest-api https://api.example.com/metrics -
 
 ---
 
-**Cette FAQ répond-elle à votre question ? Sinon, n'hésitez pas à [créer une issue](https://github.com/arkalia-luna-system/arkalia-metrics-collector/issues) ! 🚀**
+**Cette FAQ ne répond pas à votre question ? [Créez une issue](https://github.com/arkalia-luna-system/arkalia-metrics-collector/issues) !**

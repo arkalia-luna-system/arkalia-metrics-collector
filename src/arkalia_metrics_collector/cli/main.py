@@ -5,43 +5,80 @@ Arkalia Metrics Collector - Interface en ligne de commande.
 Interface CLI principale pour utiliser le collecteur de métriques.
 """
 
+import json
+import logging
 import sys
+import traceback
 from pathlib import Path
 from typing import Any
 
 import click
 
+# Constantes
+DEFAULT_SERVER_PORT = 8080
+
+
+def _validate_and_normalize_path(project_path: str) -> Path:
+    """
+    Valide et normalise un chemin de projet.
+
+    Args:
+        project_path: Chemin vers le projet
+
+    Returns:
+        Path normalisé et validé
+
+    Raises:
+        InvalidProjectPathError: Si le chemin est invalide
+        ProjectNotFoundError: Si le projet n'existe pas
+    """
+    normalized_path = Path(project_path).resolve()
+    if not normalized_path.exists():
+        raise ProjectNotFoundError(f"Le projet n'existe pas: {project_path}")
+    if not normalized_path.is_dir():
+        raise InvalidProjectPathError(
+            f"Le chemin n'est pas un répertoire: {project_path}"
+        )
+    return normalized_path
+
+
 # Ajouter le chemin du projet pour les imports
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
+
+# Logger pour le module CLI
+logger = logging.getLogger(__name__)
 
 try:
     from arkalia_metrics_collector import (
         BadgesGenerator,
         GitHubCollector,
+        InvalidProjectPathError,
         MetricsCollector,
         MetricsExporter,
         MetricsValidator,
         MultiProjectAggregator,
+        ProjectNotFoundError,
     )
     from arkalia_metrics_collector.collectors.github_issues import GitHubIssues
     from arkalia_metrics_collector.collectors.metrics_alerts import MetricsAlerts
 except ImportError as e:
-    print(f"❌ Erreur d'import: {e}")
-    print("📍 Assurez-vous que le package est installé correctement.")
+    # Utiliser click.echo pour les erreurs d'import
+    # car logger pourrait ne pas être configuré
+    click.echo(f"❌ Erreur d'import: {e}", err=True)
+    click.echo("📍 Assurez-vous que le package est installé correctement.", err=True)
     sys.exit(1)
 
 
 @click.group()
-@click.version_option(version="1.1.0", prog_name="arkalia-metrics")
-def cli():
+@click.version_option(version="1.1.1", prog_name="arkalia-metrics")
+def cli() -> None:
     """
     Arkalia Metrics Collector - Outil professionnel de métriques Python.
 
     Collecte des métriques fiables sur vos projets Python en excluant
     automatiquement les venv, cache et dépendances.
     """
-    pass
 
 
 @cli.command()
@@ -60,7 +97,19 @@ def cli():
 )
 @click.option("--validate", "-v", is_flag=True, help="Valider les métriques collectées")
 @click.option("--verbose", is_flag=True, help="Mode verbeux")
-def collect(project_path: str, output: str, format: str, validate: bool, verbose: bool):
+@click.option(
+    "--progress",
+    is_flag=True,
+    help="Afficher une barre de progression pour les opérations longues",
+)
+def collect(
+    project_path: str,
+    output: str,
+    format: str,  # noqa: A002
+    validate: bool,
+    verbose: bool,
+    progress: bool,
+) -> None:
     """
     Collecte les métriques d'un projet Python.
 
@@ -72,8 +121,17 @@ def collect(project_path: str, output: str, format: str, validate: bool, verbose
         click.echo(f"📊 Format: {format}")
 
     try:
+        # Validation et normalisation du chemin
+        try:
+            normalized_path = _validate_and_normalize_path(project_path)
+        except (InvalidProjectPathError, ProjectNotFoundError) as e:
+            click.echo(f"❌ {e}")
+            sys.exit(1)
+
         # Collecter les métriques
-        collector = MetricsCollector(project_path)
+        collector = MetricsCollector(str(normalized_path), show_progress=progress)
+        if progress:
+            click.echo("📊 Collecte des métriques en cours...")
         metrics_data = collector.collect_all_metrics()
 
         if verbose:
@@ -102,7 +160,35 @@ def collect(project_path: str, output: str, format: str, validate: bool, verbose
         exporter = MetricsExporter(metrics_data)
 
         if format == "all":
-            results = exporter.export_all_formats(output)
+            formats_to_export = ["json", "markdown", "html", "csv", "yaml"]
+            if progress:
+                with click.progressbar(
+                    formats_to_export,
+                    label="📤 Export des formats",
+                    show_eta=True,
+                ) as formats:
+                    results = {}
+                    for fmt in formats:
+                        if fmt == "json":
+                            results[fmt] = exporter.export_json(
+                                f"{output}/metrics.json"
+                            )
+                        elif fmt == "markdown":
+                            results[fmt] = exporter.export_markdown_summary(
+                                f"{output}/metrics.md"
+                            )
+                        elif fmt == "html":
+                            results[fmt] = exporter.export_html_dashboard(
+                                f"{output}/dashboard.html"
+                            )
+                        elif fmt == "csv":
+                            results[fmt] = exporter.export_csv(f"{output}/metrics.csv")
+                        elif fmt == "yaml":
+                            results[fmt] = exporter.export_yaml(
+                                f"{output}/metrics.yaml"
+                            )
+            else:
+                results = exporter.export_all_formats(output)
             if verbose:
                 for fmt, success in results.items():
                     status = "✅" if success else "❌"
@@ -140,8 +226,6 @@ def collect(project_path: str, output: str, format: str, validate: bool, verbose
     except Exception as e:
         click.echo(f"❌ Erreur lors de la collecte: {e}")
         if verbose:
-            import traceback
-
             traceback.print_exc()
         sys.exit(1)
 
@@ -150,15 +234,22 @@ def collect(project_path: str, output: str, format: str, validate: bool, verbose
 @click.argument(
     "project_path", type=click.Path(exists=True, file_okay=False, dir_okay=True)
 )
-def validate(project_path: str):
+def validate(project_path: str) -> None:
     """
     Valide les métriques d'un projet Python.
 
     PROJECT_PATH: Chemin vers le projet à valider
     """
     try:
+        # Validation et normalisation du chemin
+        try:
+            normalized_path = _validate_and_normalize_path(project_path)
+        except (InvalidProjectPathError, ProjectNotFoundError) as e:
+            click.echo(f"❌ {e}")
+            sys.exit(1)
+
         # Collecter et valider
-        collector = MetricsCollector(project_path)
+        collector = MetricsCollector(str(normalized_path))
         metrics_data = collector.collect_all_metrics()
 
         validator = MetricsValidator()
@@ -196,16 +287,28 @@ def validate(project_path: str):
 @click.argument(
     "project_path", type=click.Path(exists=True, file_okay=False, dir_okay=True)
 )
-@click.option("--port", "-p", default=8080, help="Port du serveur (défaut: 8080)")
-def serve(project_path: str, port: int):
+@click.option(
+    "--port",
+    "-p",
+    default=DEFAULT_SERVER_PORT,
+    help=f"Port du serveur (défaut: {DEFAULT_SERVER_PORT})",
+)
+def serve(project_path: str, port: int) -> None:
     """
     Lance un serveur web pour visualiser les métriques.
 
     PROJECT_PATH: Chemin vers le projet à analyser
     """
     try:
+        # Validation et normalisation du chemin
+        try:
+            normalized_path = _validate_and_normalize_path(project_path)
+        except (InvalidProjectPathError, ProjectNotFoundError) as e:
+            click.echo(f"❌ {e}")
+            sys.exit(1)
+
         # Collecter les métriques
-        collector = MetricsCollector(project_path)
+        collector = MetricsCollector(str(normalized_path), show_progress=False)
         metrics_data = collector.collect_all_metrics()
 
         # Exporter le dashboard HTML dans un dossier temporaire
@@ -219,7 +322,8 @@ def serve(project_path: str, port: int):
         click.echo(f"🌐 Dashboard généré: {dashboard_path}")
         click.echo(f"🚀 Ouvrez {dashboard_path} dans votre navigateur")
         click.echo(
-            f"💡 Pour un serveur web complet, utilisez: cd {temp_dir} && python -m http.server {port}"
+            f"💡 Pour un serveur web complet, utilisez: "
+            f"cd {temp_dir} && python -m http.server {port}"
         )
         click.echo(f"📁 Dossier temporaire: {temp_dir}")
 
@@ -236,7 +340,10 @@ def serve(project_path: str, port: int):
 @click.option(
     "--multiple",
     "-m",
-    help='Fichier JSON avec liste de dépôts à collecter (format: [{"owner": "...", "repo": "..."}])',
+    help=(
+        "Fichier JSON avec liste de dépôts à collecter "
+        '(format: [{"owner": "...", "repo": "..."}])'
+    ),
 )
 @click.option("--verbose", is_flag=True, help="Mode verbeux")
 def github(
@@ -261,8 +368,6 @@ def github(
             click.echo(f"🔍 Collecte des métriques GitHub depuis {multiple}...")
 
         try:
-            import json
-
             with open(multiple, encoding="utf-8") as f:
                 repos_list = json.load(f)
 
@@ -295,12 +400,14 @@ def github(
 
             click.echo(f"\n💾 Métriques exportées dans: {json_file}")
 
-        except Exception as e:
-            click.echo(f"❌ Erreur lors de la collecte GitHub: {e}")
+        except Exception:
+            # Ne pas exposer les détails de l'erreur qui pourraient contenir des tokens
+            click.echo("❌ Erreur lors de la collecte GitHub")
             if verbose:
-                import traceback
-
-                traceback.print_exc()
+                # Logger seulement le type d'erreur, pas le message complet
+                logger.debug(
+                    "Erreur GitHub (détails masqués pour sécurité)", exc_info=True
+                )
             sys.exit(1)
     else:
         # Mode collecte simple
@@ -328,8 +435,6 @@ def github(
             output_path.mkdir(parents=True, exist_ok=True)
             json_file = output_path / f"github_{owner}_{repo}.json"
 
-            import json
-
             with open(json_file, "w", encoding="utf-8") as f:
                 json.dump(repo_metrics, f, indent=2, ensure_ascii=False)
 
@@ -343,12 +448,14 @@ def github(
 
             click.echo(f"\n💾 Métriques exportées dans: {json_file}")
 
-        except Exception as e:
-            click.echo(f"❌ Erreur lors de la collecte GitHub: {e}")
+        except Exception:
+            # Ne pas exposer les détails de l'erreur qui pourraient contenir des tokens
+            click.echo("❌ Erreur lors de la collecte GitHub")
             if verbose:
-                import traceback
-
-                traceback.print_exc()
+                # Logger seulement le type d'erreur, pas le message complet
+                logger.debug(
+                    "Erreur GitHub (détails masqués pour sécurité)", exc_info=True
+                )
             sys.exit(1)
 
 
@@ -374,6 +481,11 @@ def github(
     help="Charger les métriques depuis un fichier JSON existant au lieu de collecter",
 )
 @click.option("--verbose", is_flag=True, help="Mode verbeux")
+@click.option(
+    "--progress",
+    is_flag=True,
+    help="Afficher une barre de progression pour les opérations longues",
+)
 def aggregate(
     projects_file: str,
     output: str,
@@ -384,6 +496,7 @@ def aggregate(
     github_api: bool,
     load_from_json: bool,
     verbose: bool,
+    progress: bool,
 ):
     """
     Agrège les métriques de plusieurs projets.
@@ -397,7 +510,9 @@ def aggregate(
 
     try:
         aggregator = MultiProjectAggregator(
-            enable_history=not no_history, enable_github=github_api
+            enable_history=not no_history,
+            enable_github=github_api,
+            show_progress=progress,
         )
 
         # Si on charge depuis JSON, utiliser load_from_json
@@ -414,8 +529,6 @@ def aggregate(
                 click.echo("✅ Métriques chargées avec succès")
         else:
             # Charger la configuration des projets
-            import json
-
             with open(projects_file, encoding="utf-8") as f:
                 config = json.load(f)
 
@@ -425,42 +538,52 @@ def aggregate(
                 sys.exit(1)
 
             # Collecter les métriques de chaque projet
-            for project in projects:
-                name = project.get("name", "")
-                path = project.get("path", "")
-                github_url = project.get("github", "")
+            if progress:
+                # Type ignore nécessaire car click.progressbar retourne un type complexe
+                project_iter: Any = click.progressbar(
+                    projects,
+                    label="📦 Collecte des projets",
+                    show_eta=True,
+                    item_show_func=lambda p: (
+                        f"Collecte de {p.get('name', '')}" if p else None
+                    ),
+                )
+                with project_iter as project_list:
+                    for project in project_list:
+                        name = project.get("name", "")
+                        path = project.get("path", "")
+                        github_url = project.get("github", "")
 
-                if not name or not path:
-                    continue
+                        if not name or not path:
+                            continue
 
-                if verbose:
-                    click.echo(f"   📦 Collecte de {name}...")
-                    if github_api and github_url:
-                        click.echo(f"      🔗 GitHub: {github_url}")
+                        if verbose:
+                            click.echo(f"\n   📦 Collecte de {name}...")
+                            if github_api and github_url:
+                                click.echo(f"      🔗 GitHub: {github_url}")
 
-                metrics = aggregator.collect_project(name, path, github_url)
-                if metrics is None:
-                    click.echo(f"   ⚠️  Impossible de collecter {name}")
-                    continue
+                        metrics = aggregator.collect_project(name, path, github_url)
+                        if metrics is None:
+                            click.echo(f"   ⚠️  Impossible de collecter {name}")
+                            continue
+            else:
+                for project in projects:
+                    name = project.get("name", "")
+                    path = project.get("path", "")
+                    github_url = project.get("github", "")
 
-        # Collecter les métriques de chaque projet
-        for project in projects:
-            name = project.get("name", "")
-            path = project.get("path", "")
-            github_url = project.get("github", "")
+                    if not name or not path:
+                        continue
 
-            if not name or not path:
-                continue
+                    if verbose:
+                        click.echo(f"   📦 Collecte de {name}...")
+                        if github_api and github_url:
+                            click.echo(f"      🔗 GitHub: {github_url}")
 
-            if verbose:
-                click.echo(f"   📦 Collecte de {name}...")
-                if github_api and github_url:
-                    click.echo(f"      🔗 GitHub: {github_url}")
-
-            metrics = aggregator.collect_project(name, path, github_url)
-            if metrics is None:
-                click.echo(f"   ⚠️  Impossible de collecter {name}")
-                continue
+                    metrics = aggregator.collect_project(name, path, github_url)
+                    if metrics is None:
+                        click.echo(f"   ⚠️  Impossible de collecter {name}")
+                        continue
 
         # Agréger les métriques
         aggregated = aggregator.aggregate_metrics()
@@ -514,8 +637,6 @@ def aggregate(
     except Exception as e:
         click.echo(f"❌ Erreur lors de l'agrégation: {e}")
         if verbose:
-            import traceback
-
             traceback.print_exc()
         sys.exit(1)
 
@@ -557,8 +678,6 @@ def export(
         click.echo(f"📊 Format: {format}")
 
     try:
-        import json
-
         # Charger les métriques
         with open(metrics_file, encoding="utf-8") as f:
             metrics_data = json.load(f)
@@ -616,9 +735,8 @@ def export(
 
                 if verbose:
                     status = "✅" if rest_success else "❌"
-                    click.echo(
-                        f"{status} Export REST API: {'Succès' if rest_success else 'Échec'}"
-                    )
+                    result_msg = "Succès" if rest_success else "Échec"
+                    click.echo(f"{status} Export REST API: {result_msg}")
 
                 if rest_success:
                     click.echo(f"🌐 Métriques exportées vers: {rest_api}")
@@ -629,15 +747,11 @@ def export(
             except Exception as e:
                 click.echo(f"❌ Erreur lors de l'export REST API: {e}")
                 if verbose:
-                    import traceback
-
                     traceback.print_exc()
 
     except Exception as e:
         click.echo(f"❌ Erreur lors de l'export: {e}")
         if verbose:
-            import traceback
-
             traceback.print_exc()
         sys.exit(1)
 
@@ -670,8 +784,6 @@ def badges(
         click.echo(f"🎨 Génération des badges depuis {metrics_file}...")
 
     try:
-        import json
-
         with open(metrics_file, encoding="utf-8") as f:
             metrics = json.load(f)
 
@@ -697,8 +809,6 @@ def badges(
     except Exception as e:
         click.echo(f"❌ Erreur lors de la génération des badges: {e}")
         if verbose:
-            import traceback
-
             traceback.print_exc()
         sys.exit(1)
 
@@ -764,8 +874,6 @@ def alerts(
         click.echo(f"   📊 Seuil: {threshold}%")
 
     try:
-        import json
-
         # Charger les métriques
         with open(metrics_file, encoding="utf-8") as f:
             metrics_data = json.load(f)
@@ -859,18 +967,23 @@ def alerts(
         else:
             click.echo("✅ Aucune alerte détectée")
             if verbose:
-                click.echo(f"   ℹ️  Aucun changement significatif (seuil: {threshold}%)")
+                click.echo(
+                    f"   ℹ️  Aucun changement significatif (seuil: {threshold}%)"
+                )
             return 0
 
     except FileNotFoundError:
         click.echo(f"❌ Fichier non trouvé: {metrics_file}")
         sys.exit(1)
-    except Exception as e:
-        click.echo(f"❌ Erreur lors de l'analyse: {e}")
+    except Exception:
+        # Ne pas exposer les détails de l'erreur
+        # qui pourraient contenir des informations sensibles
+        click.echo("❌ Erreur lors de l'analyse")
         if verbose:
-            import traceback
-
-            traceback.print_exc()
+            logger.debug(
+                "Erreur lors de l'analyse (détails masqués pour sécurité)",
+                exc_info=True,
+            )
         sys.exit(1)
 
 

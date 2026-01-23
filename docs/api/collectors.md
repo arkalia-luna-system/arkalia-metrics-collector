@@ -83,10 +83,17 @@ from arkalia_metrics_collector import GitHubCollector
 
 ```python
 collector = GitHubCollector(
-    token: str | None = None,  # Token GitHub (ou variable GITHUB_TOKEN)
-    cache_dir: str | Path = ".github_cache"
+    github_token: str | None = None,  # Token GitHub (ou variable GITHUB_TOKEN)
+    cache_duration: int = 300,  # Durée du cache en secondes
+    cache_file: Path | str | None = None,  # Fichier de cache persistant
+    max_retries: int = 3  # Nombre de tentatives en cas d'erreur
 )
 ```
+
+**Fonctionnalités :**
+- ✅ **Cache persistant** : Sauvegarde automatique dans `~/.arkalia_metrics/github_cache.json`
+- ✅ **Retry avec backoff exponentiel** : Retry automatique pour erreurs temporaires (429, 500, 502, 503, 504, timeouts)
+- ✅ **Gestion du rate limiting** : Détection et attente automatique
 
 ### Méthodes principales
 
@@ -110,13 +117,37 @@ metrics = collector.collect_repository_metrics("arkalia-luna-system", "arkalia-m
 print(f"Stars: {metrics['stars']}")
 ```
 
-#### `collect_issues(owner: str, repo: str) -> list[dict]`
+#### `collect_repo_metrics(owner: str, repo: str) -> dict[str, Any] | None`
 
-Collecte les issues d'un dépôt.
+Collecte les métriques complètes d'un dépôt GitHub.
 
-#### `collect_pull_requests(owner: str, repo: str) -> list[dict]`
+**Retour :**
+- `repository` : Informations du dépôt (nom, description, langue, etc.)
+- `stats` : Statistiques (stars, forks, watchers, issues ouvertes)
+- `issues` : Métriques des issues
+- `pull_requests` : Métriques des pull requests
+- `releases` : Métriques des releases
 
-Collecte les pull requests d'un dépôt.
+#### `collect_multiple_repos(repos: list[dict[str, str]]) -> dict[str, Any]`
+
+Collecte les métriques de plusieurs dépôts.
+
+**Args:**
+- `repos` : Liste de dictionnaires avec `owner` et `repo`
+
+**Retour :**
+- `repositories` : Dictionnaire avec métriques par dépôt
+- `aggregated` : Métriques agrégées (total_stars, total_forks, etc.)
+
+**Exemple :**
+```python
+repos = [
+    {"owner": "arkalia-luna-system", "repo": "arkalia-metrics-collector"},
+    {"owner": "arkalia-luna-system", "repo": "arkalia-quest"}
+]
+metrics = collector.collect_multiple_repos(repos)
+print(f"Total stars: {metrics['aggregated']['total_stars']}")
+```
 
 ---
 
