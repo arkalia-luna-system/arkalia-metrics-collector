@@ -242,7 +242,10 @@ jobs:
   deploy:
     name: "Deploy to PyPI"
     needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'push' &&
+      secrets.PYPI_API_TOKEN != ''
     runs-on: ubuntu-latest
     # environment: production  # Temporairement désactivé
 
