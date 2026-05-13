@@ -90,7 +90,7 @@ jobs:
           ls -la ./site/dashboard/ || echo "Dossier dashboard créé"
 
       - name: "Upload Build Artifacts"
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./site
 
@@ -105,11 +105,11 @@ jobs:
     steps:
       - name: "Deploy to GitHub Pages"
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
       - name: "Deployment Status"
         env:
-          DEPLOYMENT_OUTCOME: ${{ steps.deployment.outputs.outcome }}
+          DEPLOYMENT_OUTCOME: ${{ steps.deployment.outcome }}
           DEPLOYMENT_URL: ${{ steps.deployment.outputs.page_url }}
         run: |
           echo "🚀 DÉPLOIEMENT GITHUB PAGES TERMINÉ"
