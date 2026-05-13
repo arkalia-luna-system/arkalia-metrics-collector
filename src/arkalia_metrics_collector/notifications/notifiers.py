@@ -10,7 +10,7 @@ Support pour :
 
 import logging
 import os
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     import requests  # type: ignore[import-untyped]
@@ -146,7 +146,7 @@ class SlackNotifier:
         import requests as requests_module  # type: ignore[assignment]
 
         try:
-            payload = {
+            payload: dict[str, Any] = {
                 "text": title,
                 "blocks": [
                     {
@@ -212,7 +212,7 @@ class DiscordNotifier:
             # Discord limite à 2000 caractères
             content = message[:1900] if len(message) > 1900 else message
 
-            payload = {
+            payload: dict[str, Any] = {
                 "embeds": [
                     {
                         "title": title,
