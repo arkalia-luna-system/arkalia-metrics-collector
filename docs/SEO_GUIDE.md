@@ -104,47 +104,6 @@ Pour optimiser la section "About" sur GitHub :
 - Keywords complets
 - Classifiers appropriés
 
-## 🔗 Liens Externes
-
-### Backlinks (à créer progressivement)
-- Documentation sur d'autres projets
-- Articles de blog
-- Mentions dans des projets similaires
-
-### Social Media
-- Partager sur Twitter/LinkedIn avec hashtags :
-  - `#Python`
-  - `#CodeQuality`
-  - `#Metrics`
-  - `#OpenSource`
-  - `#CI/CD`
-
-## 📈 Métriques SEO
-
-### À Surveiller
-- **Stars GitHub** : Indicateur de popularité
-- **Forks** : Indicateur d'engagement
-- **PyPI Downloads** : Indicateur d'utilisation
-- **Issues/PRs** : Indicateur d'activité
-
-### Outils
-- GitHub Insights
-- PyPI Statistics
-- Google Analytics (si site web)
-
-## 🎨 Image Social Preview (Optionnel)
-
-Pour créer une image de prévisualisation sociale :
-
-1. Créez une image 1280x640px
-2. Placez-la dans `.github/social-preview.png`
-3. GitHub l'utilisera automatiquement
-
-**Contenu suggéré** :
-- Logo/Titre du projet
-- Description courte
-- Badges principaux
-- Couleurs de la marque
 
 ## ✅ Checklist SEO
 
@@ -154,14 +113,4 @@ Pour créer une image de prévisualisation sociale :
 - [x] Documentation complète
 - [x] Structure README claire
 - [x] Liens externes (PyPI, Codecov, CI/CD)
-- [ ] Topics GitHub (à faire manuellement)
-- [ ] Description GitHub About (à faire manuellement)
-- [ ] Image social preview (optionnel)
-
-## 📝 Notes
-
-- Le SEO est un processus continu
-- Surveillez les métriques régulièrement
-- Mettez à jour les descriptions selon les nouvelles fonctionnalités
-- Ajoutez des topics GitHub pertinents au fur et à mesure
 

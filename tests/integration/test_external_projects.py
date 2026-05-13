@@ -268,20 +268,10 @@ authors = [{name = "Test Author", email = "arkalia.luna.system@gmail.com"}]
 
     def test_external_project_error_handling(self):
         """Test de gestion d'erreur avec projet inexistant."""
-        # Test avec chemin inexistant
-        collector = MetricsCollector("/chemin/inexistant/projet")
+        from arkalia_metrics_collector.exceptions import ProjectNotFoundError
 
-        # Le collecteur doit s'initialiser sans erreur
-        assert collector.project_root is not None
-
-        # Mais la collecte peut échouer gracieusement
-        try:
-            metrics = collector.collect_all_metrics()
-            # Si ça marche, vérifier que c'est cohérent
-            assert isinstance(metrics, dict)
-        except Exception:
-            # C'est acceptable si ça échoue
-            pass
+        with pytest.raises(ProjectNotFoundError):
+            MetricsCollector("/chemin/inexistant/projet")
 
     def test_external_project_large_structure(self, tmp_path: Path):
         """Test avec structure de projet plus large."""

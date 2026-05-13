@@ -26,6 +26,8 @@ nav:
       - Collectors: api/collectors.md
       - Exporters: api/exporters.md
       - Validators: api/validators.md
+      - Exceptions: api/exceptions.md
+      - Référence Métriques: METRICS_REFERENCE.md
   - Exemples:
       - Collecte basique: examples/basic_collection.md
       - Export personnalisé: examples/custom_export.md
@@ -33,6 +35,7 @@ nav:
   - Développement:
       - Contribution: CONTRIBUTING.md
       - Sécurité: SECURITY.md
+      - Audit Complet: AUDIT_COMPLET_2025.md
 
 plugins:
   - search

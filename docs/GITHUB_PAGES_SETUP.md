@@ -46,24 +46,13 @@ https://arkalia-luna-system.github.io/arkalia-metrics-collector/
 ## **⚠️ DÉPANNAGE**
 
 ### **Erreur "Not Found"**
-- Vérifiez que GitHub Pages est activé
+- Vérifiez que GitHub Pages est activé dans les paramètres du repository
 - Assurez-vous que la source est "GitHub Actions"
 
 ### **Erreur de permissions**
-- Vérifiez les permissions du workflow
+- Vérifiez les permissions du workflow dans `.github/workflows/gh-pages.yml`
 - Assurez-vous que le repository est public ou que vous avez les droits
 
 ### **Build échoue**
-- Vérifiez les logs du workflow
-- Assurez-vous que MkDocs fonctionne localement
-
-## **📞 SUPPORT**
-
-Si vous rencontrez des problèmes :
-1. Vérifiez les logs des Actions GitHub
-2. Consultez la documentation GitHub Pages
-3. Vérifiez que tous les workflows sont à jour
-
----
-
-**🎯 Objectif : Avoir une documentation professionnelle accessible en ligne !**
+- Vérifiez les logs du workflow GitHub Actions
+- Testez MkDocs localement : `mkdocs build`

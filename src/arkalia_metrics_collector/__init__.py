@@ -14,7 +14,8 @@ Usage:
 
     collector = MetricsCollector(".")
     metrics = collector.collect_all_metrics()
-    print(f"Python files: {metrics['python_files']['count']}")
+    # Exemple d'utilisation (commenté pour éviter l'exécution lors de l'import)
+    # print(f"Python files: {metrics['python_files']['count']}")
 
 Classes principales:
     - MetricsCollector: Collecte des métriques du projet
@@ -22,7 +23,7 @@ Classes principales:
     - MetricsValidator: Validation des métriques collectées
 """
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 __author__ = "Arkalia Luna System"
 __email__ = "arkalia.luna.system@gmail.com"
 __license__ = "MIT"
@@ -30,6 +31,19 @@ __license__ = "MIT"
 from .collectors.github_collector import GitHubCollector
 from .collectors.metrics_collector import MetricsCollector
 from .collectors.multi_project_aggregator import MultiProjectAggregator
+from .exceptions import (
+    ArkaliaMetricsError,
+    CollectionError,
+    ConfigurationError,
+    CoverageParseError,
+    ExportError,
+    GitHubAPIError,
+    GitHubAuthenticationError,
+    GitHubRateLimitError,
+    InvalidProjectPathError,
+    ProjectNotFoundError,
+    ValidationError,
+)
 from .exporters.badges_generator import BadgesGenerator
 from .exporters.external_exporters import (
     AirtableExporter,
@@ -43,22 +57,33 @@ from .notifications.notifiers import DiscordNotifier, EmailNotifier, SlackNotifi
 from .validators.metrics_validator import MetricsValidator
 
 __all__ = [
-    "MetricsCollector",
-    "GitHubCollector",
-    "MultiProjectAggregator",
-    "MetricsExporter",
-    "BadgesGenerator",
-    "InteractiveDashboardGenerator",
-    "MetricsValidator",
-    "EmailNotifier",
-    "SlackNotifier",
-    "DiscordNotifier",
-    "RESTAPIExporter",
-    "GoogleSheetsExporter",
-    "NotionExporter",
     "AirtableExporter",
-    "__version__",
+    "ArkaliaMetricsError",
+    "BadgesGenerator",
+    "CollectionError",
+    "ConfigurationError",
+    "CoverageParseError",
+    "DiscordNotifier",
+    "EmailNotifier",
+    "ExportError",
+    "GitHubAPIError",
+    "GitHubAuthenticationError",
+    "GitHubCollector",
+    "GitHubRateLimitError",
+    "GoogleSheetsExporter",
+    "InteractiveDashboardGenerator",
+    "InvalidProjectPathError",
+    "MetricsCollector",
+    "MetricsExporter",
+    "MetricsValidator",
+    "MultiProjectAggregator",
+    "NotionExporter",
+    "ProjectNotFoundError",
+    "RESTAPIExporter",
+    "SlackNotifier",
+    "ValidationError",
     "__author__",
     "__email__",
     "__license__",
+    "__version__",
 ]

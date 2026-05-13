@@ -16,69 +16,67 @@
 
 ## 📋 Description
 
-**Arkalia Metrics Collector** est un outil professionnel et complet pour collecter, analyser et visualiser les métriques de vos projets Python. Il offre une analyse automatique du code source, des tests, de la documentation, du coverage, et des métriques GitHub, avec export multi-format et dashboard interactif.
+**Arkalia Metrics Collector** est un outil professionnel pour collecter, analyser et visualiser les métriques de vos projets Python. Il offre une analyse automatique du code source, des tests, de la documentation, du coverage, et des métriques GitHub, avec export multi-format et dashboard interactif.
 
-## 📊 **Métriques du Projet** *(Mises à jour automatiquement)*
-
-<div align="center">
-
-| **Composant** | **Valeur** | **Statut** | **Vérifié** |
-|:-------------:|:---------:|:----------:|:------------:|
-| **🐍 Fichiers Python** | `23 modules` | ![Actif](https://img.shields.io/badge/status-active-brightgreen) | ✅ **COMPTÉS** |
-| **📝 Lignes de Code** | `5,841 lignes` | ![Maintenu](https://img.shields.io/badge/status-maintained-blue) | ✅ **MESURÉES** |
-| **🧪 Tests** | `120 tests` | ![Testé](https://img.shields.io/badge/status-tested-green) | ✅ **COLLECTÉS** |
-| **📚 Documentation** | `56 fichiers` | ![Complet](https://img.shields.io/badge/status-complete-yellow) | ✅ **ORGANISÉS** |
-
-</div>
-
-*Métriques collectées automatiquement le 2026-04-28 par le Collecteur de Métriques Arkalia*
-
-## 📊 **Métriques Globales** *(Mise à jour automatique)*
+## Métriques du Projet
 
 <div align="center">
 
-| **Projet** | **Modules** | **Lignes** | **Tests** | **Coverage** |
-|:-----------|:-----------:|:----------:|:---------:|:------------:|
-| **arkalia-aria** | `0` | `0` | `0` | `N/A` |
-| **arkalia-cia** | `0` | `0` | `0` | `N/A` |
-| **arkalia-luna-logo** | `0` | `0` | `0` | `N/A` |
-| **arkalia-luna-pro** | `0` | `0` | `0` | `N/A` |
-| **arkalia-metrics-collector** | `0` | `0` | `0` | `N/A` |
-| **arkalia-quest** | `0` | `0` | `0` | `N/A` |
-| **base-template** | `0` | `0` | `0` | `N/A` |
-| **bbia-branding** | `0` | `0` | `0` | `N/A` |
-| **bbia-reachy-sim** | `0` | `0` | `0` | `N/A` |
-| **github-profile-arkalia** | `0` | `0` | `0` | `N/A` |
-| **ia-pipeline** | `0` | `0` | `0` | `N/A` |
-| **nours-interface** | `0` | `0` | `0` | `N/A` |
-| **TOTAL** | **`0`** | **`0`** | **`0`** | **N/A** |
+| Composant | Valeur | Statut |
+|:---------|:------:|:------:|
+| Fichiers Python | 23 modules | Actif |
+| Lignes de Code | 5,841 lignes | Maintenu |
+| Tests | 120 tests | Testé |
+| Documentation | 56 fichiers | Complet |
 
 </div>
 
-*Métriques collectées automatiquement le 2026-04-28T02:58:54.240851*
+*Dernière mise à jour : 23 janvier 2026*
 
-## ✨ Features
+## 📊 Métriques Globales
+
+<div align="center">
+
+| **Projet** | **Modules** | **Lignes** | **Tests** |
+|:-----------|:-----------:|:----------:|:---------:|
+| **arkalia-aria** | `6,082` | `3,764,289` | `2,218` |
+| **arkalia-cia** | `3,419` | `1,251,969` | `230` |
+| **arkalia-luna-logo** | `17,671` | `6,946,020` | `2,230` |
+| **arkalia-luna-pro** | `208` | `46,471` | `95` |
+| **arkalia-metrics-collector** | `23` | `5,841` | `120` |
+| **arkalia-quest** | `118` | `74,490` | `79` |
+| **athalia-dev-setup** | `168` | `86,370` | `196` |
+| **base-template** | `3,303` | `928,195` | `429` |
+| **bbia-branding** | `11` | `2,411` | `2` |
+| **bbia-reachy-sim** | `21,282` | `11,682,651` | `5,605` |
+| **github-profile-arkalia** | `4` | `1,257` | `0` |
+| **nours-interface** | `31` | `112` | `0` |
+| **TOTAL** | **`52,320`** | **`24,790,076`** | **`11,204`** |
+
+</div>
+
+*Dernière mise à jour : 23 janvier 2026*
+
+## Fonctionnalités
 
 - 🚀 **Exclusion automatique** des venv, cache, dépendances
 - 📊 **Métriques intelligentes** : code, tests, sécurité, qualité
 - 🎨 **Export multi-format** : JSON, Markdown, HTML, CSV, YAML
 - 🔧 **CLI professionnel** avec configuration flexible
 - 🌐 **Dashboard web** interactif et responsive
-- 🔗 **Intégration GitHub API complète** : stars, forks, issues, PRs, releases (option `--github-api`)
+- 🔗 **Intégration GitHub API** : stars, forks, issues, PRs, releases
 - 📈 **Agrégation multi-projets** : coverage global, métriques agrégées
 - 🏷️ **Génération de badges** : Shields.io, Codecov, GitHub Actions
 - 📋 **Tableaux README automatiques** : métriques sourcées et vérifiables
 - 📊 **Support Coverage automatique** : parsing coverage.xml, calcul global
 - 📅 **Comparaison temporelle** : historique des métriques, rapports d'évolution
 - 🔄 **Automatisation CI/CD** : mise à jour quotidienne via GitHub Actions
-- 🧪 **Tests complets** : 110 tests unitaires, intégration et performance
-- 🌐 **Tests sur projets externes** avec validation automatique
+- 🧪 **Tests complets** : tests unitaires, intégration et performance
 - 📧 **Notifications multi-canaux** : Email (SMTP), Slack, Discord
-- 🎯 **Personnalisation avancée** : labels personnalisés, assignation d'issues, seuils configurables
 - 📊 **Statistiques Git** : commits, lignes, contributeurs, activité temporelle
-- 🌐 **Export vers services externes** : REST API, Google Sheets, Notion, Airtable (structure prête)
+- 🌐 **Export vers services externes** : REST API (✅), Google Sheets, Notion, Airtable (📋 prévu)
 
-## 🚀 Installation
+## Installation
 
 ```bash
 # Installation depuis le repository
@@ -90,7 +88,7 @@ pip install -e .
 pip install arkalia-metrics-collector
 ```
 
-## 📖 Usage
+## Usage
 
 ### Collecte basique
 
@@ -123,10 +121,6 @@ echo '{"projects": [{"name": "projet1", "path": "/path/to/project1"}, {"name": "
 
 # Agréger les métriques
 arkalia-metrics aggregate projects.json --readme-table --json
-
-# Génère :
-# - aggregated_metrics.json : métriques agrégées
-# - README_TABLE.md : tableau récapitulatif pour README
 ```
 
 ### Génération de badges
@@ -140,34 +134,11 @@ arkalia-metrics badges metrics/metrics.json \
   --output badges.md
 ```
 
-### Export depuis fichier JSON
-
-```bash
-# Exporter dans un format spécifique
-arkalia-metrics export metrics.json --format yaml
-
-# Exporter dans tous les formats
-arkalia-metrics export metrics.json --format all --output exports/
-```
-
-### Comparaison temporelle
-
-```bash
-# Générer un rapport d'évolution
-arkalia-metrics aggregate projects.json --evolution --json --readme-table
-
-# Désactiver l'historique si nécessaire
-arkalia-metrics aggregate projects.json --no-history
-```
-
 ### Alertes et notifications
 
 ```bash
 # Vérifier les changements significatifs
 arkalia-metrics alerts metrics/aggregated_metrics.json
-
-# Avec seuil personnalisé
-arkalia-metrics alerts metrics/aggregated_metrics.json --threshold 15.0
 
 # Créer une issue GitHub si alertes détectées
 arkalia-metrics alerts metrics/aggregated_metrics.json --create-issue \
@@ -185,14 +156,9 @@ arkalia-metrics --help
 arkalia-metrics collect --help
 arkalia-metrics validate --help
 arkalia-metrics serve --help
-arkalia-metrics export --help
-arkalia-metrics github --help
-arkalia-metrics aggregate --help
-arkalia-metrics badges --help
-arkalia-metrics alerts --help
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 ```text
 arkalia-metrics-collector/
@@ -206,7 +172,7 @@ arkalia-metrics-collector/
 └── docs/                    # Documentation complète
 ```
 
-## 🔧 Configuration
+## Configuration
 
 Créez un fichier `arkalia-metrics.yaml` dans votre projet :
 
@@ -229,7 +195,7 @@ metrics:
   - documentation_quality
 ```
 
-## 📊 Exemples de Sortie
+## Exemples de Sortie
 
 ### Métriques JSON
 
@@ -252,37 +218,18 @@ metrics:
 }
 ```
 
-### Export Markdown
-
-```markdown
-## 📊 Métriques du Projet
-
-| Métrique | Valeur |
-|----------|---------|
-| Fichiers Python | 150 |
-| Lignes de Code | 4,500 |
-| Tests | 30 |
-| Couverture | 85.5% |
-```
-
-## 🚀 Projets Utilisant Arkalia Metrics
-
-- [Athalia Core](https://github.com/arkalia-luna-system/ia-pipeline) - Framework IA Enterprise
-- [Arkalia Quest](https://github.com/arkalia-luna-system/arkalia-quest) - Jeu éducatif IA
-- [BBIA Simulation](https://github.com/arkalia-luna-system/bbia-sim) - Simulation robotique
-
 ## 🎯 Pourquoi Choisir Arkalia Metrics Collector ?
 
 ### vs Autres Outils de Métriques
 
-| Feature | Arkalia Metrics | pytest-cov | radon | bandit | Autres |
-|---------|-----------------|------------|-------|--------|--------|
-| **Installation simple** | ✅ `pip install` | ✅ | ✅ | ✅ | ⚠️ Configuration complexe |
-| **Multi-format export** | ✅ JSON/HTML/MD/CSV | ❌ HTML uniquement | ❌ Texte | ❌ JSON | ⚠️ Format propriétaire |
-| **Dashboard intégré** | ✅ Responsive | ❌ | ❌ | ❌ | 💰 Payant |
-| **Exclusions intelligentes** | ✅ Auto venv/cache | ⚠️ Manuel | ⚠️ Manuel | ⚠️ Manuel | ❌ |
-| **CLI unifiée** | ✅ Une commande | ❌ Multiples outils | ❌ | ❌ | ❌ |
-| **CI/CD ready** | ✅ GitHub Actions | ⚠️ Configuration | ❌ | ⚠️ | ⚠️ |
+| Feature | Arkalia Metrics | pytest-cov | radon | bandit |
+|---------|-----------------|------------|-------|--------|
+| **Installation simple** | ✅ `pip install` | ✅ | ✅ | ✅ |
+| **Multi-format export** | ✅ JSON/HTML/MD/CSV | ❌ HTML uniquement | ❌ Texte | ❌ JSON |
+| **Dashboard intégré** | ✅ Responsive | ❌ | ❌ | ❌ |
+| **Exclusions intelligentes** | ✅ Auto venv/cache | ⚠️ Manuel | ⚠️ Manuel | ⚠️ Manuel |
+| **CLI unifiée** | ✅ Une commande | ❌ Multiples outils | ❌ | ❌ |
+| **CI/CD ready** | ✅ GitHub Actions | ⚠️ Configuration | ❌ | ⚠️ |
 
 ### 🎯 Avantages Clés
 
@@ -294,55 +241,32 @@ metrics:
 
 ## ⚠️ Limitations & Scope
 
-### ❌ **Pas (encore) supporté**
+### ❌ Pas (encore) supporté
 
 - **Langages** : JavaScript, TypeScript, Go, Rust
 - **Notebooks** : Jupyter .ipynb (prévu v1.2)
 - **Métriques avancées** : Complexité cyclomatique détaillée
 - **Base de données** : Stockage persistant des métriques
 
-### 🎯 **Scope volontaire**
+### 🎯 Scope volontaire
 
 - **Focus Python** : Spécialisé pour l'écosystème Python
 - **Métriques statiques** : Pas d'analyse runtime
 - **Local-first** : Pas de télémétrie ou cloud obligatoire
 - **Sans dépendances lourdes** : Reste léger et rapide
 
-### 🔮 **Roadmap**
+### 🔮 Roadmap
 
-| Version | Features Prévues | Timeline |
-|---------|------------------|----------|
-| **v1.2** | Jupyter notebooks + Go support + Complexité cyclomatique | Q2 2025 |
-| **v1.3** | Plugins système + Rust support | Q3 2025 |
+Consultez les [issues GitHub](https://github.com/arkalia-luna-system/arkalia-metrics-collector/issues) pour suivre les fonctionnalités prévues et les améliorations à venir.
 
 ## 🤝 Contributing
 
-**Nous recherchons activement des contributeurs !** 🎯
-
-### 🟢 **Issues "Help Wanted"**
-
-- 📚 Amélioration documentation
-- 🧪 Tests sur nouveaux projets Python
-- 🎨 Templates de configuration
-- 🌍 Traductions (anglais, espagnol)
-
-### 🚀 **Features Recherchées**
-
-- Support JavaScript/TypeScript
-- Métriques de complexité avancées
-- Intégration SonarQube/CodeClimate
-- Dashboard temps réel
-
-### 📋 **Guide Complet**
-
-Voir [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) pour :
+Les contributions sont les bienvenues ! Consultez [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) pour :
 
 - Setup développement
 - Standards de code
 - Process de review
 - Types de contributions
-
-**Contribution rapide :** Testez sur votre projet et signalez les améliorations !
 
 ## 📄 License
 
@@ -355,9 +279,9 @@ MIT License - voir [LICENSE](LICENSE) pour plus de détails
 - 🔒 **[Sécurité](docs/SECURITY.md)** - Politique de sécurité
 - 🤝 **[Contribution](docs/CONTRIBUTING.md)** - Guide contributeur
 
-## 👨‍💻 Auteur
+## Auteur
 
-## Arkalia Luna System
+**Arkalia Luna System**
 
 - GitHub: [@arkalia-luna-system](https://github.com/arkalia-luna-system)
 - Portfolio: [arkalia-luna-system.github.io](https://arkalia-luna-system.github.io)
@@ -366,6 +290,6 @@ MIT License - voir [LICENSE](LICENSE) pour plus de détails
 
 <div align="center">
 
-### ⭐ Si ce projet vous aide, donnez-lui une étoile ! ⭐
+Si ce projet vous aide, donnez-lui une étoile sur GitHub.
 
 </div>

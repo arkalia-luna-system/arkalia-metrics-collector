@@ -1,8 +1,8 @@
-# 📖 Guide d'Utilisation
+# Guide d'Utilisation
 
 Guide complet pour utiliser **Arkalia Metrics Collector** avec tous les exemples et cas d'usage.
 
-## 🚀 Premiers pas
+## Premiers pas
 
 ### Collecte basique
 
@@ -34,7 +34,7 @@ test_metrics = collector.collect_test_metrics()
 doc_metrics = collector.collect_documentation_metrics()
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Exclusion de fichiers
 
@@ -44,12 +44,9 @@ collector = MetricsCollector("./mon-projet")
 # Ajouter des patterns d'exclusion
 collector.exclude_patterns.add("*.tmp")
 collector.exclude_patterns.add("backup/")
-
-# Vérifier l'exclusion
-is_excluded = collector._is_excluded(Path("./backup/file.py"))
 ```
 
-## 📤 Export des métriques
+## Export des métriques
 
 ### Export simple
 
@@ -59,35 +56,26 @@ from arkalia_metrics_collector import MetricsExporter
 # Créer un exporteur
 exporter = MetricsExporter(metrics_data)
 
-# Exporter en JSON
+# Exporter en différents formats
 exporter.export_json("metrics.json")
-
-# Exporter en Markdown
 exporter.export_markdown_summary("metrics.md")
-
-# Exporter en HTML
 exporter.export_html_dashboard("dashboard.html")
-
-# Exporter en CSV
 exporter.export_csv("metrics.csv")
-
-# Exporter en YAML
 exporter.export_yaml("metrics.yaml")
 ```
 
 ### Export en lot
 
 ```python
-# Exporter dans tous les formats (JSON, Markdown, HTML, CSV, YAML)
+# Exporter dans tous les formats
 results = exporter.export_all_formats("output/")
 
 # Vérifier les résultats
 for format, success in results.items():
     print(f"{format}: {'✅' if success else '❌'}")
-# Résultat: {'json': True, 'markdown': True, 'html': True, 'csv': True, 'yaml': True}
 ```
 
-## ✅ Validation des métriques
+## Validation des métriques
 
 ### Validation basique
 
@@ -118,7 +106,7 @@ print(f"Score: {report['validation_summary']['score']}/100")
 print(f"Statut: {report['validation_summary']['status']}")
 ```
 
-## 🖥️ Interface en ligne de commande
+## Interface en ligne de commande
 
 ### Collecte
 
@@ -162,7 +150,7 @@ arkalia-metrics serve ./mon-projet
 arkalia-metrics serve ./mon-projet --port 9000
 ```
 
-## 🔍 Métriques disponibles
+## Métriques disponibles
 
 ### Structure des données
 
@@ -179,17 +167,14 @@ arkalia-metrics serve ./mon-projet --port 9000
     "count": 25,
     "core_files": 20,
     "test_files": 5,
-    "total_lines": 1500,
-    "files_list": ["main.py", "utils.py", ...]
+    "total_lines": 1500
   },
   "test_metrics": {
     "collected_tests_count": 45,
-    "test_files_count": 5,
-    "test_files": ["test_main.py", ...]
+    "test_files_count": 5
   },
   "documentation_metrics": {
-    "documentation_files": 3,
-    "documentation_list": ["README.md", "docs/", ...]
+    "documentation_files": 3
   },
   "summary": {
     "total_python_files": 25,
@@ -200,112 +185,7 @@ arkalia-metrics serve ./mon-projet --port 9000
 }
 ```
 
-## 🌐 Tests sur Projets Externes
-
-### Collecte sur Projets Réels
-
-```bash
-# Analyser un projet externe
-arkalia-metrics collect /path/to/external-project --validate
-
-# Générer tous les formats
-arkalia-metrics collect /path/to/external-project --format all --output reports/
-
-# Mode verbeux pour debug
-arkalia-metrics collect /path/to/external-project --verbose
-```
-
-### Validation des Métriques
-
-```bash
-# Validation complète
-arkalia-metrics validate /path/to/project
-
-# Validation avec rapport détaillé
-arkalia-metrics validate /path/to/project --verbose
-```
-
-### Serveur de Visualisation
-
-```bash
-# Lancer le serveur de dashboard
-arkalia-metrics serve /path/to/project --port 8080
-
-# Ouvrir http://localhost:8080 dans le navigateur
-```
-
-## 🧪 Tests et Validation
-
-### Tests Automatisés
-
-```bash
-# Exécuter tous les tests
-pytest tests/ -v
-
-# Tests spécifiques
-pytest tests/integration/test_external_projects.py -v
-pytest tests/performance/test_performance_metrics.py -v
-pytest tests/unit/cli/test_cli_main.py -v
-```
-
-### Validation de Qualité
-
-```bash
-# Vérification complète
-ruff check .
-black --check .
-mypy src/
-bandit -r src/
-```
-
-## 🎯 Cas d'usage avancés
-
-### Intégration CI/CD
-
-```yaml
-# .github/workflows/metrics.yml
-name: Collect Metrics
-on: [push, pull_request]
-
-jobs:
-  metrics:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Collect Metrics
-        run: |
-          pip install arkalia-metrics-collector
-          arkalia-metrics collect . --format json --output metrics/
-      - name: Upload Metrics
-        uses: actions/upload-artifact@v3
-        with:
-          name: project-metrics
-          path: metrics/
-```
-
-### Surveillance continue
-
-```python
-import schedule
-import time
-from arkalia_metrics_collector import MetricsCollector, MetricsExporter
-
-def collect_daily_metrics():
-    collector = MetricsCollector("./mon-projet")
-    metrics = collector.collect_all_metrics()
-    
-    exporter = MetricsExporter(metrics)
-    exporter.export_json(f"metrics_{time.strftime('%Y%m%d')}.json")
-
-# Planifier la collecte quotidienne
-schedule.every().day.at("09:00").do(collect_daily_metrics)
-
-while True:
-    schedule.run_pending()
-    time.sleep(60)
-```
-
-## 🔗 Intégration GitHub API
+## Intégration GitHub API
 
 ### Collecte des métriques GitHub
 
@@ -322,7 +202,6 @@ if metrics:
     stats = metrics.get("stats", {})
     print(f"⭐ Stars: {stats.get('stars', 0)}")
     print(f"🍴 Forks: {stats.get('forks', 0)}")
-    print(f"👀 Watchers: {stats.get('watchers', 0)}")
     print(f"📝 Open Issues: {stats.get('open_issues', 0)}")
 ```
 
@@ -346,13 +225,9 @@ print(f"Total stars: {aggregated['aggregated']['total_stars']}")
 arkalia-metrics aggregate projects.json --github-api --json
 ```
 
-Les métriques GitHub seront automatiquement incluses dans `aggregated_metrics.json` :
-- `github_metrics.total_stars` : Total des stars
-- `github_metrics.total_forks` : Total des forks
-- `github_metrics.total_watchers` : Total des watchers
-- `github_metrics.total_open_issues` : Total des issues ouvertes
+Les métriques GitHub seront automatiquement incluses dans `aggregated_metrics.json`.
 
-## 📊 Statistiques de Contribution Git
+## Statistiques de Contribution Git
 
 ### Collecte des statistiques Git
 
@@ -377,16 +252,9 @@ if contributions:
         print(f"  {contrib['name']}: {contrib['commits']} commits")
 ```
 
-### Intégration automatique
+Les statistiques Git sont automatiquement collectées lors de l'agrégation multi-projets.
 
-Les statistiques Git sont automatiquement collectées lors de l'agrégation multi-projets et incluses dans `aggregated_metrics.json` :
-- `git_contributions.total_commits` : Total des commits
-- `git_contributions.recent_commits_30d` : Commits des 30 derniers jours
-- `git_contributions.lines.added` : Lignes ajoutées
-- `git_contributions.lines.deleted` : Lignes supprimées
-- `git_contributions.top_contributors` : Top 10 contributeurs
-
-## 📈 Agrégation Multi-Projets
+## Agrégation Multi-Projets
 
 ### Collecte et agrégation
 
@@ -404,6 +272,7 @@ aggregated = aggregator.aggregate_metrics()
 
 print(f"Total modules: {aggregated['aggregated']['total_modules']}")
 print(f"Total lignes: {aggregated['aggregated']['total_lines_of_code']}")
+print(f"Coverage global: {aggregated['aggregated']['global_coverage']}%")
 ```
 
 ### Génération de tableau README
@@ -414,7 +283,15 @@ table = aggregator.generate_readme_table()
 print(table)
 ```
 
-## 📤 Export vers formats multiples
+### Chargement depuis JSON
+
+```python
+# Charger depuis un fichier JSON
+aggregator.load_from_json("projects_metrics.json")
+aggregated = aggregator.aggregate_metrics()
+```
+
+## Export vers formats multiples
 
 ### Export depuis fichier JSON
 
@@ -435,6 +312,7 @@ arkalia-metrics export metrics.json \
 
 ```python
 from arkalia_metrics_collector import MetricsExporter
+from arkalia_metrics_collector.exporters.external_exporters import RESTAPIExporter
 
 # Charger les métriques
 import json
@@ -443,12 +321,9 @@ with open("metrics.json") as f:
 
 # Exporter
 exporter = MetricsExporter(metrics_data)
-
-# Export YAML
 exporter.export_yaml("metrics.yaml")
 
 # Export vers API REST
-from arkalia_metrics_collector.exporters.external_exporters import RESTAPIExporter
 rest_exporter = RESTAPIExporter(
     api_url="https://api.example.com/metrics",
     api_key="YOUR_KEY"
@@ -456,7 +331,7 @@ rest_exporter = RESTAPIExporter(
 rest_exporter.export(metrics_data)
 ```
 
-## 🚨 Système d'alertes et notifications
+## Système d'alertes et notifications
 
 ### Vérification des alertes
 
@@ -480,7 +355,7 @@ arkalia-metrics alerts metrics/aggregated_metrics.json \
 # Avec personnalisation
 arkalia-metrics alerts metrics/aggregated_metrics.json \
   --create-issue \
-  --labels "metrics,automated,alerts,urgent" \
+  --labels "metrics,automated,alerts" \
   --assignees "user1,user2" \
   --threshold 20.0
 ```
@@ -490,11 +365,6 @@ arkalia-metrics alerts metrics/aggregated_metrics.json \
 ```bash
 # Activer les notifications (Email, Slack, Discord)
 arkalia-metrics alerts metrics/aggregated_metrics.json --notify
-
-# Avec création d'issue
-arkalia-metrics alerts metrics/aggregated_metrics.json \
-  --notify \
-  --create-issue
 ```
 
 ### Configuration des notifications
@@ -546,44 +416,7 @@ if alerts_data.get("has_alerts"):
     print(f"Slack: {results.get('slack', False)}")
 ```
 
-## 📈 Agrégation Multi-Projets
-
-### Collecte et agrégation
-
-```python
-from arkalia_metrics_collector import MultiProjectAggregator
-
-aggregator = MultiProjectAggregator()
-
-# Collecter plusieurs projets
-aggregator.collect_project("projet1", "/path/to/project1")
-aggregator.collect_project("projet2", "/path/to/project2")
-
-# Agréger les métriques
-aggregated = aggregator.aggregate_metrics()
-
-print(f"Total modules: {aggregated['aggregated']['total_modules']}")
-print(f"Total lignes: {aggregated['aggregated']['total_lines_of_code']}")
-print(f"Coverage global: {aggregated['aggregated']['global_coverage']}%")
-```
-
-### Génération de tableau README
-
-```python
-# Générer un tableau Markdown pour README
-table = aggregator.generate_readme_table()
-print(table)
-```
-
-### Chargement depuis JSON
-
-```python
-# Charger depuis un fichier JSON
-aggregator.load_from_json("projects_metrics.json")
-aggregated = aggregator.aggregate_metrics()
-```
-
-## 🏷️ Génération de Badges
+## Génération de Badges
 
 ### Badges automatiques
 
@@ -632,3 +465,47 @@ actions_badge = generator.generate_github_actions_badge(
     workflow="ci",
 )
 ```
+
+## Cas d'usage avancés
+
+### Intégration CI/CD
+
+```yaml
+# .github/workflows/metrics.yml
+name: Collect Metrics
+on: [push, pull_request]
+
+jobs:
+  metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Collect Metrics
+        run: |
+          pip install arkalia-metrics-collector
+          arkalia-metrics collect . --format json --output metrics/
+      - name: Upload Metrics
+        uses: actions/upload-artifact@v3
+        with:
+          name: project-metrics
+          path: metrics/
+```
+
+### Collecte programmée
+
+```python
+from arkalia_metrics_collector import MetricsCollector, MetricsExporter
+from datetime import datetime
+
+def collect_metrics():
+    collector = MetricsCollector("./mon-projet")
+    metrics = collector.collect_all_metrics()
+    
+    exporter = MetricsExporter(metrics)
+    timestamp = datetime.now().strftime('%Y%m%d')
+    exporter.export_json(f"metrics_{timestamp}.json")
+```
+
+---
+
+**Pour plus d'informations, consultez la [documentation complète](../README.md) et la [FAQ](../FAQ.md).**

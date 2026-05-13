@@ -36,17 +36,7 @@ Le badge est automatiquement généré dans le README :
 
 ## 🔧 Configuration GitHub
 
-### Token Codecov (Optionnel)
-
-Si vous souhaitez utiliser un token Codecov personnalisé :
-
-1. Allez sur [codecov.io](https://codecov.io)
-2. Connectez-vous avec GitHub
-3. Ajoutez le repository `arkalia-metrics-collector`
-4. Copiez le token
-5. Ajoutez-le dans GitHub Secrets : `CODECOV_TOKEN`
-
-**Note** : Le token n'est pas obligatoire pour les repositories publics. L'action Codecov fonctionne sans token pour les projets open-source.
+**Note** : Pour les repositories publics, aucun token n'est nécessaire. L'action Codecov fonctionne automatiquement.
 
 ## 📈 Vérification
 

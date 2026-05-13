@@ -54,8 +54,3 @@
 - **Développement normal** : CI/CD Matrix + Sécurité
 - **Documentation** : GitHub Pages automatique
 - **Test GitHub Pages** : Manuel si nécessaire
-- **Déploiement PyPI** : CI/CD Matrix (quand activé)
-
----
-
-**Objectif : Workflows spécialisés sans conflits de permissions !** 🎯

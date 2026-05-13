@@ -8,18 +8,24 @@ Supporte JSON, Markdown, HTML, CSV et YAML.
 
 import csv
 import json
+import logging
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-try:
+if TYPE_CHECKING:
     import yaml  # type: ignore[import-untyped]
-except ImportError:
-    yaml = None
+else:
+    try:
+        import yaml
+    except ImportError:
+        yaml = None  # type: ignore[assignment,unused-ignore]
 
 from arkalia_metrics_collector import __version__
 from arkalia_metrics_collector.exporters.interactive_dashboard import (
     InteractiveDashboardGenerator,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class MetricsExporter:
@@ -63,7 +69,7 @@ class MetricsExporter:
             return True
 
         except (OSError, TypeError) as e:
-            print(f"Erreur lors de l'export JSON: {e}")
+            logger.error(f"Erreur lors de l'export JSON: {e}")
             return False
 
     def export_markdown_summary(self, output_file: str) -> bool:
@@ -105,7 +111,7 @@ class MetricsExporter:
             return True
 
         except OSError as e:
-            print(f"Erreur lors de l'export Markdown: {e}")
+            logger.error(f"Erreur lors de l'export Markdown: {e}")
             return False
 
     def export_html_dashboard(
@@ -249,7 +255,7 @@ class MetricsExporter:
             return True
 
         except OSError as e:
-            print(f"Erreur lors de l'export HTML: {e}")
+            logger.error(f"Erreur lors de l'export HTML: {e}")
             return False
 
     def export_csv(self, output_file: str) -> bool:
@@ -310,7 +316,7 @@ class MetricsExporter:
             return True
 
         except OSError as e:
-            print(f"Erreur lors de l'export CSV: {e}")
+            logger.error(f"Erreur lors de l'export CSV: {e}")
             return False
 
     def export_yaml(self, output_file: str) -> bool:
@@ -324,7 +330,9 @@ class MetricsExporter:
             True si l'export a réussi
         """
         if yaml is None:
-            print("⚠️  PyYAML n'est pas installé. Installez-le avec: pip install pyyaml")
+            logger.warning(
+                "⚠️  PyYAML n'est pas installé. Installez-le avec: pip install pyyaml"
+            )
             return False
 
         try:
@@ -343,7 +351,7 @@ class MetricsExporter:
             return True
 
         except (OSError, TypeError) as e:
-            print(f"Erreur lors de l'export YAML: {e}")
+            logger.error(f"Erreur lors de l'export YAML: {e}")
             return False
 
     def export_all_formats(self, output_dir: str = "metrics") -> dict[str, bool]:

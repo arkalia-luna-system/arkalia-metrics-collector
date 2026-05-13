@@ -8,6 +8,10 @@ from unittest.mock import patch
 import pytest
 
 from arkalia_metrics_collector.collectors.metrics_collector import MetricsCollector
+from arkalia_metrics_collector.exceptions import (
+    InvalidProjectPathError,
+    ProjectNotFoundError,
+)
 
 
 class TestMetricsCollector:
@@ -241,23 +245,15 @@ class TestMetricsCollector:
         )
 
     def test_error_handling_invalid_path(self):
-        """Test de la gestion d'erreur avec un chemin invalide."""
-        # Votre implémentation n'a pas de validation de chemin, donc pas d'erreur
-        collector = MetricsCollector("/chemin/inexistant")
-        # Votre implémentation accepte n'importe quel chemin
-        # Normaliser le chemin pour la comparaison cross-platform
-        expected_path = Path("/chemin/inexistant").resolve()
-        actual_path = Path(collector.project_root).resolve()
-        assert actual_path == expected_path
+        """Test de la gestion d'erreur avec un chemin inexistant."""
+        with pytest.raises(ProjectNotFoundError) as exc_info:
+            MetricsCollector("/chemin/inexistant")
+        assert "/chemin/inexistant" in str(exc_info.value)
 
     def test_error_handling_file_instead_of_dir(self, temp_project_dir: Path):
         """Test de la gestion d'erreur avec un fichier au lieu d'un dossier."""
         file_path = temp_project_dir / "test_file.txt"
         file_path.write_text("test")
 
-        # Votre implémentation accepte les fichiers
-        collector = MetricsCollector(str(file_path))
-        # Normaliser les chemins pour la comparaison cross-platform
-        expected_path = Path(file_path).resolve()
-        actual_path = Path(collector.project_root).resolve()
-        assert actual_path == expected_path
+        with pytest.raises(InvalidProjectPathError):
+            MetricsCollector(str(file_path))

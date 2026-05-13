@@ -35,7 +35,10 @@ class MultiProjectAggregator:
     """
 
     def __init__(
-        self, enable_history: bool = True, enable_github: bool = False
+        self,
+        enable_history: bool = True,
+        enable_github: bool = False,
+        show_progress: bool = False,
     ) -> None:
         """
         Initialise l'agrégateur multi-projets.
@@ -43,10 +46,12 @@ class MultiProjectAggregator:
         Args:
             enable_history: Activer la sauvegarde de l'historique
             enable_github: Activer la collecte GitHub API
+            show_progress: Afficher une barre de progression (nécessite tqdm)
         """
         self.projects_metrics: dict[str, Any] = {}
         self.history = MetricsHistory() if enable_history else None
         self.github_collector = GitHubCollector() if enable_github else None
+        self.show_progress = show_progress
 
     def collect_project(
         self,
@@ -66,7 +71,9 @@ class MultiProjectAggregator:
             Métriques du projet ou None en cas d'erreur
         """
         try:
-            collector = MetricsCollector(str(project_path))
+            collector = MetricsCollector(
+                str(project_path), show_progress=self.show_progress
+            )
             metrics = collector.collect_all_metrics()
 
             # Collecter les métriques GitHub si activé

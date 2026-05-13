@@ -10,22 +10,40 @@ Collecte des métriques depuis l'API GitHub :
 - Releases
 """
 
+import json
 import logging
 import os
 import re
 import time
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 from arkalia_metrics_collector import __version__
+from arkalia_metrics_collector.exceptions import (
+    GitHubAPIError,
+    GitHubAuthenticationError,
+    GitHubRateLimitError,
+)
 
 try:
     import requests  # type: ignore[import-untyped]
 except ImportError:
-    requests = None
+    requests = None  # type: ignore[assignment,unused-ignore]
 
 # Configuration du logger
 logger = logging.getLogger(__name__)
+
+# Constantes
+DEFAULT_CACHE_FILE = Path.home() / ".arkalia_metrics" / "github_cache.json"
+MAX_RETRIES = 3
+INITIAL_BACKOFF = 1  # secondes
+MAX_BACKOFF = 60  # secondes
+DEFAULT_CACHE_DURATION = 300  # secondes (5 minutes)
+DEFAULT_TIMEOUT = 10  # secondes
+DEFAULT_RATE_LIMIT_REMAINING = 5000
+DEFAULT_RATE_LIMIT_RESET_OFFSET = 3600  # secondes (1 heure)
+CACHE_SAVE_INTERVAL = 10  # sauvegarder tous les N ajouts
 
 
 class GitHubCollector:
@@ -40,21 +58,37 @@ class GitHubCollector:
     """
 
     def __init__(
-        self, github_token: str | None = None, cache_duration: int = 300
+        self,
+        github_token: str | None = None,
+        cache_duration: int = DEFAULT_CACHE_DURATION,
+        cache_file: Path | str | None = None,
+        max_retries: int = MAX_RETRIES,
     ) -> None:
         """
         Initialise le collecteur GitHub.
 
         Args:
             github_token: Token GitHub (optionnel, peut être dans GITHUB_TOKEN env)
+            cache_duration: Durée du cache en secondes
+                (défaut: 300 = 5 minutes)
+            cache_file: Chemin vers le fichier de cache persistant
+                (défaut: ~/.arkalia_metrics/github_cache.json)
+            max_retries: Nombre maximum de tentatives en cas d'erreur (défaut: 3)
         """
         self.token = github_token or os.getenv("GITHUB_TOKEN")
         self.base_url = "https://api.github.com"
         self.session = self._create_session()
         self.cache_duration = cache_duration
+        self.max_retries = max_retries
         self._cache: dict[str, tuple[float, Any]] = {}
-        self._rate_limit_remaining = 5000
+        self._rate_limit_remaining = DEFAULT_RATE_LIMIT_REMAINING
         self._rate_limit_reset = 0
+
+        # Cache persistant
+        if cache_file is None:
+            cache_file = DEFAULT_CACHE_FILE
+        self.cache_file = Path(cache_file)
+        self._load_persistent_cache()
 
     def _create_session(self) -> requests.Session | None:
         """
@@ -85,6 +119,47 @@ class GitHubCollector:
         )
         return session
 
+    def _load_persistent_cache(self) -> None:
+        """Charge le cache persistant depuis le fichier."""
+        try:
+            if self.cache_file.exists():
+                with open(self.cache_file, encoding="utf-8") as f:
+                    cache_data = json.load(f)
+                    current_time = time.time()
+                    # Nettoyer les entrées expirées lors du chargement
+                    for key, (timestamp, value) in cache_data.items():
+                        if current_time - timestamp < self.cache_duration:
+                            self._cache[key] = (timestamp, value)
+                    logger.debug(
+                        f"Cache persistant chargé: {len(self._cache)} entrées valides"
+                    )
+        except OSError as e:
+            logger.warning(f"Impossible de lire le fichier de cache: {e}")
+        except json.JSONDecodeError as e:
+            logger.warning(f"Erreur de format JSON dans le cache: {e}")
+        except Exception as e:
+            logger.warning(f"Erreur inattendue lors du chargement du cache: {e}")
+
+    def _save_persistent_cache(self) -> None:
+        """Sauvegarde le cache persistant dans le fichier."""
+        try:
+            # Créer le répertoire si nécessaire
+            self.cache_file.parent.mkdir(parents=True, exist_ok=True)
+            # Nettoyer les entrées expirées avant sauvegarde
+            current_time = time.time()
+            valid_cache = {
+                key: (timestamp, value)
+                for key, (timestamp, value) in self._cache.items()
+                if current_time - timestamp < self.cache_duration
+            }
+            with open(self.cache_file, "w", encoding="utf-8") as f:
+                json.dump(valid_cache, f, default=str, indent=2)
+            logger.debug(f"Cache persistant sauvegardé: {len(valid_cache)} entrées")
+        except OSError as e:
+            logger.warning(f"Impossible d'écrire le fichier de cache: {e}")
+        except Exception as e:
+            logger.warning(f"Erreur inattendue lors de la sauvegarde du cache: {e}")
+
     def _get_cached(self, key: str) -> Any | None:
         """Récupère une valeur du cache si elle est encore valide."""
         if key in self._cache:
@@ -98,14 +173,20 @@ class GitHubCollector:
     def _set_cache(self, key: str, value: Any) -> None:
         """Met en cache une valeur avec timestamp."""
         self._cache[key] = (time.time(), value)
+        # Sauvegarder périodiquement (tous les N ajouts pour éviter trop d'écritures)
+        if len(self._cache) % CACHE_SAVE_INTERVAL == 0:
+            self._save_persistent_cache()
 
-    def _make_request(self, url: str, timeout: int = 10) -> requests.Response | None:
+    def _make_request(
+        self, url: str, timeout: int = DEFAULT_TIMEOUT, retry_count: int = 0
+    ) -> requests.Response | None:
         """
-        Effectue une requête HTTP avec gestion du rate limiting.
+        Effectue une requête HTTP avec gestion du rate limiting et retry avec backoff exponentiel.
 
         Args:
             url: URL à requêter
             timeout: Timeout en secondes
+            retry_count: Nombre de tentatives déjà effectuées (interne)
 
         Returns:
             Response ou None en cas d'erreur
@@ -122,30 +203,131 @@ class GitHubCollector:
         # Vérifier le rate limiting
         if self._rate_limit_remaining <= 1 and time.time() < self._rate_limit_reset:
             wait_time = self._rate_limit_reset - time.time()
-            logger.warning(f"Rate limit atteint. Attente de {wait_time:.1f}s")
-            time.sleep(wait_time)
+            if wait_time > 0:
+                logger.warning(f"Rate limit atteint. Attente de {wait_time:.1f}s")
+                time.sleep(wait_time)
 
         try:
             response = self.session.get(url, timeout=timeout)
 
             # Mettre à jour les informations de rate limiting
             self._rate_limit_remaining = int(
-                response.headers.get("X-RateLimit-Remaining", 5000)
+                response.headers.get(
+                    "X-RateLimit-Remaining", DEFAULT_RATE_LIMIT_REMAINING
+                )
             )
             self._rate_limit_reset = int(
-                response.headers.get("X-RateLimit-Reset", time.time() + 3600)
+                response.headers.get(
+                    "X-RateLimit-Reset", time.time() + DEFAULT_RATE_LIMIT_RESET_OFFSET
+                )
             )
 
             if response.status_code == 200:
                 self._set_cache(url, response)
                 logger.debug(f"Requête réussie: {url}")
+                return response
+            elif response.status_code == 401:
+                error_msg = "Authentification GitHub échouée. Vérifiez votre token."
+                logger.warning(error_msg)
+                logger.debug(
+                    "GitHubAuthenticationError",
+                    exc_info=GitHubAuthenticationError(error_msg),
+                )
+                return None
+            elif response.status_code == 403:
+                # Peut être rate limit ou permissions
+                if "rate limit" in response.text.lower():
+                    wait_time = self._rate_limit_reset - time.time()
+                    if wait_time > 0 and retry_count < self.max_retries:
+                        logger.warning(
+                            f"Rate limit 403 pour {url}. Retry dans {wait_time:.1f}s (tentative {retry_count + 1}/{self.max_retries})"
+                        )
+                        time.sleep(wait_time)
+                        return self._make_request(url, timeout, retry_count + 1)
+                    error_msg = f"Limite de taux GitHub atteinte. Attente requise: {wait_time:.0f}s"
+                    logger.warning(error_msg)
+                    logger.debug(
+                        "GitHubRateLimitError", exc_info=GitHubRateLimitError(error_msg)
+                    )
+                else:
+                    error_msg = f"Accès refusé pour {url} (403)"
+                    logger.warning(error_msg)
+                    logger.debug("GitHubAPIError", exc_info=GitHubAPIError(error_msg))
+                return None
+            elif response.status_code == 429:  # Too Many Requests
+                # Extraire le temps d'attente depuis les headers
+                retry_after = response.headers.get("Retry-After")
+                if retry_after:
+                    wait_time = int(retry_after)
+                else:
+                    # Utiliser backoff exponentiel
+                    wait_time = min(INITIAL_BACKOFF * (2**retry_count), MAX_BACKOFF)
+
+                if retry_count < self.max_retries:
+                    logger.warning(
+                        f"Rate limit 429 pour {url}. Retry dans {wait_time}s (tentative {retry_count + 1}/{self.max_retries})"
+                    )
+                    time.sleep(wait_time)
+                    return self._make_request(url, timeout, retry_count + 1)
+                else:
+                    error_msg = (
+                        f"Rate limit atteint après {self.max_retries} tentatives"
+                    )
+                    logger.error(error_msg)
+                    logger.debug(
+                        "GitHubRateLimitError", exc_info=GitHubRateLimitError(error_msg)
+                    )
+                    return None
+            elif response.status_code in (500, 502, 503, 504):  # Erreurs serveur
+                # Retry avec backoff exponentiel pour erreurs serveur
+                if retry_count < self.max_retries:
+                    wait_time = min(INITIAL_BACKOFF * (2**retry_count), MAX_BACKOFF)
+                    logger.warning(
+                        f"Erreur serveur {response.status_code} pour {url}. Retry dans {wait_time}s (tentative {retry_count + 1}/{self.max_retries})"
+                    )
+                    time.sleep(wait_time)
+                    return self._make_request(url, timeout, retry_count + 1)
+                else:
+                    logger.error(
+                        f"Erreur serveur {response.status_code} après {self.max_retries} tentatives pour {url}"
+                    )
+                    return None
             else:
                 logger.warning(f"Erreur HTTP {response.status_code} pour {url}")
+                return None
 
-            return response
-
+        except requests.exceptions.Timeout:
+            # Retry pour timeout
+            if retry_count < self.max_retries:
+                wait_time = min(INITIAL_BACKOFF * (2**retry_count), MAX_BACKOFF)
+                logger.warning(
+                    f"Timeout pour {url}. Retry dans {wait_time}s (tentative {retry_count + 1}/{self.max_retries})"
+                )
+                time.sleep(wait_time)
+                return self._make_request(url, timeout, retry_count + 1)
+            else:
+                logger.error(f"Timeout après {self.max_retries} tentatives pour {url}")
+                return None
+        except requests.exceptions.RequestException as e:
+            # Retry pour autres erreurs réseau
+            if retry_count < self.max_retries:
+                wait_time = min(INITIAL_BACKOFF * (2**retry_count), MAX_BACKOFF)
+                logger.warning(
+                    f"Erreur réseau pour {url}: {e}. Retry dans {wait_time}s (tentative {retry_count + 1}/{self.max_retries})"
+                )
+                time.sleep(wait_time)
+                return self._make_request(url, timeout, retry_count + 1)
+            else:
+                logger.error(
+                    f"Erreur réseau après {self.max_retries} tentatives pour {url}: {e}"
+                )
+                return None
         except Exception as e:
-            logger.error(f"Erreur lors de la requête {url}: {e}")
+            logger.error(f"Erreur inattendue lors de la requête {url}: {e}")
+            logger.debug(
+                "GitHubAPIError",
+                exc_info=GitHubAPIError(f"Erreur lors de la requête GitHub: {e}"),
+            )
             return None
 
     def collect_repo_metrics(self, owner: str, repo: str) -> dict[str, Any] | None:
@@ -447,6 +629,9 @@ class GitHubCollector:
                 total_stars += metrics.get("stats", {}).get("stars", 0)
                 total_forks += metrics.get("stats", {}).get("forks", 0)
                 total_watchers += metrics.get("stats", {}).get("watchers", 0)
+
+        # Sauvegarder le cache après toutes les collectes
+        self._save_persistent_cache()
 
         return {
             "repositories": all_metrics,

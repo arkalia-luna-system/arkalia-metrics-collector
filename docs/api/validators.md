@@ -1,12 +1,12 @@
-# ✅ API Reference - Validators
+# API Reference - Validators
 
 Documentation complète des validateurs de métriques d'**Arkalia Metrics Collector**.
 
-## 🎯 Vue d'ensemble
+## Vue d'ensemble
 
 Les validateurs permettent de vérifier la qualité, la cohérence et la validité des métriques collectées.
 
-## 📦 MetricsValidator
+## MetricsValidator
 
 Classe principale pour la validation des métriques collectées.
 
@@ -61,9 +61,9 @@ print(f"Score: {report['validation_summary']['score']}/100")
 print(f"Statut: {report['validation_summary']['status']}")
 ```
 
-### Règles de validation
+## Règles de validation
 
-#### Structure des métriques
+### Structure des métriques
 
 **Clés requises :**
 - `timestamp` : Horodatage de la collecte
@@ -79,7 +79,7 @@ print(f"Statut: {report['validation_summary']['status']}")
 - `python_version` : Version Python utilisée
 - `collection_date` : Date de collecte
 
-#### Cohérence des données
+### Cohérence des données
 
 **Validation Python :**
 - `core_files + test_files == count` (cohérence du comptage)
@@ -101,7 +101,6 @@ print(f"Statut: {report['validation_summary']['status']}")
 
 #### Erreurs (validation_errors)
 
-**Structure :**
 - `"Clé manquante: {key}"` : Clé requise manquante
 - `"Nombre de fichiers Python manquant"` : Métrique Python manquante
 - `"Incohérence dans le comptage des fichiers: {core} + {test} != {count}"` : Comptage incohérent
@@ -112,7 +111,6 @@ print(f"Statut: {report['validation_summary']['status']}")
 
 #### Avertissements (validation_warnings)
 
-**Structure :**
 - `"Info de collection manquante: {key}"` : Information optionnelle manquante
 - `"Fichiers Python détectés mais 0 lignes de code"` : Problème potentiel
 - `"Aucun fichier Python détecté"` : Projet vide
@@ -130,9 +128,9 @@ Le score est calculé automatiquement :
 - `"✅ VALID"` : Score = 100, aucune erreur
 - `"❌ INVALID"` : Score < 100, erreurs détectées
 
-### Exemples d'utilisation
+## Exemples d'utilisation
 
-#### Validation basique
+### Validation basique
 
 ```python
 from arkalia_metrics_collector import MetricsValidator
@@ -145,7 +143,7 @@ print(f"Erreurs: {len(errors)}")
 print(f"Avertissements: {len(warnings)}")
 ```
 
-#### Validation avec rapport
+### Validation avec rapport
 
 ```python
 validator = MetricsValidator()
@@ -167,12 +165,14 @@ if report['warnings']:
         print(f"  - {warning}")
 ```
 
-#### Validation dans un pipeline
+### Validation dans un pipeline
 
 ```python
 def validate_project_metrics(project_path: str) -> bool:
     """Valide les métriques d'un projet."""
     try:
+        from arkalia_metrics_collector import MetricsCollector, MetricsValidator
+        
         # Collecter les métriques
         collector = MetricsCollector(project_path)
         metrics = collector.collect_all_metrics()
@@ -207,6 +207,8 @@ for project in projects:
 #### Collecteur + Validateur
 
 ```python
+from arkalia_metrics_collector import MetricsCollector, MetricsValidator
+
 # Collecter et valider en une fois
 collector = MetricsCollector("./mon-projet")
 validator = MetricsValidator()
@@ -226,6 +228,8 @@ else:
 #### Exporteur + Validateur
 
 ```python
+from arkalia_metrics_collector import MetricsExporter, MetricsValidator
+
 # Valider avant l'export
 validator = MetricsValidator()
 is_valid, errors, warnings = validator.validate_metrics(metrics_data)
@@ -239,7 +243,7 @@ else:
     print("❌ Export annulé - métriques invalides")
 ```
 
-### Personnalisation future
+## Personnalisation
 
 **Règles personnalisées :**
 - Seuils de qualité configurables
@@ -250,3 +254,7 @@ else:
 - Validation de schémas JSON
 - Règles de qualité de code
 - Métriques de performance
+
+---
+
+**Pour plus d'informations, consultez la [documentation complète](../README.md).**

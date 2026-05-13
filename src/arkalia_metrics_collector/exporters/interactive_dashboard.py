@@ -10,10 +10,13 @@ Crée un dashboard avancé avec :
 """
 
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
 from arkalia_metrics_collector import __version__
+
+logger = logging.getLogger(__name__)
 
 
 class InteractiveDashboardGenerator:
@@ -89,7 +92,7 @@ class InteractiveDashboardGenerator:
             return True
 
         except Exception as e:
-            print(f"Erreur lors de la génération du dashboard: {e}")
+            logger.error(f"Erreur lors de la génération du dashboard: {e}")
             return False
 
     @staticmethod
