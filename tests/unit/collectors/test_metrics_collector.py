@@ -37,7 +37,7 @@ class TestMetricsCollector:
 
     def test_exclude_patterns_default(self):
         """Test des patterns d'exclusion par défaut."""
-        collector = MetricsCollector("/tmp")
+        collector = MetricsCollector(".")
         expected_patterns = {
             "__pycache__",
             ".venv",
@@ -248,7 +248,8 @@ class TestMetricsCollector:
         """Test de la gestion d'erreur avec un chemin inexistant."""
         with pytest.raises(ProjectNotFoundError) as exc_info:
             MetricsCollector("/chemin/inexistant")
-        assert "/chemin/inexistant" in str(exc_info.value)
+        error_message = str(exc_info.value).replace("\\", "/")
+        assert "chemin/inexistant" in error_message
 
     def test_error_handling_file_instead_of_dir(self, temp_project_dir: Path):
         """Test de la gestion d'erreur avec un fichier au lieu d'un dossier."""
