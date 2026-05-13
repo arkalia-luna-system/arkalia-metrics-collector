@@ -75,7 +75,7 @@ jobs:
           done
 
           echo "SUCCESS Structure validée - Tests autorisés"
-          echo "should-continue=true" >> $GITHUB_OUTPUT
+          echo "should-continue=true" >> "${GITHUB_OUTPUT}"
 
       - name: "Metriques Projet"
         run: |
