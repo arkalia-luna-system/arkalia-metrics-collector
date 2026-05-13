@@ -236,8 +236,7 @@ def test_product_model():
             (tests_dir / f"{test_name}.py").write_text(content)
 
         # Documentation
-        (docs_dir / "README.md").write_text(
-            """# Comprehensive Package
+        (docs_dir / "README.md").write_text("""# Comprehensive Package
 
 Package complet pour les tests de validation des outputs.
 
@@ -266,11 +265,9 @@ Classe principale pour le traitement de données.
 - `__init__(config)`: Initialise le processeur
 - `process(items)`: Traite une liste d'éléments
 - `validate(data)`: Valide des données
-"""
-        )
+""")
 
-        (docs_dir / "CHANGELOG.md").write_text(
-            """# Changelog
+        (docs_dir / "CHANGELOG.md").write_text("""# Changelog
 
 ## [1.0.0] - 2024-01-01
 
@@ -285,12 +282,10 @@ Classe principale pour le traitement de données.
 
 ### Fixed
 - None
-"""
-        )
+""")
 
         # Scripts
-        (scripts_dir / "deploy.py").write_text(
-            '''#!/usr/bin/env python3
+        (scripts_dir / "deploy.py").write_text('''#!/usr/bin/env python3
 """Script de déploiement."""
 import os
 import sys
@@ -303,8 +298,7 @@ def deploy():
 
 if __name__ == "__main__":
     deploy()
-'''
-        )
+''')
 
         return project
 
@@ -600,16 +594,14 @@ if __name__ == "__main__":
         src_dir.mkdir(parents=True)
 
         # Fichier avec caractères spéciaux (sans émojis problématiques)
-        (src_dir / "special.py").write_text(
-            '''"""Module avec caractères spéciaux."""
+        (src_dir / "special.py").write_text('''"""Module avec caractères spéciaux."""
 # Accents: éàçù
 # Symboles: @#$%^&*()
 
 def fonction_spéciale():
     """Fonction avec caractères spéciaux."""
     return "Café & croissants"
-'''
-        )
+''')
 
         collector = MetricsCollector(str(project))
         metrics = collector.collect_all_metrics()
