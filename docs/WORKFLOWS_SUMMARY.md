@@ -2,7 +2,7 @@
 
 ## **🚀 WORKFLOWS ACTIFS**
 
-### **1. CI/CD Matrix (`ci-matrix.yml`)**
+### **1. CI (`ci.yml`)**
 - **Objectif** : Tests multi-plateforme, qualité, sécurité, build
 - **Permissions** : `contents: read` uniquement
 - **Déclencheurs** : Push sur main/develop, PR, manuel
@@ -30,14 +30,14 @@
 
 | Workflow | contents | pages | id-token | security-events |
 |----------|----------|-------|----------|-----------------|
-| CI/CD Matrix | ✅ read | ❌ | ❌ | ❌ |
+| CI | ✅ read | ❌ | ❌ | ❌ |
 | GitHub Pages | ✅ read | ✅ write | ✅ write | ❌ |
 | Test Pages | ✅ read | ✅ write | ✅ write | ❌ |
 | Sécurité | ✅ read | ❌ | ❌ | ✅ write |
 
 ## **🎯 RÉPARTITION DES RESPONSABILITÉS**
 
-- **CI/CD Matrix** : Tests, qualité, build (pas de déploiement)
+- **CI** : Tests, qualité, build (pas de déploiement)
 - **GitHub Pages** : Documentation en ligne
 - **Test Pages** : Test de GitHub Pages
 - **Sécurité** : Audit de sécurité
@@ -51,6 +51,6 @@
 
 ## **🚀 UTILISATION**
 
-- **Développement normal** : CI/CD Matrix + Sécurité
+- **Développement normal** : CI + Sécurité
 - **Documentation** : GitHub Pages automatique
 - **Test GitHub Pages** : Manuel si nécessaire

@@ -1,8 +1,5 @@
-# Workflow CI/CD Matrix Ultra-Professionnel pour Arkalia Metrics Collector
-# Teste sur Windows, macOS, Linux + Python 3.10, 3.11, 3.12
-# Avec tests, couverture, sécurité et qualité
-
-name: CI_CD_Matrix_Ultra_Pro
+# CI : tests (Linux / macOS / Windows × Python 3.10–3.12), qualité, sécurité, build
+name: CI
 
 on:
   push:

@@ -14,13 +14,13 @@ Le fichier `.codecov.yml` à la racine du projet configure :
 
 ### 2. Intégration CI/CD
 
-Le workflow `.github/workflows/ci-matrix.yml` inclut :
+Le workflow `.github/workflows/ci.yml` inclut :
 
 ```yaml
 - name: "Upload Coverage"
-  uses: codecov/codecov-action@v4
+  uses: codecov/codecov-action@v6
   with:
-    file: ./coverage.xml
+    files: ./coverage.xml
     flags: unittests
     name: codecov-umbrella
     fail_ci_if_error: false
