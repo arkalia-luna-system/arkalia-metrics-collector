@@ -208,15 +208,12 @@ class RESTAPIExporter:
             logger.warning("requests n'est pas installé")
             return False
 
-        # Import local pour mypy
-        import requests as requests_module  # type: ignore[assignment]
-
         try:
             headers = {"Content-Type": "application/json"}
             if self.api_key:
                 headers["Authorization"] = f"Bearer {self.api_key}"
 
-            response = requests_module.post(
+            response = requests.post(
                 self.api_url, json=metrics, headers=headers, timeout=HTTP_TIMEOUT
             )
 

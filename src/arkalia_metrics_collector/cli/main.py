@@ -967,9 +967,7 @@ def alerts(
         else:
             click.echo("✅ Aucune alerte détectée")
             if verbose:
-                click.echo(
-                    f"   ℹ️  Aucun changement significatif (seuil: {threshold}%)"
-                )
+                click.echo(f"   ℹ️  Aucun changement significatif (seuil: {threshold}%)")
             return 0
 
     except FileNotFoundError:

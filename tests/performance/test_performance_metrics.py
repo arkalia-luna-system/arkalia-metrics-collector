@@ -35,22 +35,26 @@ class TestPerformanceMetrics:
 
         # 10 fichiers source
         for i in range(10):
-            (src_dir / f"module_{i}.py").write_text(f'''"""Module {i}."""
+            (src_dir / f"module_{i}.py").write_text(
+                f'''"""Module {i}."""
 def function_{i}():
     """Fonction {i}."""
     return {i}
-''')
+'''
+            )
 
         # 5 fichiers de test
         for i in range(5):
-            (tests_dir / f"test_module_{i}.py").write_text(f'''"""Tests module {i}."""
+            (tests_dir / f"test_module_{i}.py").write_text(
+                f'''"""Tests module {i}."""
 import pytest
 from package.module_{i} import function_{i}
 
 def test_function_{i}():
     """Test fonction {i}."""
     assert function_{i}() == {i}
-''')
+'''
+            )
 
         return project
 
@@ -417,10 +421,12 @@ def test_handler_{file_num}():
 
         # 50 fichiers
         for i in range(50):
-            (src_dir / f"module_{i}.py").write_text(f'''"""Module {i}."""
+            (src_dir / f"module_{i}.py").write_text(
+                f'''"""Module {i}."""
 def function_{i}():
     return {i}
-''')
+'''
+            )
 
         collector = MetricsCollector(str(project))
 
