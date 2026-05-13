@@ -126,9 +126,9 @@ jobs:
           pytest tests/ -v --cov=arkalia_metrics_collector --cov-report=xml --cov-report=html
 
       - name: "Upload Coverage"
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
-          file: ./coverage.xml
+          files: ./coverage.xml
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: false
@@ -198,7 +198,7 @@ jobs:
           bandit -r src/arkalia_metrics_collector/ -f txt -o logs/bandit_report.txt
 
       - name: "Upload Security Report"
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: security-reports
           path: logs/bandit_report.*
@@ -231,7 +231,7 @@ jobs:
         run: python -m build
 
       - name: "Upload Build Artifacts"
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
@@ -242,10 +242,7 @@ jobs:
   deploy:
     name: "Deploy to PyPI"
     needs: build
-    if: >-
-      github.ref == 'refs/heads/main' &&
-      github.event_name == 'push' &&
-      secrets.PYPI_API_TOKEN != ''
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     # environment: production  # Temporairement désactivé
 
@@ -254,7 +251,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: "Download Build Artifacts"
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist/
@@ -278,4 +275,8 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
+          if [ -z "${TWINE_PASSWORD:-}" ]; then
+            echo "::notice::Publication PyPI ignorée (PYPI_API_TOKEN non configuré)."
+            exit 0
+          fi
           twine upload dist/*
