@@ -38,7 +38,7 @@ jobs:
 
     steps:
       - name: "Checkout Code"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -98,7 +98,7 @@ jobs:
 
     steps:
       - name: "Checkout Code"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: "Setup Python ${{ matrix.python-version }}"
         uses: actions/setup-python@v6
@@ -141,7 +141,7 @@ jobs:
 
     steps:
       - name: "Checkout Code"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: "Setup Python"
         uses: actions/setup-python@v6
@@ -173,7 +173,7 @@ jobs:
 
     steps:
       - name: "Checkout Code"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: "Setup Python"
         uses: actions/setup-python@v6
@@ -211,7 +211,7 @@ jobs:
 
     steps:
       - name: "Checkout Code"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: "Setup Python"
         uses: actions/setup-python@v6
@@ -245,7 +245,7 @@ jobs:
 
     steps:
       - name: "Checkout Code"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: "Download Build Artifacts"
         uses: actions/download-artifact@v8
