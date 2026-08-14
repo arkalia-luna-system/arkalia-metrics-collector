@@ -1,80 +1,43 @@
-# Arkalia Metrics Collector 🚀
+# Arkalia Metrics Collector
 
-> **Collecteur de métriques universel et professionnel pour projets Python**  
-> Analyse automatique de code, tests, documentation, coverage, et métriques GitHub. Export multi-format (JSON, Markdown, HTML, CSV, YAML), dashboard interactif, agrégation multi-projets, et intégration CI/CD complète.
+CLI perso pour collecter des métriques sur des projets Python (fichiers, tests, docs, exports).
+
+> **Note (août 2026)** : d’anciens badges / tableaux affichaient des totaux absurdes
+> (des millions de lignes) — erreur d’agrégation, **pas** la taille réelle de ce dépôt.
+> Ce README a été corrigé pour rester factuel.
 
 ![License](https://img.shields.io/badge/License-MIT-blue?style=flat)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat&logo=python)
-[![Stars](https://img.shields.io/github/stars/arkalia-luna-system/arkalia-metrics-collector?style=flat&logo=github)](https://github.com/arkalia-luna-system/arkalia-metrics-collector)
-[![PyPI](https://img.shields.io/pypi/v/arkalia-metrics-collector?logo=pypi&logoColor=white)](https://pypi.org/project/arkalia-metrics-collector/)
-
-[![Modules](https://img.shields.io/badge/Python%20Modules-52,320-blue?style=flat&logo=python)](https://github.com/arkalia-luna-system/arkalia-metrics-collector)
-[![LOC](https://img.shields.io/badge/Lines%20of%20Code-24,790,076-green?style=flat)](https://github.com/arkalia-luna-system/arkalia-metrics-collector)
-[![Tests](https://img.shields.io/badge/Tests-11,204-purple?style=flat)](https://github.com/arkalia-luna-system/arkalia-metrics-collector)
 [![CI](https://github.com/arkalia-luna-system/arkalia-metrics-collector/actions/workflows/ci.yml/badge.svg)](https://github.com/arkalia-luna-system/arkalia-metrics-collector/actions)
-[![Codecov](https://codecov.io/gh/arkalia-luna-system/arkalia-metrics-collector/branch/main/graph/badge.svg)](https://codecov.io/gh/arkalia-luna-system/arkalia-metrics-collector)
 
-## 📋 Description
+## Description
 
-**Arkalia Metrics Collector** est un outil professionnel pour collecter, analyser et visualiser les métriques de vos projets Python. Il offre une analyse automatique du code source, des tests, de la documentation, du coverage, et des métriques GitHub, avec export multi-format et dashboard interactif.
+Outil d’analyse locale : scanner un repo Python, exporter des métriques
+(JSON / Markdown / HTML / CSV / YAML). Utile pour un suivi perso multi-projets.
+Ce n’est **pas** une plateforme « enterprise » ni un SaaS.
 
-## Métriques du Projet
+## Ordre de grandeur de **ce** dépôt
 
-<div align="center">
+| Composant | Ordre de grandeur |
+|-----------|-------------------|
+| Modules Python | ~dizaines |
+| Tests | ~centaine |
+| Rôle | Outillage perso |
 
-| Composant | Valeur | Statut |
-|:---------|:------:|:------:|
-| Fichiers Python | 23 modules | Actif |
-| Lignes de Code | 5,841 lignes | Maintenu |
-| Tests | 120 tests | Testé |
-| Documentation | 56 fichiers | Complet |
+*(Les chiffres exacts évoluent — se fier à `pytest` / CI, pas à d’anciens badges.)*
 
-</div>
+## Ancienne section « métriques globales »
 
-*Dernière mise à jour : 23 janvier 2026*
-
-## 📊 Métriques Globales
-
-<div align="center">
-
-| **Projet** | **Modules** | **Lignes** | **Tests** |
-|:-----------|:-----------:|:----------:|:---------:|
-| **arkalia-aria** | `6,082` | `3,764,289` | `2,218` |
-| **arkalia-cia** | `3,419` | `1,251,969` | `230` |
-| **arkalia-luna-logo** | `17,671` | `6,946,020` | `2,230` |
-| **arkalia-luna-pro** | `208` | `46,471` | `95` |
-| **arkalia-metrics-collector** | `23` | `5,841` | `120` |
-| **arkalia-quest** | `118` | `74,490` | `79` |
-| **athalia-dev-setup** | `168` | `86,370` | `196` |
-| **base-template** | `3,303` | `928,195` | `429` |
-| **bbia-branding** | `11` | `2,411` | `2` |
-| **bbia-reachy-sim** | `21,282` | `11,682,651` | `5,605` |
-| **github-profile-arkalia** | `4` | `1,257` | `0` |
-| **nours-interface** | `31` | `112` | `0` |
-| **TOTAL** | **`52,320`** | **`24,790,076`** | **`11,204`** |
-
-</div>
-
-*Dernière mise à jour : 23 janvier 2026*
+~~Tableaux multi-projets avec des millions de LOC~~ — **retirés** (non fiables).
 
 ## Fonctionnalités
 
-- 🚀 **Exclusion automatique** des venv, cache, dépendances
-- 📊 **Métriques intelligentes** : code, tests, sécurité, qualité
-- 🎨 **Export multi-format** : JSON, Markdown, HTML, CSV, YAML
-- 🔧 **CLI professionnel** avec configuration flexible
-- 🌐 **Dashboard web** interactif et responsive
-- 🔗 **Intégration GitHub API** : stars, forks, issues, PRs, releases
-- 📈 **Agrégation multi-projets** : coverage global, métriques agrégées
-- 🏷️ **Génération de badges** : Shields.io, Codecov, GitHub Actions
-- 📋 **Tableaux README automatiques** : métriques sourcées et vérifiables
-- 📊 **Support Coverage automatique** : parsing coverage.xml, calcul global
-- 📅 **Comparaison temporelle** : historique des métriques, rapports d'évolution
-- 🔄 **Automatisation CI/CD** : mise à jour quotidienne via GitHub Actions
-- 🧪 **Tests complets** : tests unitaires, intégration et performance
-- 📧 **Notifications multi-canaux** : Email (SMTP), Slack, Discord
-- 📊 **Statistiques Git** : commits, lignes, contributeurs, activité temporelle
-- 🌐 **Export vers services externes** : REST API (✅), Google Sheets, Notion, Airtable (📋 prévu)
+- Exclusion venv / cache / dépendances
+- Métriques code / tests / docs
+- Export JSON, Markdown, HTML, CSV, YAML
+- CLI + option dashboard local
+- Intégration GitHub API (optionnelle)
+- CI GitHub Actions
 
 ## Installation
 
